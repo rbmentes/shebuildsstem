@@ -3,11 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>LID Project | SheBuildsSTEM</title>
+  <link rel="icon" href="favicon.jpg">
   <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body>
 
 <header>
+  <!-- Language Switch -->
   <div class="lang">
     <a href="project-lid.html" class="active">🇬🇧 EN</a>
     <a href="project-lid-tr.html">🇹🇷 TR</a>
@@ -16,28 +20,105 @@
 
 <section>
   <div class="card project-card">
+
     <h1>🎤 Language Identification (LID) Project</h1>
 
-    <p>This project was developed as part of my Introduction to Speech Processing course.</p>
+    <p>
+      This project was developed as part of my
+      <b>Introduction to Speech Processing</b> course.
+      The main goal was to build a system that can automatically
+      recognize the spoken language from short audio recordings.
+    </p>
 
-    <h2>✨ Methods Used</h2>
-    <ul>
-      <li>MFCC (classical method)</li>
-      <li>CNN (deep learning method)</li>
-    </ul>
+    <hr>
+
+    <h2>📂 Dataset</h2>
+    <p>
+      I used an open-source dataset available on Kaggle.
+      The dataset contains short speech samples from multiple languages.
+      Working with real audio data helped me better understand how speech
+      processing systems are trained and evaluated.
+    </p>
+
+    <hr>
+
+    <h2>✨ Methods Implemented</h2>
+
+    <h3>1️⃣ MFCC (Mel-Frequency Cepstral Coefficients)</h3>
+    <p>
+      I started the project with a more classical approach using MFCC features.
+      This was the first stage where I was learning how language identification works.
+      The code was easier to build, but the results were not very strong,
+      since MFCC-based methods are more traditional and limited compared to deep learning.
+    </p>
+
+    <h3>2️⃣ CNN (Convolutional Neural Network)</h3>
+    <p>
+      After that, I moved to a more modern approach using a CNN model.
+      This method produced better performance and improved accuracy.
+    </p>
+
+    <p>
+      The most challenging part of this stage was trying to increase the model’s accuracy.
+      I had to carefully analyze what was causing errors in training and prediction,
+      then adjust parameters and improve the model step by step.
+    </p>
+
+    <hr>
 
     <h2>📊 Results</h2>
-    <p>Validation Accuracy: <b>64.61%</b></p>
 
-    <h2>💻 Tools</h2>
-    <p>Python, Google Colab, Kaggle Dataset</p>
+    <p><b>Validation Accuracy:</b> 64.61%</p>
+
+    <p>
+      The CNN model was trained for 10 epochs, and the best model was saved during training.
+      Overall, CNN achieved better results compared to the MFCC baseline method.
+    </p>
+
+    <hr>
+
+    <h2>💻 Tools & Technologies</h2>
+
+    <ul>
+      <li>Python</li>
+      <li>Google Colab</li>
+      <li>Kaggle Dataset</li>
+      <li>Audio Feature Extraction (MFCC)</li>
+      <li>Deep Learning (CNN)</li>
+    </ul>
+
+    <hr>
+
+    <h2>🌷 What This Project Taught Me</h2>
+
+    <p>
+      This project helped me understand how speech-processing projects are developed in Python.
+      I learned how to use Google Colab efficiently, work with audio data,
+      and explore the exciting field of language identification.
+    </p>
+
+    <p>
+      Most importantly, I realized that improving model performance requires patience,
+      experimentation, and a lot of problem-solving — and that’s what made the project so rewarding.
+    </p>
+
+    <hr>
 
     <h2>🔗 GitHub Repository</h2>
-    <a href="https://github.com/rbmentes/lid-language-identification" target="_blank">
-      View Full Code →
+
+    <p>
+      You can explore the full code and notebooks here:
+    </p>
+
+    <a href="https://github.com/rbmentes/lid-language-identification"
+       target="_blank"
+       class="btn">
+       View on GitHub →
     </a>
+
   </div>
 </section>
 
 </body>
 </html>
+
