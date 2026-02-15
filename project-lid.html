@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>LID Project | SheBuildsSTEM</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.jpg">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<header>
+  <h1>Language Identification (LID) Project 🎙️</h1>
+  <p>A Speech Processing journey using MFCC & CNN</p>
+
+  <a class="btn" href="index.html">← Back to Home</a>
+</header>
+
+<section>
+  <div class="card" style="max-width: 850px; text-align: left; padding: 40px;">
+
+    <h2>📌 Project Overview</h2>
+    <p>
+      This project was developed as part of my 
+      <b>Introduction to Speech Processing</b> course.
+      The goal was to build a system that can automatically recognize 
+      the spoken language from short audio recordings.
+    </p>
+
+    <h2>🗂 Dataset</h2>
+    <p>
+      I used an open dataset from <b>Kaggle</b>, containing audio samples
+      in multiple languages for training and evaluation.
+    </p>
+
+    <h2>⚙️ Methods Implemented</h2>
+
+    <h3>1) MFCC-Based Classical Approach 🎼</h3>
+    <p>
+      My first implementation used <b>MFCC (Mel-Frequency Cepstral Coefficients)</b>,
+      which is a traditional and widely used feature extraction technique in speech processing.
+      This approach helped me understand the foundations of audio analysis.
+    </p>
+    <p>
+      Although it was easier to implement, the accuracy was limited because MFCC-based
+      pipelines are considered more classical compared to modern deep learning models.
+    </p>
+
+    <h3>2) CNN-Based Deep Learning Approach 🧠</h3>
+    <p>
+      After gaining confidence, I moved to a more modern method:
+      <b>Convolutional Neural Networks (CNNs)</b>.
+      This model achieved significantly better results by learning patterns directly
+      from audio representations.
+    </p>
+
+    <h2>🚧 Challenges</h2>
+    <p>
+      The most difficult part was improving the validation accuracy.
+      I spent a lot of time analyzing what factors in the code were limiting performance
+      and experimenting with changes to achieve better results.
+    </p>
+
+    <h2>✨ What I Learned</h2>
+    <ul>
+      <li>How to build real machine learning projects in <b>Python</b></li>
+      <li>Using <b>Google Colab</b> efficiently for training deep models</li>
+      <li>Audio preprocessing and feature extraction</li>
+      <li>Speech processing is challenging, but also incredibly fun</li>
+    </ul>
+
+    <h2>📊 Results</h2>
+    <p>
+      Below are sample outputs from the CNN method:
+    </p>
+
+    <p><b>Training Performance:</b></p>
+    <img src="results/cnn_training.png" style="width:100%; border-radius:15px; margin-bottom:20px;">
+
+    <p><b>Prediction Example:</b></p>
+    <img src="results/cnn_predictions.png" style="width:100%; border-radius:15px;">
+
+    <h2>🔗 Project Repository</h2>
+    <p>
+      You can view the full code and notebooks here:
+    </p>
+
+    <a class="btn" href="https://github.com/rbmentes/lid-language-identification" target="_blank">
+      View on GitHub →
+    </a>
+
+  </div>
+</section>
+
+<footer>
+  <p>Made with 💗 by Buse | SheBuildsSTEM</p>
+</footer>
+
+</body>
+</html>
