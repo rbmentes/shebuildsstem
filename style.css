@@ -115,3 +115,42 @@ nav a:hover {
   transform: translateY(-10px);
   box-shadow: 0 15px 35px rgba(255, 255, 255, 0.4);
 }
+.lang {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-weight: bold;
+}
+
+.lang a {
+  color: white;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+.lang a:hover {
+  text-decoration: underline;
+}
+.lang {
+  position: absolute;
+  top: 25px;
+  right: 30px;
+  display: flex;
+  gap: 10px;
+}
+
+.lang a {
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.lang a:hover {
+  background: rgba(255, 255, 255, 0.45);
+  transform: scale(1.05);
+}
