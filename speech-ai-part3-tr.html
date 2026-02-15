@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Speech AI Başlangıç Serisi — Bölüm 3</title>
+  <title>Speech AI Başlangıç Serisi — Bölüm 3 | Spektrogram ve Convolution</title>
 
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="favicon.jpg">
@@ -19,25 +19,72 @@
 <section class="blog-container">
 
   <h2>🎧 Speech AI Başlangıç Serisi — Bölüm 3</h2>
-  <h3>Spektrogram ve Convolution Mantığı</h3>
+  <h3>Spektrogram ve Convolution Mantığını Derinlemesine Anlamak</h3>
 
   <p>
-    CNN modellerinin sesi nasıl işlediğini anlamak için önce
-    spektrogram kavramını anlamamız gerekir.
+    Önceki bölümde CNN modellerinin sesi bir görüntü gibi işlediğini öğrenmiştik.
+    Peki bu "görüntü" tam olarak nedir?
+  </p>
+
+  <p>
+    Bu bölümde spektrogramın ne olduğunu, nasıl üretildiğini
+    ve convolution işleminin matematiksel mantığını sade bir şekilde inceleyeceğiz.
   </p>
 
   <hr>
 
   <h3>📊 Spektrogram Nedir?</h3>
 
+  <p>
+    Spektrogram, ses sinyalinin zaman içinde frekans dağılımını gösteren
+    iki boyutlu bir temsildir.
+  </p>
+
   <ul>
-    <li>X ekseni → Zaman</li>
-    <li>Y ekseni → Frekans</li>
-    <li>Renk → Enerji yoğunluğu</li>
+    <li><strong>X ekseni:</strong> Zaman</li>
+    <li><strong>Y ekseni:</strong> Frekans</li>
+    <li><strong>Renk yoğunluğu:</strong> Enerji (Genlik)</li>
   </ul>
 
   <p>
-    Kısa zamanlı Fourier dönüşümü (STFT) ile elde edilir.
+    Dalga formu (waveform) bize sadece genlik-zaman ilişkisini verir.
+    Ancak spektrogram bize hem zaman hem frekans bilgisini aynı anda sunar.
+  </p>
+
+  <hr>
+
+  <h3>⚙️ Spektrogram Nasıl Oluşturulur?</h3>
+
+  <p>
+    Spektrogram oluşturmak için genellikle
+    <strong>Kısa Zamanlı Fourier Dönüşümü (STFT)</strong> kullanılır.
+  </p>
+
+  <ol>
+    <li>Ses küçük frame’lere bölünür</li>
+    <li>Her frame için Fourier Transform uygulanır</li>
+    <li>Frekans bileşenleri hesaplanır</li>
+    <li>Enerji değerleri 2D matris haline getirilir</li>
+  </ol>
+
+  <p>
+    Sonuç: Zaman-frekans düzleminde bir yoğunluk haritası.
+  </p>
+
+  <hr>
+
+  <h3>🧠 Neden Spektrogram Güçlüdür?</h3>
+
+  <ul>
+    <li>Zaman bilgisini korur</li>
+    <li>Frekans bilgisini korur</li>
+    <li>Yerel akustik örüntüleri görünür hale getirir</li>
+  </ul>
+
+  <p>
+    Konuşma sinyali, sabit bir frekanstan oluşmaz.
+    Sürekli değişen geçişler içerir.
+    Spektrogram bu geçişleri analiz edebilmemizi sağlar.
   </p>
 
   <hr>
@@ -45,23 +92,76 @@
   <h3>🔍 Convolution Nedir?</h3>
 
   <p>
-    Convolution, küçük bir filtreyi giriş matrisi üzerinde kaydırarak
-    örüntü yakalama işlemidir.
+    Convolution, küçük bir filtrenin (kernel) giriş matrisi üzerinde
+    kaydırılması işlemidir.
+  </p>
+
+  <p>
+    Kernel, belirli bir örüntüyü arar.
+    Her konumda çarpım-toplam işlemi yapılır ve yeni bir çıktı matrisi oluşturulur.
+  </p>
+
+  <p>
+    Bu işlem sayesinde CNN:
   </p>
 
   <ul>
-    <li>Kernel boyutu</li>
-    <li>Stride</li>
-    <li>Padding</li>
+    <li>Frekans geçişlerini</li>
+    <li>Enerji yoğunluğu bölgelerini</li>
+    <li>Fonem yapılarının izlerini</li>
+    <li>Dile özgü akustik özellikleri</li>
   </ul>
 
   <p>
-    Bu parametreler modelin hangi detayları yakalayacağını belirler.
+    otomatik olarak öğrenebilir.
   </p>
 
   <hr>
 
-  <a class="btn" href="speech-ai-part2-tr.html">← Önceki</a>
+  <h3>⚙️ CNN Parametreleri</h3>
+
+  <ul>
+    <li><strong>Kernel Size:</strong> Filtrenin boyutu</li>
+    <li><strong>Stride:</strong> Filtrenin kayma adımı</li>
+    <li><strong>Padding:</strong> Kenarların işlenme şekli</li>
+  </ul>
+
+  <p>
+    Bu parametreler modelin hangi ölçekte örüntü yakalayacağını belirler.
+  </p>
+
+  <hr>
+
+  <h3>🚀 Bu Bilgi Neden Önemli?</h3>
+
+  <p>
+    Spektrogram ve convolution mantığını anlamak,
+    CNN modellerinin neden güçlü olduğunu kavramamızı sağlar.
+  </p>
+
+  <p>
+    Artık sadece modeli kullanmıyoruz —
+    nasıl çalıştığını da anlayabiliyoruz.
+  </p>
+
+  <hr>
+
+  <h3>➡️ Sıradaki Bölüm</h3>
+
+  <p>
+    Bir sonraki bölümde:
+  </p>
+
+  <ul>
+    <li>Model eğitimi</li>
+    <li>Loss fonksiyonları</li>
+    <li>Overfitting ve regularization</li>
+    <li>Performans iyileştirme yöntemleri</li>
+  </ul>
+
+  <br>
+
+  <a class="btn" href="speech-ai-part2-tr.html">← Önceki Bölüm</a>
   <a class="btn" href="blog-tr.html">Blog'a Dön →</a>
 
 </section>
