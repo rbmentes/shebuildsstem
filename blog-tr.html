@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Blog | SheBuildsSTEM</title>
 
   <link rel="stylesheet" href="style.css">
@@ -17,27 +17,48 @@
   <h1>SheBuildsSTEM Blog 💗</h1>
 </header>
 
-<section class="blog-list">
+<section class="hub-container">
 
-  <h2>📚 Yazılarım</h2>
-  <p>Teknik yazılar + kişisel STEM yolculuğum burada.</p>
+  <h2>📚 Blog Kategorileri</h2>
+  <p>Yeni başlayanlar için teknik yazılar + kişisel mühendislik yazıları.</p>
 
-  <div class="grid">
+  <!-- Categories -->
+  <div class="hub-grid">
 
-    <!-- Blog Post 1 -->
-    <div class="card">
-      <h3>💗 Mühendislikte Geride Hissettiğinde...</h3>
-      <p>Kendi öğrencilik yolculuğumdan bir yazı.</p>
-      <a class="btn" href="feeling-behind-tr.html">Oku →</a>
+    <div class="hub-card">
+      <h3>🎧 Speech AI Başlangıç Serisi</h3>
+      <p>Speech processing ve audio AI konularına giriş serisi.</p>
+      <a class="btn" href="#speech-series">Seriyi Keşfet →</a>
     </div>
 
-    <!-- Blog Post 2 -->
-    <div class="card">
-      <h3>🎧 Speech AI Serisi — Bölüm 1</h3>
-      <p>Ses verisi nedir? MFCC nasıl çalışır?</p>
+    <div class="hub-card">
+      <h3>💗 Mühendislik Günlükleri</h3>
+      <p>Mühendislik okurken yaşadıklarım ve kişisel düşünceler.</p>
+      <a class="btn" href="#reflections">Yazıları Oku →</a>
+    </div>
+
+  </div>
+
+  <!-- Speech AI Posts -->
+  <h2 id="speech-series">🎧 Speech AI Serisi</h2>
+
+  <div class="post-grid">
+    <div class="post-card">
+      <h3>Speech AI — Bölüm 1</h3>
+      <p>Ses Özellikleri ve MFCC Nedir?</p>
       <a class="btn" href="speech-ai-part1-tr.html">Oku →</a>
     </div>
+  </div>
 
+  <!-- Reflection Posts -->
+  <h2 id="reflections">💗 Mühendislik Günlükleri</h2>
+
+  <div class="post-grid">
+    <div class="post-card">
+      <h3>Mühendislikte Geride Hissettiğinde...</h3>
+      <p>Kendimi geride hissettiğim zamanlar üzerine bir yazı.</p>
+      <a class="btn" href="feeling-behind-tr.html">Oku →</a>
+    </div>
   </div>
 
   <br>

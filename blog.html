@@ -1,43 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Blog | SheBuildsSTEM</title>
+
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="favicon.jpg">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
 <header>
-  <h1>SheBuildsSTEM 💗⚡</h1>
+  <h1>SheBuildsSTEM Blog 💗</h1>
 </header>
 
-<section class="blog-container">
+<section class="hub-container">
 
-  <h2>🌸 Blog Hub</h2>
-  <p>Technical insights, engineering reflections and learning journeys.</p>
+  <h2>📚 Blog Categories</h2>
+  <p>Technical beginner-friendly posts + personal engineering reflections.</p>
 
-  <hr>
+  <!-- Categories -->
+  <div class="hub-grid">
 
-  <div class="blog-category">
-    <h3>🎙 Speech AI Starter Series</h3>
-    <p>A beginner-friendly technical series about speech processing and audio AI.</p>
-    <a class="btn" href="speech-ai.html">Explore Series →</a>
+    <div class="hub-card">
+      <h3>🎧 Speech AI Starter Series</h3>
+      <p>A beginner-friendly technical series about speech processing and audio AI.</p>
+      <a class="btn" href="#speech-series">Explore Series →</a>
+    </div>
+
+    <div class="hub-card">
+      <h3>💗 Engineering Reflections</h3>
+      <p>Personal thoughts about studying engineering and growth.</p>
+      <a class="btn" href="#reflections">Read Reflections →</a>
+    </div>
+
   </div>
 
-  <div class="blog-category">
-    <h3>💗 Engineering Reflections</h3>
-    <p>Personal thoughts about studying engineering and growth.</p>
-    <a class="btn" href="blog-tr.html">Read Reflections →</a>
+  <!-- Speech AI Posts -->
+  <h2 id="speech-series">🎧 Speech AI Series</h2>
+
+  <div class="post-grid">
+    <div class="post-card">
+      <h3>Speech AI Starter Series — Part 1</h3>
+      <p>Understanding Audio Features & MFCC</p>
+      <a class="btn" href="speech-ai-part1.html">Read →</a>
+    </div>
   </div>
 
-  <div class="card">
-  <h3>🎧 Speech AI Starter Series — Part 1</h3>
-  <p>Understanding Audio Features & MFCC</p>
-  <a class="btn" href="speech-ai-part1.html">Read →</a>
-</div>
+  <!-- Reflection Posts -->
+  <h2 id="reflections">💗 Engineering Reflections</h2>
 
+  <div class="post-grid">
+    <div class="post-card">
+      <h3>When You Feel Behind in Engineering...</h3>
+      <p>A personal story about struggling, learning, and continuing.</p>
+      <a class="btn" href="feeling-behind.html">Read →</a>
+    </div>
+  </div>
+
+  <br>
+  <a class="btn" href="index.html">← Back to Home</a>
 
 </section>
 
