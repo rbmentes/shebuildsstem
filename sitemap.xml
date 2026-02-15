@@ -1,16 +1,36 @@
-<url>
-  <loc>https://rbmentes.github.io/shebuildsstem/blog-tr.html</loc>
-</url>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-<url>
-  <loc>https://rbmentes.github.io/shebuildsstem/post1.html</loc>
-</url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsstem/index.html</loc>
+  </url>
 
-<url>
-  <loc>https://rbmentes.github.io/shebuildsstem/post1-tr.html</loc>
-</url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsstem/tr.html</loc>
+  </url>
 
-<url>
-  <loc>https://rbmentes.github.io/shebuildsstem/feeling-behing-tr.html</loc>
-</url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsstem/blog.html</loc>
+  </url>
 
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsstem/blog-tr.html</loc>
+  </url>
+
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsstem/post1.html</loc>
+  </url>
+
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsstem/post1-tr.html</loc>
+  </url>
+
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsstem/project-lid.html</loc>
+  </url>
+
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsstem/project-lid-tr.html</loc>
+  </url>
+
+</urlset>
