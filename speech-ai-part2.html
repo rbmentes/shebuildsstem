@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speech AI Starter Series — Part 2 | CNNs for Speech Recognition</title>
+  <link rel="icon" href="favicon.jpg">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<header>
+  <h1>SheBuildsSTEM 💗⚡</h1>
+</header>
+
+<section class="blog-container">
+
+  <h2>🎧 Speech AI Starter Series — Part 2</h2>
+  <h3>CNNs for Speech Recognition</h3>
+
+  <p>
+    In Part 1, we learned why raw audio is not directly suitable for machine learning models 
+    and why we use feature extraction methods like MFCC.
+  </p>
+
+  <p>
+    Now we move to something more powerful: <strong>Convolutional Neural Networks (CNNs)</strong>.
+  </p>
+
+  <hr>
+
+  <h3>🧠 Why Do We Need Neural Networks for Speech?</h3>
+
+  <p>
+    Traditional machine learning models rely heavily on handcrafted features.
+    But speech is complex. It contains patterns across time and frequency that are 
+    difficult to manually design features for.
+  </p>
+
+  <p>
+    This is where deep learning comes in.
+  </p>
+
+  <p>
+    Instead of manually defining what is important, neural networks learn the patterns directly from data.
+  </p>
+
+  <hr>
+
+  <h3>📊 Turning Audio into an Image</h3>
+
+  <p>
+    CNNs were originally designed for image processing.
+    So how can we use them for speech?
+  </p>
+
+  <p>
+    The trick is simple:
+  </p>
+
+  <ul>
+    <li>Convert audio into a spectrogram</li>
+    <li>Represent it as a 2D matrix (time × frequency)</li>
+    <li>Treat it like an image</li>
+  </ul>
+
+  <p>
+    A spectrogram shows how frequency content changes over time.
+    It visually represents speech patterns.
+  </p>
+
+  <p>
+    Now a CNN can scan this "image" and detect patterns.
+  </p>
+
+  <hr>
+
+  <h3>🔍 How CNN Works on Speech</h3>
+
+  <p>
+    A Convolutional Neural Network consists of:
+  </p>
+
+  <ul>
+    <li><strong>Convolution layers</strong> → detect local patterns</li>
+    <li><strong>Activation functions</strong> → introduce non-linearity</li>
+    <li><strong>Pooling layers</strong> → reduce dimensionality</li>
+    <li><strong>Fully connected layers</strong> → perform classification</li>
+  </ul>
+
+  <p>
+    In speech tasks, convolution filters learn:
+  </p>
+
+  <ul>
+    <li>Frequency transitions</li>
+    <li>Energy concentration patterns</li>
+    <li>Phoneme-related structures</li>
+  </ul>
+
+  <p>
+    Instead of manually extracting features like MFCC, 
+    CNN automatically learns discriminative patterns.
+  </p>
+
+  <hr>
+
+  <h3>⚙️ Why CNNs Work Well for Speech</h3>
+
+  <ul>
+    <li>Capture local frequency-time patterns</li>
+    <li>Handle noise better than traditional methods</li>
+    <li>Require less manual feature engineering</li>
+    <li>Scale well with larger datasets</li>
+  </ul>
+
+  <p>
+    That’s why CNN-based models often outperform classical ML approaches in:
+  </p>
+
+  <ul>
+    <li>Speech recognition</li>
+    <li>Language identification</li>
+    <li>Speaker recognition</li>
+  </ul>
+
+  <hr>
+
+  <h3>🧩 CNN vs MFCC — What’s the Difference?</h3>
+
+  <p>
+    MFCC is a handcrafted feature extraction method.
+    CNN is a learning-based pattern extraction method.
+  </p>
+
+  <p>
+    Many modern systems combine both:
+  </p>
+
+  <ul>
+    <li>Extract MFCC features</li>
+    <li>Feed them into a CNN model</li>
+  </ul>
+
+  <p>
+    This hybrid approach is very common in practical speech AI systems.
+  </p>
+
+  <hr>
+
+  <h3>🚀 What Comes Next?</h3>
+
+  <p>
+    In the next part, we will explore:
+  </p>
+
+  <ul>
+    <li>What is a spectrogram in detail?</li>
+    <li>How convolution actually works mathematically</li>
+    <li>How to build a simple CNN for speech classification</li>
+  </ul>
+
+  <br>
+  <a class="btn" href="blog.html">← Back to Blog</a>
+
+</section>
+
+<footer>
+  <p>Made with 💗 by Buse | SheBuildsSTEM</p>
+</footer>
+
+</body>
+</html>
