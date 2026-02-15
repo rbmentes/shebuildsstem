@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Speech AI Başlangıç Serisi — Bölüm 2 | CNN</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="favicon.jpg" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<header>
+  <h1>SheBuildsSTEM 💗⚡</h1>
+</header>
+
+<section class="blog-container">
+
+  <h2>🎧 Speech AI Başlangıç Serisi — Bölüm 2</h2>
+  <h3>Konuşma Tanımada CNN (Convolutional Neural Networks)</h3>
+
+  <p>
+    İlk bölümde ham ses verisinin doğrudan makine öğrenmesi modellerine verilmesinin 
+    neden zor olduğunu ve MFCC gibi feature extraction yöntemlerinin 
+    neden kullanıldığını öğrenmiştik.
+  </p>
+
+  <p>
+    Bu bölümde ise daha modern ve güçlü bir yaklaşımı inceleyeceğiz:
+    <strong>Convolutional Neural Networks (CNN)</strong>.
+  </p>
+
+  <hr>
+
+  <h3>🧠 Neden Derin Öğrenmeye İhtiyaç Duyuyoruz?</h3>
+
+  <p>
+    Geleneksel yöntemlerde özellikleri (features) biz tasarlarız.
+    Ancak konuşma sinyali oldukça karmaşıktır.
+  </p>
+
+  <p>
+    Zamana ve frekansa bağlı olarak değişen çok sayıda örüntü içerir.
+    Bu örüntüleri elle tasarlamak her zaman yeterli değildir.
+  </p>
+
+  <p>
+    Derin öğrenme modelleri ise bu örüntüleri doğrudan veriden öğrenir.
+    Yani model kendi “feature extraction” sürecini kendisi geliştirir.
+  </p>
+
+  <hr>
+
+  <h3>📊 Sesi Görüntüye Dönüştürmek</h3>
+
+  <p>
+    CNN’ler aslında görüntü işleme için geliştirilmiştir.
+    Peki sesi nasıl görüntü gibi kullanıyoruz?
+  </p>
+
+  <p>
+    Bunun için sesi bir <strong>spektrrograma</strong> dönüştürürüz.
+  </p>
+
+  <ul>
+    <li>Zaman ekseni</li>
+    <li>Frekans ekseni</li>
+    <li>Genlik (renk yoğunluğu)</li>
+  </ul>
+
+  <p>
+    Böylece konuşma sinyali 2 boyutlu bir matris haline gelir.
+    CNN bu matrisi bir görüntü gibi işler.
+  </p>
+
+  <hr>
+
+  <h3>🔍 CNN Ses Verisini Nasıl Öğrenir?</h3>
+
+  <p>
+    Bir CNN modeli genellikle şu katmanlardan oluşur:
+  </p>
+
+  <ul>
+    <li><strong>Convolution Katmanları:</strong> Lokal örüntüleri yakalar</li>
+    <li><strong>Activation Fonksiyonları:</strong> Non-lineerlik sağlar</li>
+    <li><strong>Pooling Katmanları:</strong> Boyut azaltır</li>
+    <li><strong>Fully Connected Katmanlar:</strong> Sınıflandırma yapar</li>
+  </ul>
+
+  <p>
+    Konuşma tanımada convolution filtreleri şunları öğrenebilir:
+  </p>
+
+  <ul>
+    <li>Frekans geçişleri</li>
+    <li>Enerji yoğunluğu bölgeleri</li>
+    <li>Fonem yapıları</li>
+    <li>Dile özgü akustik örüntüler</li>
+  </ul>
+
+  <p>
+    Yani model, MFCC gibi önceden tanımlanmış özelliklere bağlı kalmadan
+    kendi ayırt edici temsillerini oluşturur.
+  </p>
+
+  <hr>
+
+  <h3>⚙️ CNN Neden Daha Başarılı?</h3>
+
+  <ul>
+    <li>Time-frequency yapıyı birlikte analiz eder</li>
+    <li>Gürültüye daha dayanıklıdır</li>
+    <li>Daha büyük veriyle daha iyi ölçeklenir</li>
+    <li>Manuel feature engineering ihtiyacını azaltır</li>
+  </ul>
+
+  <p>
+    Bu nedenle modern speech AI sistemlerinde CNN tabanlı yaklaşımlar
+    klasik yöntemlerden daha yüksek doğruluk oranlarına ulaşabilmektedir.
+  </p>
+
+  <hr>
+
+  <h3>🧩 MFCC ve CNN Arasındaki Fark</h3>
+
+  <p>
+    MFCC → El ile tasarlanmış bir özellik çıkarma yöntemidir.
+  </p>
+
+  <p>
+    CNN → Veriden doğrudan örüntü öğrenen bir derin öğrenme modelidir.
+  </p>
+
+  <p>
+    Günümüzde birçok sistem bu iki yaklaşımı birlikte kullanır:
+  </p>
+
+  <ul>
+    <li>MFCC çıkarılır</li>
+    <li>CNN modeline giriş olarak verilir</li>
+  </ul>
+
+  <hr>
+
+  <h3>🌸 Projemde CNN Deneyimim</h3>
+
+  <p>
+    Language Identification projemde MFCC yönteminden sonra CNN kullandım.
+    CNN modeli ile doğruluk oranının arttığını gözlemledim.
+  </p>
+
+  <p>
+    En zorlayıcı kısım, doğruluk oranını artırmak için
+    model parametrelerini ve veri işleme adımlarını optimize etmekti.
+  </p>
+
+  <p>
+    Bu süreç, ses işleme ve derin öğrenme alanını daha derinlemesine
+    anlamamı sağladı.
+  </p>
+
+  <hr>
+
+  <h3>➡️ Sıradaki Bölüm</h3>
+
+  <p>
+    Bir sonraki yazıda:
+  </p>
+
+  <ul>
+    <li>Spektrogram nedir?</li>
+    <li>Convolution matematiksel olarak nasıl çalışır?</li>
+    <li>Basit bir CNN modeli nasıl kurulur?</li>
+  </ul>
+
+  <br>
+
+  <a class="btn" href="speech-ai-part1-tr.html">← Önceki Bölüm</a>
+  <a class="btn" href="blog-tr.html">Blog'a Dön →</a>
+
+</section>
+
+<footer>
+  <p>Made with 💗 by Buse | SheBuildsSTEM</p>
+</footer>
+
+</body>
+</html>
