@@ -1,76 +1,175 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>What Is MFCC? | SheBuildsSTEM</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="favicon.jpg">
-  <meta name="description" content="Beginner-friendly explanation of MFCC and feature extraction in speech processing.">
-</head>
+<h2>🎧 Speech AI Starter Series — Part 1</h2>
+<p><i>Understanding Audio Features & MFCC</i></p>
 
-<body>
+<p>
+When we record audio, what we actually capture is not “sound” in the way we feel it —
+we capture a long sequence of numbers.
+</p>
 
-<header>
-  <h1>🎙 Speech AI Starter Series</h1>
-</header>
+<p>
+These numbers represent <b>air pressure changes over time</b>.
+This is called a waveform.
+Speech, music, noise… everything becomes a signal.
+</p>
 
-<section class="blog-container">
+<hr>
 
-  <h2>Part 1 — What Is MFCC and Why Is It Used in Speech Processing?</h2>
+<h2>🌊 Why Can’t We Use Raw Audio Directly?</h2>
 
-  <p><strong>February 2026</strong></p>
+<p>
+At first, you might think:
+<b>“Why not just give the waveform to a machine learning model?”</b>
+</p>
 
-  <p>
-  When we record audio, what we actually get is a long sequence of numbers.
-  These numbers represent air pressure changes over time.
-  </p>
+<p>
+The problem is that raw audio is:
+</p>
 
-  <p>
-  Raw audio is often too detailed and noisy for machine learning models.
-  That’s why we use feature extraction.
-  </p>
+<ul>
+  <li>Extremely long (thousands of samples per second)</li>
+  <li>Very noisy and detailed</li>
+  <li>Hard for classical ML models to understand</li>
+</ul>
 
-  <h3>What Is MFCC?</h3>
+<p>
+So instead of using raw samples, we transform audio into something more meaningful:
+<b>features</b>.
+</p>
 
-  <p>
-  MFCC (Mel-Frequency Cepstral Coefficients) is a compact representation
-  of audio that mimics human hearing.
-  </p>
+<hr>
 
-  <p>
-  Instead of using raw waveform samples, we extract meaningful frequency-based features.
-  </p>
+<h2>✨ Feature Extraction in Speech AI</h2>
 
-  <h3>Why Is MFCC Important?</h3>
+<p>
+Feature extraction means converting audio into a compact representation that keeps the important information.
+</p>
 
-  <ul>
-    <li>Reduces data size</li>
-    <li>Keeps important speech characteristics</li>
-    <li>Widely used before deep learning became dominant</li>
-  </ul>
+<p>
+For speech tasks, we want to capture things like:
+</p>
 
-  <h3>Limitations</h3>
+<ul>
+  <li>Pitch and tone</li>
+  <li>Pronunciation patterns</li>
+  <li>Frequency structure of speech</li>
+  <li>Language-specific characteristics</li>
+</ul>
 
-  <p>
-  MFCC relies on handcrafted feature engineering and may miss complex
-  patterns that deep learning models can learn automatically.
-  </p>
+<p>
+One of the most famous feature extraction methods is:
+<b>MFCC</b>.
+</p>
 
-  <hr>
+<hr>
 
-  <div class="series-navigation">
-    <p>Next in the series:</p>
-    <a href="#">Part 2 — From MFCC to CNN →</a>
-  </div>
+<h2>💡 What Is MFCC?</h2>
 
-  <br>
-  <a class="btn2" href="speech-ai.html">← Back to Series</a>
+<p>
+MFCC stands for:
+</p>
 
-</section>
+<p><b>Mel-Frequency Cepstral Coefficients</b></p>
 
-<footer>
-  <p>Made with 💗 by Buse | SheBuildsSTEM</p>
-</footer>
+<p>
+It is a way to represent speech by focusing on how humans actually hear sound.
+</p>
 
-</body>
-</html>
+<p>
+Instead of keeping every raw detail, MFCC captures the <b>shape of the الصوت spectrum</b>
+in a compact form.
+</p>
+
+<hr>
+
+<h2>🧠 Why Does MFCC Mimic Human Hearing?</h2>
+
+<p>
+Humans do not hear frequencies linearly.
+We are more sensitive to lower frequencies than very high ones.
+</p>
+
+<p>
+MFCC uses the <b>Mel scale</b>, which compresses frequencies the same way our ears do.
+</p>
+
+<p>
+That’s why MFCC has been so successful in speech recognition for decades.
+</p>
+
+<hr>
+
+<h2>⚙️ How MFCC Is Computed (Simplified Steps)</h2>
+
+<p>
+MFCC extraction happens in a few key stages:
+</p>
+
+<ol>
+  <li><b>Split audio into small frames</b> (speech changes quickly)</li>
+  <li><b>Apply Fourier Transform</b> to get frequency information</li>
+  <li><b>Map frequencies onto the Mel scale</b></li>
+  <li><b>Take logarithm</b> (humans perceive loudness logarithmically)</li>
+  <li><b>Apply DCT</b> to compress into coefficients</li>
+</ol>
+
+<p>
+The result is a small vector of numbers that describes the speech sound efficiently.
+</p>
+
+<hr>
+
+<h2>📌 Why Is MFCC Important?</h2>
+
+<ul>
+  <li>Reduces audio data size dramatically</li>
+  <li>Keeps key speech characteristics</li>
+  <li>Works well with classical ML models</li>
+  <li>Was the standard before deep learning dominated</li>
+</ul>
+
+<hr>
+
+<h2>⚠️ Limitations of MFCC</h2>
+
+<p>
+MFCC is powerful, but it has weaknesses:
+</p>
+
+<ul>
+  <li>It is a handcrafted feature, not learned automatically</li>
+  <li>May miss complex patterns in speech</li>
+  <li>Performance is limited compared to modern deep networks</li>
+</ul>
+
+<p>
+That’s why deep learning models like CNNs are now widely used —
+they can learn features directly from spectrograms.
+</p>
+
+<hr>
+
+<h2>🌸 My Experience in This Project</h2>
+
+<p>
+In my Language Identification project, MFCC was the first method I tried.
+It helped me understand the basics of speech processing and feature extraction.
+</p>
+
+<p>
+Even though the accuracy was not perfect, it was an important first step.
+</p>
+
+<p>
+In the next part, I will explain how I moved from MFCC features to a modern CNN-based approach —
+and how the results improved.
+</p>
+
+<hr>
+
+<h2>➡️ Coming Next: Part 2</h2>
+
+<p>
+<b>Speech AI Starter Series — Part 2:</b><br>
+How CNNs Learn Speech Features Automatically 🎧⚡
+</p>
+
