@@ -1,115 +1,111 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
+  <meta charset="UTF-8">
   <title>LID Projesi | SheBuildsSTEM</title>
-
-  <!-- Favicon -->
   <link rel="icon" href="favicon.jpg">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
-
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
 
 <header>
-  <h1>Dil Tanıma (LID) Projesi 🎙️</h1>
-  <p>MFCC ve CNN kullanarak Speech Processing yolculuğu</p>
-
-  <!-- Dil seçimi -->
   <div class="lang">
     <a href="project-lid.html">🇬🇧 EN</a>
     <a href="project-lid-tr.html" class="active">🇹🇷 TR</a>
   </div>
-
-  <a class="btn" href="index.html">← Ana Sayfaya Dön</a>
 </header>
 
 <section>
-  <div class="card" style="max-width: 850px; text-align: left; padding: 40px;">
+  <div class="card project-card">
 
-    <h2>📌 Proje Özeti</h2>
+    <h1>🎤 Dil Tanıma (LID) Projesi</h1>
+
     <p>
       Bu proje, <b>Introduction to Speech Processing</b> dersi kapsamında geliştirilmiştir.
-      Amacım, kısa ses kayıtlarından konuşulan dili otomatik olarak tanıyabilen bir sistem oluşturmaktı.
+      Amaç, kısa ses kayıtlarından konuşulan dili otomatik olarak tanıyabilen bir sistem oluşturmaktı.
     </p>
 
-    <h2>🗂 Veri Seti</h2>
+    <hr>
+
+    <h2>📂 Veri Seti</h2>
     <p>
-      Eğitim ve değerlendirme için <b>Kaggle</b> üzerinden bulduğum,
-      birden fazla dili içeren açık bir ses veri seti kullandım.
+      Projede Kaggle üzerinden açık erişimli bir veri seti kullandım.
+      Veri seti farklı dillere ait ses kayıtları içermektedir.
     </p>
 
-    <h2>⚙️ Kullanılan Yöntemler</h2>
+    <hr>
 
-    <h3>1) MFCC Tabanlı Klasik Yöntem 🎼</h3>
+    <h2>✨ Kullanılan Yöntemler</h2>
+
+    <h3>1️⃣ MFCC (Mel-Frequency Cepstral Coefficients)</h3>
     <p>
-      İlk olarak <b>MFCC (Mel-Frequency Cepstral Coefficients)</b> yöntemiyle başladım.
-      Bu yöntem, konuşma işleme alanında sık kullanılan klasik bir özellik çıkarım tekniğidir.
+      İlk olarak klasik bir yöntem olan MFCC kullandım.
+      Bu aşama projeyi anlamaya başladığım ilk dönemdi.
+      Kod yapısı daha basitti ancak doğruluk oranı çok yüksek değildi.
     </p>
 
+    <h3>2️⃣ CNN (Convolutional Neural Network)</h3>
     <p>
-      Bu yaklaşım projeyi anlamaya başladığım ilk anlardı ve kodlaması daha kolaydı.
-      Ancak doğruluk oranı sınırlı kaldı çünkü MFCC daha geleneksel bir yöntemdir.
+      Daha sonra modern bir yöntem olan CNN modelini uyguladım.
+      Bu yöntem daha yüksek doğruluk sağladı.
+      En zorlandığım kısım doğruluk oranını artırmak için
+      modelin hata yaptığı noktaları analiz etmek ve düzeltmekti.
     </p>
 
-    <h3>2) CNN Tabanlı Derin Öğrenme Yöntemi 🧠</h3>
-    <p>
-      Daha sonra modern yöntemlerden biri olan <b>Convolutional Neural Networks (CNN)</b>
-      modelini uygulamaya başladım.
-      CNN modeli, ses verisindeki desenleri daha iyi öğrenebildiği için daha yüksek doğruluk sağladı.
-    </p>
-
-    <h2>🚧 Zorluklar</h2>
-    <p>
-      En çok zorlandığım kısım doğruluk oranını artırmaya çalışmaktı.
-      Kod içerisinde performansı düşüren etkenleri bulmak ve iyileştirmeler yapmak zaman aldı.
-    </p>
-
-    <h2>✨ Bu Projeden Ne Öğrendim?</h2>
-    <ul>
-      <li><b>Python</b> ile gerçek bir makine öğrenmesi projesi geliştirmeyi</li>
-      <li><b>Google Colab</b> kullanarak model eğitmeyi</li>
-      <li>Ses verisi işleme ve feature extraction süreçlerini</li>
-      <li>Speech Processing alanının ne kadar eğlenceli ve ilgi çekici olduğunu</li>
-    </ul>
+    <hr>
 
     <h2>📊 Sonuçlar</h2>
+
+    <p><b>Validation Accuracy:</b> 64.61%</p>
     <p>
-      Aşağıda CNN yöntemiyle elde ettiğim örnek çıktılar bulunmaktadır:
+      Model eğitim sürecinde 10 epoch kullanıldı ve en iyi model kaydedildi.
+      CNN yöntemi MFCC yöntemine göre daha iyi performans gösterdi.
     </p>
 
-    <p><b>Eğitim Süreci:</b></p>
-    <img src="results/cnn_training.png"
-         style="width:100%; border-radius:15px; margin-bottom:20px;">
+    <hr>
 
-    <p><b>Tahmin Örneği:</b></p>
-    <img src="results/cnn_predictions.png"
-         style="width:100%; border-radius:15px;">
+    <h2>💻 Kullanılan Teknolojiler</h2>
 
-    <h2>🔗 Proje GitHub Bağlantısı</h2>
+    <ul>
+      <li>Python</li>
+      <li>Google Colab</li>
+      <li>Kaggle Dataset</li>
+      <li>Deep Learning (CNN)</li>
+      <li>Audio Processing</li>
+    </ul>
+
+    <hr>
+
+    <h2>🌷 Bu Proje Bana Ne Öğretti?</h2>
+
     <p>
-      Kodların tamamını ve notebook dosyalarını burada bulabilirsiniz:
+      Bu proje sayesinde Python ile proje geliştirmeyi,
+      Google Colab kullanmayı, ses verisi işlemeyi
+      ve bu alanın ne kadar eğlenceli olduğunu keşfettim.
     </p>
 
-    <a class="btn"
-       href="https://github.com/rbmentes/lid-language-identification"
-       target="_blank">
-      GitHub Repo → 
+    <p>
+      Aynı zamanda model performansını artırmanın sabır ve analiz gerektirdiğini öğrendim.
+    </p>
+
+    <hr>
+
+    <h2>🔗 GitHub Repository</h2>
+
+    <p>
+      Projenin tüm kodlarına aşağıdaki bağlantıdan ulaşabilirsiniz:
+    </p>
+
+    <a href="https://github.com/rbmentes/lid-language-identification"
+       target="_blank"
+       class="btn">
+       GitHub’da Gör →
     </a>
 
   </div>
 </section>
-
-<footer>
-  <p>Made with 💗 by Buse | SheBuildsSTEM</p>
-</footer>
 
 </body>
 </html>
