@@ -248,3 +248,38 @@ footer {
   padding: 25px;
   border-radius: 18px;
 }
+/* ================= TOOLKIT PAGE ================= */
+
+.toolkit-header {
+  padding: 80px 20px;
+  color: white;
+}
+
+.toolkit-container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 40px 20px;
+}
+
+.tool-card {
+  background: rgba(255,255,255,0.9);
+  padding: 30px;
+  margin-bottom: 30px;
+  border-radius: 25px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  text-align: left;
+  transition: 0.3s;
+}
+
+.tool-card:hover {
+  transform: translateY(-8px);
+}
+
+.tool-card h2 {
+  margin-top: 0;
+}
+
+.tool-sub {
+  color: #777;
+  font-weight: 600;
+}
