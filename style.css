@@ -172,3 +172,19 @@ footer {
   color: #ff4fa3;
   font-weight: bold;
 }
+.lang a.active {
+  background: rgba(255, 255, 255, 0.6);
+  color: #ff4fa3;
+}
+/* Project pages wide layout */
+.project-card {
+  max-width: 1000px;   /* daha geniş */
+  padding: 50px;
+  text-align: left;
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+.project-card p {
+  font-size: 1.1rem;
+  color: #333;
+}
