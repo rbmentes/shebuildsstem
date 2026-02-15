@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Speech AI Starter Series — Bölüm 1</title>
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="favicon.jpg" />
+
+  <!-- Font -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<body>
+
+  <section class="post-page">
+    <div class="post-card">
+
+      <!-- Back Button -->
+      <a class="back-btn" href="blog-tr.html">← Blog’a Dön</a>
+
+      <h1>🎧 Speech AI Başlangıç Serisi — Bölüm 1</h1>
+      <p class="subtitle">Ses Özellikleri ve MFCC’yi Anlamak</p>
+
+      <p>
+        Ses kaydettiğimizde aslında elimizde “ses” değil,
+        zaman boyunca uzanan uzun bir sayı dizisi olur.
+      </p>
+
+      <p>
+        Bu sayılar, <b>hava basıncındaki değişimleri</b> temsil eder.
+        Buna <b>waveform (dalga formu)</b> denir.
+        Konuşma, müzik, gürültü… hepsi bir sinyale dönüşür.
+      </p>
+
+      <hr />
+
+      <h2>🌊 Ham Ses Verisini Neden Direkt Kullanamayız?</h2>
+
+      <p>
+        İlk başta şu soru akla gelir:
+        <b>“Neden dalga formunu doğrudan modele vermiyoruz?”</b>
+      </p>
+
+      <p>Çünkü ham ses verisi:</p>
+
+      <ul>
+        <li>Çok uzundur (saniyede binlerce örnek içerir)</li>
+        <li>Gürültülü ve aşırı detaylıdır</li>
+        <li>Klasik ML modelleri için anlaması zordur</li>
+      </ul>
+
+      <p>
+        Bu yüzden ham ses yerine, daha anlamlı hale getirilmiş
+        <b>özellikler (features)</b> çıkarırız.
+      </p>
+
+      <hr />
+
+      <h2>✨ Speech AI’de Feature Extraction Nedir?</h2>
+
+      <p>
+        Feature extraction, sesi daha küçük ve anlamlı bir temsile dönüştürme işlemidir.
+        Amaç: önemli bilgiyi koruyup gereksiz detayları azaltmaktır.
+      </p>
+
+      <p>Konuşma için yakalamak istediğimiz şeyler şunlardır:</p>
+
+      <ul>
+        <li>Ses tonu ve perde (pitch)</li>
+        <li>Kelime telaffuz yapıları</li>
+        <li>Frekans dağılımı</li>
+        <li>Dile özgü ses karakteristikleri</li>
+      </ul>
+
+      <p>
+        Bu alanda en popüler yöntemlerden biri:
+        <b>MFCC</b>.
+      </p>
+
+      <hr />
+
+      <h2>💡 MFCC Nedir?</h2>
+
+      <p><b>MFCC = Mel-Frequency Cepstral Coefficients</b></p>
+
+      <p>
+        MFCC, konuşmayı insan kulağına benzer şekilde temsil etmeye çalışan bir yöntemdir.
+      </p>
+
+      <p>
+        Ham dalga formunu kullanmak yerine,
+        sesin frekans yapısını kompakt şekilde özetler.
+      </p>
+
+      <hr />
+
+      <h2>⚙️ MFCC Nasıl Hesaplanır? (Basitleştirilmiş)</h2>
+
+      <ol>
+        <li>Ses küçük parçalara (frame) bölünür</li>
+        <li>Fourier Transform uygulanır</li>
+        <li>Frekanslar Mel ölçeğine aktarılır</li>
+        <li>Log alınır</li>
+        <li>DCT uygulanarak katsayılar çıkarılır</li>
+      </ol>
+
+      <hr />
+
+      <h2>⚠️ MFCC’nin Sınırlamaları</h2>
+
+      <ul>
+        <li>El yapımı feature engineering içerir</li>
+        <li>Karmaşık örüntüleri kaçırabilir</li>
+        <li>Modern deep learning modelleri genelde daha güçlüdür</li>
+      </ul>
+
+      <hr />
+
+      <h2>🌸 Benim Deneyimim</h2>
+
+      <p>
+        Dil Tanıma (Language Identification) projemde ilk denediğim yöntem MFCC oldu.
+        Speech processing dünyasını anlamaya başladığım ilk anlardan biriydi.
+      </p>
+
+      <p>
+        Sonrasında CNN kullanarak daha iyi sonuçlar elde ettim.
+      </p>
+
+      <h2>➡️ Sıradaki Bölüm</h2>
+      <p><b>Bölüm 2: Konuşmada CNN ile Daha Güçlü Modeller 🎧⚡</b></p>
+
+    </div>
+  </section>
+
+</body>
+</html>
