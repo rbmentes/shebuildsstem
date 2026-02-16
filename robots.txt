@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rbmentes.github.io/shebuildsstem/sitemap.xml
