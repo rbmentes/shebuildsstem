@@ -5,6 +5,8 @@ body {
   background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff);
 }
 
+/* ================= HEADER ================= */
+
 header {
   padding: 80px 20px;
   color: white;
@@ -14,6 +16,8 @@ header {
 h1 {
   font-size: 3rem;
 }
+
+/* ================= BUTTONS ================= */
 
 .btn, .btn2 {
   display: inline-block;
@@ -34,9 +38,13 @@ h1 {
   color: white;
 }
 
+/* ================= SECTIONS ================= */
+
 section {
   padding: 60px 20px;
 }
+
+/* ================= CARDS (GENERAL) ================= */
 
 .card {
   background: rgba(255, 255, 255, 0.85);
@@ -61,6 +69,8 @@ section {
   flex-wrap: wrap;
 }
 
+/* ================= NAV ================= */
+
 nav {
   margin-top: 25px;
 }
@@ -76,7 +86,8 @@ nav a:hover {
   text-decoration: underline;
 }
 
-/* Language Switch */
+/* ================= LANGUAGE SWITCH ================= */
+
 .lang {
   position: absolute;
   top: 25px;
@@ -99,9 +110,10 @@ nav a:hover {
   color: #ff4fa3;
 }
 
-/* Wide Project Layout */
+/* ================= PROJECT PAGE ================= */
+
 .project-card {
-  max-width: 1000px !important;
+  max-width: 1000px;
   width: 90%;
   margin: 40px auto;
   padding: 60px;
@@ -110,30 +122,13 @@ nav a:hover {
   font-size: 1.1rem;
 }
 
-footer {
-  padding: 20px;
-  background: rgba(255,255,255,0.4);
-}
 .project-card .btn2 {
   display: inline-block;
   margin: 20px 0 30px 0;
 }
-.blog-post {
-  max-width: 950px;   /* daha geniş */
-  width: 90%;
-  margin: 40px auto;
-  padding: 50px;
-  text-align: left;
-  line-height: 1.8;
-  font-size: 1.05rem;
-}
-.blog-post p {
-  text-align: left;
-}
-.blog-post h1,
-.blog-post h2 {
-  text-align: center;
-}
+
+/* ================= BLOG SINGLE PAGE ================= */
+
 .blog-container {
   max-width: 850px;
   margin: 80px auto;
@@ -142,6 +137,7 @@ footer {
   border-radius: 25px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.15);
   text-align: left;
+  line-height: 1.75;
 }
 
 .blog-container h2 {
@@ -154,7 +150,6 @@ footer {
 }
 
 .blog-container p {
-  line-height: 1.8;
   margin: 20px 0;
 }
 
@@ -167,55 +162,9 @@ footer {
   opacity: 0.6;
   margin-bottom: 30px;
 }
-.blog-category, .series-list {
-  margin: 40px 0;
-}
 
-.blog-category p,
-.series-list p {
-  opacity: 0.8;
-}
-.post-page {
-  padding: 80px 20px;
-}
+/* ================= BLOG HUB PAGE ================= */
 
-.post-card {
-  background: rgba(255, 255, 255, 0.92);
-  max-width: 850px;
-  margin: auto;
-  padding: 50px;
-  border-radius: 25px;
-  text-align: left;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-}
-
-.post-card h1 {
-  font-size: 2.3rem;
-  margin-bottom: 10px;
-}
-
-.subtitle {
-  font-style: italic;
-  margin-bottom: 30px;
-  color: gray;
-}
-
-.post-card h2 {
-  margin-top: 40px;
-}
-
-.post-card ul, 
-.post-card ol {
-  margin-left: 25px;
-}
-
-.back-btn {
-  display: inline-block;
-  margin-bottom: 25px;
-  text-decoration: none;
-  font-weight: bold;
-  color: #ff4fa3;
-}
 .hub-container {
   max-width: 900px;
   margin: auto;
@@ -234,7 +183,10 @@ footer {
   padding: 25px;
   border-radius: 18px;
   box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  backdrop-filter: blur(6px);
 }
+
+/* ================= BLOG POST GRID ================= */
 
 .post-grid {
   display: grid;
@@ -243,11 +195,24 @@ footer {
   margin-top: 20px;
 }
 
-.post-card {
+/* HUB post cards only */
+.post-grid .post-card {
   background: rgba(255,255,255,0.75);
   padding: 25px;
   border-radius: 18px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  transition: 0.3s ease;
+  text-align: left;
 }
+
+.post-grid .post-card:hover {
+  transform: translateY(-4px);
+}
+
+.post-grid .post-card p {
+  line-height: 1.6;
+}
+
 /* ================= TOOLKIT PAGE ================= */
 
 .toolkit-header {
@@ -275,14 +240,12 @@ footer {
   transform: translateY(-8px);
 }
 
-.tool-card h2 {
-  margin-top: 0;
-}
-
 .tool-sub {
   color: #777;
   font-weight: 600;
 }
+
+/* ================= MINI SERIES ================= */
 
 .blog-category {
   margin-top: 60px;
@@ -294,22 +257,15 @@ footer {
   font-size: 0.9rem;
 }
 
-.blog-card {
-  background: #fff;
-  border: 1px solid #f0f0f0;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  transition: 0.3s ease;
-}
-
-.blog-card:hover {
-  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-  transform: translateY(-3px);
-}
-
 .series-desc {
   color: #777;
   margin-bottom: 20px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+}
+
+/* ================= FOOTER ================= */
+
+footer {
+  padding: 20px;
+  background: rgba(255,255,255,0.4);
 }

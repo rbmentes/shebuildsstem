@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>What Is Overfitting? | AI & Signal Processing Essentials</title>
 
-  <meta name="description" content="Beginner-friendly explanation of overfitting in machine learning with examples from speech AI and signal processing.">
+  <title>What Is Overfitting? | AI & Signal Processing Essentials – SheBuildsSTEM</title>
+
+  <meta name="description" content="Detailed beginner-friendly explanation of overfitting in machine learning with examples from speech AI and signal processing.">
 
   <link rel="stylesheet" href="style.css">
   <link rel="icon" href="favicon.jpg">
@@ -20,66 +21,109 @@
 
 <section class="blog-container">
 
+  <p class="series-label">Mini Technical Series</p>
   <h2>🎧 AI & Signal Processing Essentials — Part 1</h2>
   <h3>What Is Overfitting? (And Why It Happens)</h3>
 
   <p>
-    When we train a machine learning model, we want it to learn patterns — not memorize data.
-    Overfitting happens when a model learns the training data too well, including the noise.
+    When we train a machine learning model, our goal is not to make it memorize data,
+    but to help it learn meaningful patterns.
+    <strong>Overfitting</strong> occurs when a model learns the training data too well —
+    including random noise and small fluctuations that do not represent real structure.
   </p>
 
   <h3>🧠 Simple Intuition</h3>
   <p>
-    Imagine memorizing past exam questions perfectly. You score well on the same questions,
-    but struggle when the questions change slightly. That is overfitting.
+    Imagine memorizing past exam questions perfectly.
+    If the exact same questions appear again, you will score very high.
+    But if the questions change slightly, you may struggle.
+    That happens because you memorized instead of truly understanding the topic.
+  </p>
+
+  <p>
+    Overfitting works the same way.
+    The model memorizes the dataset instead of learning generalizable rules.
   </p>
 
   <h3>📊 Training vs Test Performance</h3>
   <ul>
-    <li>Training accuracy → very high</li>
-    <li>Validation/Test accuracy → significantly lower</li>
+    <li><strong>Training accuracy</strong> → Very high</li>
+    <li><strong>Validation/Test accuracy</strong> → Significantly lower</li>
   </ul>
+
+  <p>
+    This gap indicates that the model performs well on data it has seen,
+    but struggles with unseen data.
+  </p>
 
   <h3>🔬 Technical View</h3>
   <p>
-    Overfitting occurs when a model has too much capacity relative to the dataset size.
-    Deep networks can start fitting noise instead of meaningful patterns.
+    Overfitting typically happens when model capacity is too large
+    relative to the dataset size.
+    Deep neural networks, especially when trained without sufficient data
+    or regularization, can begin modeling random noise instead of
+    meaningful signal patterns.
+  </p>
+
+  <p>
+    From a statistical perspective,
+    as model complexity increases, variance increases as well.
+    High variance leads to poor generalization performance.
   </p>
 
   <h3>⚡ Why Does It Happen?</h3>
   <ul>
-    <li>Model too complex</li>
-    <li>Dataset too small</li>
-    <li>Training too long</li>
-    <li>No regularization</li>
+    <li>The model is too complex</li>
+    <li>The dataset is too small</li>
+    <li>Training continues for too many epochs</li>
+    <li>No regularization techniques are applied</li>
   </ul>
 
   <h3>🎧 Overfitting in Speech AI</h3>
   <p>
-    In speech tasks like deepfake detection, overfitting may appear as very high training accuracy
-    but much lower validation accuracy.
+    In speech-based AI tasks such as deepfake voice detection,
+    overfitting is a common challenge.
+  </p>
+
+  <p>
+    For example, a model might learn speaker-specific traits
+    or background noise patterns from the training data.
+    This results in very high training accuracy,
+    but poor performance when evaluated on recordings from different environments.
   </p>
 
   <h3>🛠 How to Prevent It</h3>
   <ul>
-    <li>More data</li>
-    <li>Dropout & L2 regularization</li>
-    <li>Early stopping</li>
-    <li>Data augmentation</li>
+    <li>Collect more data</li>
+    <li>Apply Dropout and L2 regularization</li>
+    <li>Use Early Stopping</li>
+    <li>Apply Data Augmentation techniques</li>
   </ul>
 
   <h3>🔌 EE Perspective</h3>
   <p>
-    From an Electrical Engineering perspective, a system must generalize to variations.
-    AI models are no different.
+    In Electrical & Electronics Engineering,
+    a well-designed system must respond consistently
+    under varying input conditions.
+  </p>
+
+  <p>
+    AI models are also systems.
+    They should generalize to new signals,
+    not just perform well on previously seen samples.
   </p>
 
   <h3>💡 Final Takeaway</h3>
   <p>
-    The goal is not to make the model memorize everything, but to make it learn what matters.
+    The goal is not to build a model that memorizes everything.
+    The goal is to build a model that understands what truly matters.
   </p>
 
-  <!-- SERIES NAVIGATION -->
+  <p>
+    A strong model performs well not only on training data,
+    but also on data it has never seen before.
+  </p>
+
   <div class="series-nav">
     <a class="btn-outline" href="blog.html">← Back to Blog</a>
     <a class="btn" href="ai-essentials-part2.html">Next →</a>
