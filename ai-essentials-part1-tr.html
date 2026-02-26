@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Overfitting Nedir? | AI & Sinyal İşleme Temelleri – SheBuildsSTEM</title>
+
+  <meta name="description" content="Makine öğrenmesinde overfitting nedir? Konuşma yapay zekası ve sinyal işleme örnekleriyle detaylı ve anlaşılır açıklama.">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<header>
+  <h1>SheBuildsSTEM 💗⚡</h1>
+</header>
+
+<section class="blog-container">
+
+  <p class="series-label">Mini Teknik Seri</p>
+  <h2>🎧 AI & Sinyal İşleme Temelleri — Bölüm 1</h2>
+  <h3>Overfitting Nedir? (Ve Neden Oluşur?)</h3>
+
+  <p>
+    Bir makine öğrenmesi modeli eğitirken amacımız veriyi ezberletmek değil,
+    verideki anlamlı örüntüleri öğretmektir. 
+    <strong>Overfitting</strong>, modelin eğitim verisini gereğinden fazla öğrenmesi,
+    hatta verideki rastgele gürültüyü bile ezberlemesi durumudur.
+  </p>
+
+  <h3>🧠 Basit Sezgi</h3>
+  <p>
+    Geçmiş yılların sınav sorularını tamamen ezberlediğini düşün.
+    Aynı sorular tekrar gelirse çok yüksek not alırsın.
+    Fakat soru biraz farklı gelirse zorlanırsın.
+    Çünkü konuyu anlamadın, sadece ezberledin.
+  </p>
+
+  <p>
+    İşte overfitting tam olarak budur:
+    Model konuyu anlamak yerine eğitim verisini ezberler.
+  </p>
+
+  <h3>📊 Eğitim vs Test Performansı</h3>
+  <ul>
+    <li><strong>Eğitim doğruluğu</strong> → Çok yüksek</li>
+    <li><strong>Doğrulama/Test doğruluğu</strong> → Belirgin şekilde daha düşük</li>
+  </ul>
+
+  <p>
+    Bu durum, modelin yeni ve daha önce görmediği veriler üzerinde
+    iyi performans gösteremediğini gösterir.
+  </p>
+
+  <h3>🔬 Teknik Bakış Açısı</h3>
+  <p>
+    Overfitting genellikle model kapasitesinin veri miktarına göre fazla olması durumunda ortaya çıkar.
+    Özellikle derin sinir ağları, yeterli veri veya düzenlileştirme (regularization) olmadan
+    eğitildiğinde rastgele gürültüyü bile öğrenebilir.
+  </p>
+
+  <p>
+    Matematiksel olarak bakarsak,
+    model karmaşıklığı arttıkça varyans da artar.
+    Bu da genelleme hatasına yol açar.
+  </p>
+
+  <h3>⚡ Neden Oluşur?</h3>
+  <ul>
+    <li>Model çok karmaşık</li>
+    <li>Veri seti çok küçük</li>
+    <li>Eğitim süresi çok uzun</li>
+    <li>Regularization teknikleri kullanılmamış</li>
+  </ul>
+
+  <h3>🎧 Konuşma Yapay Zekasında Overfitting</h3>
+  <p>
+    Deepfake ses tespiti gibi konuşma tabanlı yapay zeka görevlerinde,
+    overfitting sık görülen bir problemdir.
+  </p>
+
+  <p>
+    Örneğin model,
+    belirli hoparlör özelliklerini veya kayıt ortamına ait gürültü örüntülerini öğrenebilir.
+    Bu durumda eğitim doğruluğu çok yüksek olur,
+    ancak farklı ortamdan gelen test verilerinde performans düşer.
+  </p>
+
+  <h3>🛠 Nasıl Önlenir?</h3>
+  <ul>
+    <li>Daha fazla veri toplamak</li>
+    <li>Dropout ve L2 regularization uygulamak</li>
+    <li>Early stopping kullanmak</li>
+    <li>Data augmentation (veri artırma) yapmak</li>
+  </ul>
+
+  <h3>🔌 Elektrik & Elektronik Perspektifi</h3>
+  <p>
+    Elektrik-Elektronik mühendisliğinde bir sistemin,
+    farklı giriş sinyallerine karşı kararlı ve tutarlı davranması beklenir.
+  </p>
+
+  <p>
+    Yapay zeka modelleri de birer sistemdir.
+    Gerçek dünyadaki değişimlere uyum sağlayabilmeli,
+    yalnızca eğitim verisine bağımlı kalmamalıdır.
+  </p>
+
+  <h3>💡 Sonuç</h3>
+  <p>
+    Amaç modeli her şeyi ezberleyecek kadar karmaşık yapmak değildir.
+    Amaç, gerçekten önemli olan örüntüleri öğrenmesini sağlamaktır.
+  </p>
+
+  <p>
+    İyi bir model, görmediği veriler üzerinde de güçlü performans gösterebilmelidir.
+  </p>
+
+  <div class="series-nav">
+    <a class="btn-outline" href="blog-tr.html">← Blog’a Dön</a>
+    <a class="btn" href="ai-essentials-part2-tr.html">Sonraki →</a>
+  </div>
+
+</section>
+
+<footer>
+  <p>💗 Buse tarafından hazırlandı | SheBuildsSTEM</p>
+</footer>
+
+</body>
+</html>
