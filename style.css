@@ -283,3 +283,26 @@ footer {
   color: #777;
   font-weight: 600;
 }
+
+* ===== SERIES NAVIGATION ===== */
+
+.series-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 60px;
+}
+
+.btn-outline {
+  padding: 10px 22px;
+  border: 2px solid white;
+  border-radius: 30px;
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.btn-outline:hover {
+  background: rgba(255,255,255,0.25);
+}
