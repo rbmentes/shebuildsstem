@@ -284,25 +284,26 @@ footer {
   font-weight: 600;
 }
 
-* ===== SERIES NAVIGATION ===== */
-
-.series-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.blog-category {
   margin-top: 60px;
 }
 
-.btn-outline {
-  padding: 10px 22px;
-  border: 2px solid white;
-  border-radius: 30px;
-  text-decoration: none;
-  color: white;
-  font-weight: 600;
-  transition: 0.3s;
+.category-desc {
+  color: #777;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
 }
 
-.btn-outline:hover {
-  background: rgba(255,255,255,0.25);
+.blog-card {
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  transition: 0.3s ease;
+}
+
+.blog-card:hover {
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+  transform: translateY(-3px);
 }
