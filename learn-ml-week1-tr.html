@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Benimle Makine Öğrenmesi Öğren — Hafta 1 | SheBuildsSTEM</title>
+
+  <meta name="description" content="Makine öğrenmesi serisi Hafta 1: ML nedir, supervised ve unsupervised öğrenme, veri seti, feature, label ve genelleme kavramları.">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<header>
+  <h1>SheBuildsSTEM 💗⚡</h1>
+</header>
+
+<section class="blog-container">
+
+  <p class="series-label">Benimle Makine Öğrenmesi Öğren</p>
+  <h2>Hafta 1 — Makine Öğrenmesi Nedir?</h2>
+
+  <p class="date">Bahar 2026</p>
+
+  <h3>📌 Bu Seriye Neden Başladım?</h3>
+  <p>
+    Bu dönem ilk kez Makine Öğrenmesi dersi alıyorum.
+    Sadece sınava çalışmak yerine, öğrendiklerimi adım adım yazıya dökmeye karar verdim.
+  </p>
+
+  <p>
+    Bu seri bir uzman anlatımı değil.
+    Bir mühendislik öğrencisinin sıfırdan sistematik bir anlayış inşa etme süreci.
+    Hem kendim için hem de birlikte öğrenmek isteyen herkes için.
+  </p>
+
+  <h3>🧠 Makine Öğrenmesi Nedir?</h3>
+
+  <p>
+    Makine Öğrenmesi (Machine Learning), bilgisayarların açıkça programlanmadan
+    verilerden örüntü öğrenmesini sağlayan bir alandır.
+  </p>
+
+  <p>
+    Klasik programlamada:
+  </p>
+
+  <ul>
+    <li>Kuralları biz yazarız</li>
+    <li>Bilgisayar kuralları uygular</li>
+  </ul>
+
+  <p>
+    Makine öğrenmesinde ise:
+  </p>
+
+  <ul>
+    <li>Veri veririz</li>
+    <li>Örnekler veririz</li>
+    <li>Bazen doğru cevapları da veririz</li>
+  </ul>
+
+  <p>
+    Ve model, giriş ile çıkış arasındaki ilişkiyi kendisi öğrenir.
+  </p>
+
+  <p>
+    Kısaca:
+    <strong>Makine öğrenmesi = Matematik destekli örüntü çıkarımı.</strong>
+  </p>
+
+  <h3>🔍 Makine Öğrenmesi Türleri</h3>
+
+  <h4>1️⃣ Denetimli Öğrenme (Supervised Learning)</h4>
+  <p>
+    Veri etiketlidir. Yani doğru cevaplar bellidir.
+  </p>
+
+  <p>
+    Örnekler:
+  </p>
+
+  <ul>
+    <li>Ev fiyatı tahmini (Regression)</li>
+    <li>Sahte ses tespiti (Classification)</li>
+    <li>Spam tespiti</li>
+  </ul>
+
+  <p>
+    Model, giriş (X) ile çıkış (y) arasındaki ilişkiyi öğrenir.
+  </p>
+
+  <h4>2️⃣ Denetimsiz Öğrenme (Unsupervised Learning)</h4>
+  <p>
+    Veri etiketli değildir.
+  </p>
+
+  <p>
+    Model, verideki gizli yapıyı keşfetmeye çalışır.
+  </p>
+
+  <ul>
+    <li>Benzer verileri gruplayarak clustering yapmak</li>
+    <li>Boyut indirgeme</li>
+  </ul>
+
+  <h4>3️⃣ Pekiştirmeli Öğrenme (Reinforcement Learning)</h4>
+  <p>
+    Model bir ortamla etkileşime girer ve ödül-ceza sistemiyle öğrenir.
+  </p>
+
+  <p>
+    Genellikle robotik, oyun ve kontrol sistemlerinde kullanılır.
+  </p>
+
+  <h3>📊 Regression ve Classification</h3>
+
+  <p>
+    Denetimli öğrenme iki ana problem türüne ayrılır:
+  </p>
+
+  <h4>Regression</h4>
+  <p>
+    Çıkış sürekli bir değerdir.
+  </p>
+
+  <ul>
+    <li>Sıcaklık tahmini</li>
+    <li>Enerji tüketimi</li>
+  </ul>
+
+  <h4>Classification</h4>
+  <p>
+    Çıkış kategoriktir.
+  </p>
+
+  <ul>
+    <li>Gerçek / Sahte</li>
+    <li>Hastalık var / yok</li>
+  </ul>
+
+  <p>
+    Benim deepfake projem bir classification problemiydi.
+  </p>
+
+  <h3>📂 Veri Seti, Feature ve Label</h3>
+
+  <p>
+    Her makine öğrenmesi problemi bir veri seti ile başlar.
+  </p>
+
+  <p>
+    Veri seti genellikle şunlardan oluşur:
+  </p>
+
+  <ul>
+    <li><strong>Feature (X)</strong> → Giriş değişkenleri</li>
+    <li><strong>Label (y)</strong> → Hedef çıktı</li>
+  </ul>
+
+  <p>
+    Konuşma işleme örneğinde:
+  </p>
+
+  <ul>
+    <li>Feature → MFCC, spektrogram değerleri</li>
+    <li>Label → Real / Fake</li>
+  </ul>
+
+  <p>
+    Makine öğrenmesi aslında veri dönüşüm sürecidir.
+  </p>
+
+  <h3>🎯 Eğitim ve Test Verisi</h3>
+
+  <p>
+    Modelin gerçekten öğrenip öğrenmediğini anlamak için veri ikiye ayrılır:
+  </p>
+
+  <ul>
+    <li>Training set → Model burada öğrenir</li>
+    <li>Test set → Model burada değerlendirilir</li>
+  </ul>
+
+  <p>
+    Amaç: Genelleme yapabilen bir model üretmektir.
+  </p>
+
+  <h3>⚡ Genelleme Neden Önemli?</h3>
+
+  <p>
+    Eğer model eğitim verisini ezberler ama yeni veride başarısız olursa,
+    o model işe yaramaz.
+  </p>
+
+  <p>
+    Bu durum overfitting ile ilgilidir.
+  </p>
+
+  <p>
+    Makine öğrenmesi ezberleme değil, örüntü yakalamadır.
+  </p>
+
+  <h3>💡 Bu Hafta Fark Ettiğim Şey</h3>
+
+  <p>
+    Makine öğrenmesi sihir değildir.
+  </p>
+
+  <p>
+    Temel kavramları anlamadan algoritmalara geçmek hata olur.
+    Veri yapısını anlamak ve problemi doğru tanımlamak ilk adımdır.
+  </p>
+
+  <div class="series-nav">
+    <a class="btn" href="learn-ml-week2-tr.html">Sonraki Hafta →</a>
+  </div>
+
+</section>
+
+<footer>
+  <p>💗 Buse tarafından hazırlandı | SheBuildsSTEM</p>
+</footer>
+
+</body>
+</html>
