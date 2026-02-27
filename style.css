@@ -1,3 +1,5 @@
+/* ================= GLOBAL ================= */
+
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
@@ -38,35 +40,15 @@ h1 {
   color: white;
 }
 
-/* ================= SECTIONS ================= */
-
-section {
-  padding: 60px 20px;
-}
-
-/* ================= CARDS (GENERAL) ================= */
-
-.card {
-  background: rgba(255, 255, 255, 0.85);
-  margin: 20px auto;
-  padding: 25px;
-  max-width: 450px;
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.4);
-  transition: 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-8px);
-}
-
-.grid {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
+.btn-outline {
+  display: inline-block;
+  padding: 12px 25px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  border: 2px solid #ff4fa3;
+  color: #ff4fa3;
+  background: transparent;
 }
 
 /* ================= NAV ================= */
@@ -110,6 +92,37 @@ nav a:hover {
   color: #ff4fa3;
 }
 
+/* ================= SECTIONS ================= */
+
+section {
+  padding: 60px 20px;
+}
+
+/* ================= GENERAL CARDS ================= */
+
+.card {
+  background: rgba(255, 255, 255, 0.85);
+  margin: 20px auto;
+  padding: 25px;
+  max-width: 450px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.4);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.grid {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 /* ================= PROJECT PAGE ================= */
 
 .project-card {
@@ -120,11 +133,6 @@ nav a:hover {
   text-align: left;
   line-height: 1.9;
   font-size: 1.1rem;
-}
-
-.project-card .btn2 {
-  display: inline-block;
-  margin: 20px 0 30px 0;
 }
 
 /* ================= BLOG SINGLE PAGE ================= */
@@ -158,9 +166,26 @@ nav a:hover {
   line-height: 1.8;
 }
 
-.date {
-  opacity: 0.6;
-  margin-bottom: 30px;
+/* ================= SERIES LABEL ================= */
+
+.series-label {
+  display: inline-block;
+  background-color: #ffe6f0;
+  color: #d63384;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+/* ================= SERIES NAVIGATION ================= */
+
+.series-nav {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 /* ================= BLOG HUB PAGE ================= */
@@ -195,7 +220,6 @@ nav a:hover {
   margin-top: 20px;
 }
 
-/* HUB post cards only */
 .post-grid .post-card {
   background: rgba(255,255,255,0.75);
   padding: 25px;
@@ -211,6 +235,12 @@ nav a:hover {
 
 .post-grid .post-card p {
   line-height: 1.6;
+}
+
+.series-desc {
+  color: #777;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
 }
 
 /* ================= TOOLKIT PAGE ================= */
@@ -238,29 +268,6 @@ nav a:hover {
 
 .tool-card:hover {
   transform: translateY(-8px);
-}
-
-.tool-sub {
-  color: #777;
-  font-weight: 600;
-}
-
-/* ================= MINI SERIES ================= */
-
-.blog-category {
-  margin-top: 60px;
-}
-
-.category-desc {
-  color: #777;
-  margin-bottom: 20px;
-  font-size: 0.9rem;
-}
-
-.series-desc {
-  color: #777;
-  margin-bottom: 20px;
-  font-size: 0.95rem;
 }
 
 /* ================= FOOTER ================= */

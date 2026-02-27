@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Bias vs Variance | AI & Signal Processing Essentials – SheBuildsSTEM</title>
+
+  <meta name="description" content="Understanding the bias-variance tradeoff in machine learning with intuitive explanations and speech AI examples.">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<header>
+  <h1>SheBuildsSTEM 💗⚡</h1>
+</header>
+
+<section class="blog-container">
+
+  <p class="series-label">Mini Technical Series</p>
+  <h2>🎧 AI & Signal Processing Essentials — Part 2</h2>
+  <h3>Bias vs Variance (The Core Tradeoff)</h3>
+
+  <p>
+    In Part 1, we discussed overfitting — when a model memorizes instead of generalizes.
+    But to truly understand overfitting, we need to understand two fundamental concepts:
+    <strong>bias</strong> and <strong>variance</strong>.
+  </p>
+
+  <h3>🧠 What Is Bias?</h3>
+
+  <p>
+    Bias refers to the error introduced by simplifying assumptions in the model.
+    A high-bias model is too simple to capture the true structure of the data.
+  </p>
+
+  <p>
+    This often leads to <strong>underfitting</strong> —
+    the model performs poorly on both training and test data.
+  </p>
+
+  <h3>📊 What Is Variance?</h3>
+
+  <p>
+    Variance measures how sensitive a model is to small changes in the training data.
+    A high-variance model changes drastically when trained on slightly different data.
+  </p>
+
+  <p>
+    This leads to <strong>overfitting</strong> —
+    excellent performance on training data,
+    but poor performance on unseen data.
+  </p>
+
+  <h3>⚖ The Tradeoff</h3>
+
+  <p>
+    Bias and variance move in opposite directions.
+    When model complexity increases:
+  </p>
+
+  <ul>
+    <li>Bias decreases</li>
+    <li>Variance increases</li>
+  </ul>
+
+  <p>
+    When model complexity decreases:
+  </p>
+
+  <ul>
+    <li>Bias increases</li>
+    <li>Variance decreases</li>
+  </ul>
+
+  <p>
+    The goal is to find the “sweet spot” —
+    a model complex enough to capture real patterns,
+    but simple enough to generalize.
+  </p>
+
+  <h3>🎧 Bias vs Variance in Speech AI</h3>
+
+  <p>
+    In speech processing tasks like deepfake voice detection:
+  </p>
+
+  <ul>
+    <li>A very shallow model may have high bias (miss important acoustic cues).</li>
+    <li>A very deep model may have high variance (memorize speaker-specific noise).</li>
+  </ul>
+
+  <p>
+    Proper regularization and sufficient data help balance this tradeoff.
+  </p>
+
+  <h3>🔬 Mathematical Perspective</h3>
+
+  <p>
+    The expected prediction error can be decomposed into:
+  </p>
+
+  <p>
+    <strong>Error = Bias² + Variance + Irreducible Noise</strong>
+  </p>
+
+  <p>
+    We cannot eliminate noise, but we can control bias and variance.
+  </p>
+
+  <h3>🔌 EE Perspective</h3>
+
+  <p>
+    From an Electrical & Electronics Engineering perspective,
+    this tradeoff resembles filter design.
+  </p>
+
+  <p>
+    A filter that is too rigid ignores important frequencies (high bias).
+    A filter that is too sensitive amplifies noise (high variance).
+  </p>
+
+  <h3>💡 Final Takeaway</h3>
+
+  <p>
+    Overfitting is not random.
+    It is the result of high variance.
+  </p>
+
+  <p>
+    Underfitting is not laziness.
+    It is the result of high bias.
+  </p>
+
+  <p>
+    Strong models are built by balancing both.
+  </p>
+
+  <div class="series-nav">
+    <a class="btn-outline" href="ai-essentials-part1.html">← Previous</a>
+    <a class="btn" href="ai-essentials-part3.html">Next →</a>
+  </div>
+
+</section>
+
+<footer>
+  <p>Made with 💗 by Buse | SheBuildsSTEM</p>
+</footer>
+
+</body>
+</html>
