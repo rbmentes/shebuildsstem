@@ -1,3 +1,5 @@
+/* ================= GLOBAL ================= */
+
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
@@ -5,28 +7,40 @@ body {
   background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff);
 }
 
-/* HEADER */
+/* ================= HEADER ================= */
+
 header {
   padding: 80px 20px;
   color: white;
+  position: relative;
 }
 
 h1 {
   font-size: 3rem;
 }
 
-/* BUTTONS */
-.btn {
+/* ================= BUTTONS ================= */
+
+.btn, .btn2 {
   display: inline-block;
   margin: 15px;
   padding: 12px 25px;
   border-radius: 30px;
   text-decoration: none;
   font-weight: bold;
+}
+
+.btn {
   background: white;
   color: #ff4fa3;
 }
 
+.btn2 {
+  border: 2px solid white;
+  color: white;
+}
+
+/* NEW: outline button (series nav için) */
 .btn-outline {
   display: inline-block;
   padding: 12px 25px;
@@ -35,9 +49,151 @@ h1 {
   font-weight: bold;
   border: 2px solid #ff4fa3;
   color: #ff4fa3;
+  background: transparent;
 }
 
-/* HUB PAGE */
+/* ================= NAV ================= */
+
+nav {
+  margin-top: 25px;
+}
+
+nav a {
+  margin: 0 15px;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* ================= LANGUAGE SWITCH ================= */
+
+.lang {
+  position: absolute;
+  top: 25px;
+  right: 30px;
+  display: flex;
+  gap: 10px;
+}
+
+.lang a {
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lang a.active {
+  background: rgba(255, 255, 255, 0.65);
+  color: #ff4fa3;
+}
+
+/* ================= SECTIONS ================= */
+
+section {
+  padding: 60px 20px;
+}
+
+/* ================= TOOLKIT / GENERAL CARDS ================= */
+
+.card {
+  background: rgba(255, 255, 255, 0.85);
+  margin: 20px auto;
+  padding: 25px;
+  max-width: 450px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.4);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.grid {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ================= PROJECT PAGE ================= */
+
+.project-card {
+  max-width: 1000px;
+  width: 90%;
+  margin: 40px auto;
+  padding: 60px;
+  text-align: left;
+  line-height: 1.9;
+  font-size: 1.1rem;
+}
+
+/* ================= BLOG SINGLE PAGE ================= */
+
+.blog-container {
+  max-width: 850px;
+  margin: 80px auto;
+  background: white;
+  padding: 60px;
+  border-radius: 25px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  text-align: left;
+  line-height: 1.8;
+}
+
+.blog-container h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.blog-container h3 {
+  margin-top: 35px;
+}
+
+.blog-container p {
+  margin: 20px 0;
+}
+
+.blog-container ul {
+  margin-top: 20px;
+  line-height: 1.8;
+}
+
+.date {
+  opacity: 0.6;
+  margin-bottom: 30px;
+}
+
+/* NEW: Series label */
+.series-label {
+  display: inline-block;
+  background-color: #ffe6f0;
+  color: #d63384;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+/* NEW: Series navigation */
+.series-nav {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+/* ================= BLOG HUB PAGE ================= */
+
 .hub-container {
   max-width: 900px;
   margin: auto;
@@ -58,7 +214,8 @@ h1 {
   box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 
-/* POST GRID */
+/* ================= BLOG POST CARDS ================= */
+
 .post-grid {
   display: grid;
   gap: 20px;
@@ -78,41 +235,8 @@ h1 {
   transform: translateY(-4px);
 }
 
-.post-card p {
-  line-height: 1.6;
-}
+/* ================= FOOTER ================= */
 
-/* BLOG SINGLE PAGE */
-.blog-container {
-  max-width: 850px;
-  margin: 80px auto;
-  background: white;
-  padding: 60px;
-  border-radius: 25px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-  text-align: left;
-  line-height: 1.75;
-}
-
-.series-label {
-  display: inline-block;
-  background-color: #ffe6f0;
-  color: #d63384;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  margin-bottom: 15px;
-  font-weight: 600;
-}
-
-.series-nav {
-  margin-top: 50px;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-/* FOOTER */
 footer {
   padding: 20px;
   background: rgba(255,255,255,0.4);
