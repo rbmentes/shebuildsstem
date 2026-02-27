@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Bias ve Variance | AI & Sinyal İşleme Temelleri – SheBuildsSTEM</title>
+
+  <meta name="description" content="Makine öğrenmesinde bias-variance dengesi nedir? Overfitting ve underfitting ile ilişkisi ve konuşma yapay zekası örnekleri.">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<header>
+  <h1>SheBuildsSTEM 💗⚡</h1>
+</header>
+
+<section class="blog-container">
+
+  <p class="series-label">Mini Teknik Seri</p>
+  <h2>🎧 AI & Sinyal İşleme Temelleri — Bölüm 2</h2>
+  <h3>Bias ve Variance (Temel Denge)</h3>
+
+  <p>
+    Bir önceki bölümde overfitting kavramını inceledik.
+    Ancak overfitting’i gerçekten anlamak için iki temel kavramı bilmemiz gerekir:
+    <strong>bias</strong> ve <strong>variance</strong>.
+  </p>
+
+  <h3>🧠 Bias Nedir?</h3>
+
+  <p>
+    Bias, modelin yaptığı basitleştirme varsayımlarından kaynaklanan hatadır.
+    Yüksek bias’a sahip bir model,
+    verinin gerçek yapısını yakalayamayacak kadar basittir.
+  </p>
+
+  <p>
+    Bu genellikle <strong>underfitting</strong> ile sonuçlanır —
+    model hem eğitim hem de test verisinde düşük performans gösterir.
+  </p>
+
+  <h3>📊 Variance Nedir?</h3>
+
+  <p>
+    Variance, modelin eğitim verisindeki küçük değişikliklere
+    ne kadar hassas olduğunu ölçer.
+  </p>
+
+  <p>
+    Yüksek variance’a sahip bir model,
+    verideki küçük değişimlerde bile büyük farklılıklar gösterir.
+    Bu da <strong>overfitting</strong>’e yol açar —
+    eğitimde çok iyi, testte zayıf performans.
+  </p>
+
+  <h3>⚖ Bias–Variance Dengesi</h3>
+
+  <p>
+    Model karmaşıklığı arttıkça:
+  </p>
+
+  <ul>
+    <li>Bias azalır</li>
+    <li>Variance artar</li>
+  </ul>
+
+  <p>
+    Model karmaşıklığı azaldıkça:
+  </p>
+
+  <ul>
+    <li>Bias artar</li>
+    <li>Variance azalır</li>
+  </ul>
+
+  <p>
+    Amaç, gerçek örüntüleri yakalayabilecek kadar karmaşık,
+    fakat genelleme yapabilecek kadar sade bir model bulmaktır.
+  </p>
+
+  <h3>🎧 Konuşma Yapay Zekasında Bias & Variance</h3>
+
+  <p>
+    Deepfake ses tespiti gibi konuşma tabanlı sistemlerde:
+  </p>
+
+  <ul>
+    <li>Çok basit bir model önemli akustik özellikleri kaçırabilir (yüksek bias).</li>
+    <li>Çok derin bir model hoparlör gürültüsünü ezberleyebilir (yüksek variance).</li>
+  </ul>
+
+  <p>
+    Regularization ve yeterli veri,
+    bu dengeyi sağlamaya yardımcı olur.
+  </p>
+
+  <h3>🔬 Matematiksel Perspektif</h3>
+
+  <p>
+    Beklenen tahmin hatası şu şekilde ayrıştırılabilir:
+  </p>
+
+  <p>
+    <strong>Hata = Bias² + Variance + İndirgenemez Gürültü</strong>
+  </p>
+
+  <p>
+    Gürültüyü tamamen ortadan kaldıramayız,
+    ancak bias ve variance’ı kontrol edebiliriz.
+  </p>
+
+  <h3>🔌 Elektrik & Elektronik Perspektifi</h3>
+
+  <p>
+    Bu denge, filtre tasarımına benzer.
+  </p>
+
+  <p>
+    Çok katı bir filtre önemli frekansları kaçırabilir (yüksek bias).
+    Çok hassas bir filtre ise gürültüyü büyütebilir (yüksek variance).
+  </p>
+
+  <h3>💡 Sonuç</h3>
+
+  <p>
+    Overfitting rastgele değildir —
+    yüksek variance sonucudur.
+  </p>
+
+  <p>
+    Underfitting tembellik değildir —
+    yüksek bias sonucudur.
+  </p>
+
+  <p>
+    Güçlü modeller bu iki kavram arasında doğru dengeyi kurar.
+  </p>
+
+  <div class="series-nav">
+    <a class="btn-outline" href="ai-essentials-part1-tr.html">← Önceki</a>
+    <a class="btn" href="ai-essentials-part3-tr.html">Sonraki →</a>
+  </div>
+
+</section>
+
+<footer>
+  <p>💗 Buse tarafından hazırlandı | SheBuildsSTEM</p>
+</footer>
+
+</body>
+</html>
