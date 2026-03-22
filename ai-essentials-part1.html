@@ -3,133 +3,377 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>What Is Overfitting? | AI & Signal Processing Essentials – SheBuildsSTEM</title>
-
   <meta name="description" content="Detailed beginner-friendly explanation of overfitting in machine learning with examples from speech AI and signal processing.">
-
-  <link rel="stylesheet" href="style.css">
   <link rel="icon" href="favicon.jpg">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff);
+      min-height: 100vh;
+      color: #2d2d2d;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+
+    header a {
+      display: inline-block;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: white;
+      text-decoration: none;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.12);
+      margin-bottom: 20px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      background: rgba(255,255,255,0.25);
+      color: white;
+      padding: 7px 18px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.4);
+      transition: background 0.2s;
+    }
+
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+
+    /* ── Article container ── */
+    .blog-container {
+      max-width: 780px;
+      margin: 0 auto 80px;
+      padding: 0 20px;
+    }
+
+    /* ── Article card ── */
+    .article-card {
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.55);
+      border-radius: 28px;
+      padding: 52px 56px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.11);
+    }
+
+    /* ── Series label ── */
+    .series-label {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      color: white;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    /* ── Title block ── */
+    .article-card .series-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #a855f7;
+      margin-bottom: 8px;
+    }
+
+    .article-card h2 {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: #2d2d2d;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .article-meta {
+      font-size: 0.78rem;
+      color: #999;
+      margin-bottom: 36px;
+      padding-bottom: 28px;
+      border-bottom: 2px solid rgba(168,85,247,0.12);
+    }
+
+    /* ── Body text ── */
+    .article-card p {
+      font-size: 0.97rem;
+      color: #444;
+      line-height: 1.9;
+      margin-bottom: 18px;
+    }
+
+    /* ── Section headings ── */
+    .article-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #2d2d2d;
+      margin: 36px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── Lists ── */
+    .article-card ul {
+      list-style: none;
+      margin: 0 0 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .article-card ul li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.93rem;
+      color: #444;
+      line-height: 1.7;
+    }
+
+    .article-card ul li::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+
+    /* ── Highlight box ── */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(168,85,247,0.07));
+      border-left: 4px solid #ff4fa3;
+      border-radius: 0 14px 14px 0;
+      padding: 18px 22px;
+      margin: 20px 0;
+    }
+
+    .highlight-box p {
+      margin: 0;
+      font-size: 0.93rem;
+      color: #555;
+      font-style: italic;
+    }
+
+    /* ── Stat row ── */
+    .stat-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 16px 0 22px;
+    }
+
+    .stat-chip {
+      flex: 1;
+      min-width: 180px;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .stat-chip.good {
+      background: rgba(255,79,163,0.08);
+      border: 1px solid rgba(255,79,163,0.2);
+      color: #be185d;
+    }
+
+    .stat-chip.bad {
+      background: rgba(168,85,247,0.08);
+      border: 1px solid rgba(168,85,247,0.2);
+      color: #6d28d9;
+    }
+
+    .stat-chip strong { display: block; font-size: 0.78rem; opacity: 0.7; margin-bottom: 2px; }
+
+    /* ── Takeaway box ── */
+    .takeaway {
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      border-radius: 18px;
+      padding: 26px 28px;
+      margin-top: 36px;
+      color: white;
+    }
+
+    .takeaway h3 {
+      color: white;
+      font-size: 1rem;
+      margin: 0 0 10px;
+    }
+
+    .takeaway p {
+      color: rgba(255,255,255,0.92);
+      font-size: 0.9rem;
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    /* ── Series nav ── */
+    .series-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 44px;
+      padding-top: 28px;
+      border-top: 2px solid rgba(168,85,247,0.1);
+    }
+
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      color: white;
+      padding: 11px 26px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+      box-shadow: 0 6px 18px rgba(255,79,163,0.25);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(255,79,163,0.32);
+    }
+
+    .btn-outline {
+      display: inline-block;
+      background: transparent;
+      color: #ff4fa3;
+      padding: 11px 26px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+      border: 2px solid #ff4fa3;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .btn-outline:hover {
+      transform: translateY(-3px);
+      background: rgba(255,79,163,0.06);
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 26px 20px;
+      background: rgba(255,255,255,0.25);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .article-card { animation: fadeUp 0.6s ease forwards; }
+
+    @media (max-width: 600px) {
+      .article-card { padding: 32px 24px; }
+      .article-card h2 { font-size: 1.5rem; }
+    }
+  </style>
 </head>
 
 <body>
 
+<!-- ── Header ── -->
 <header>
-  <h1>SheBuildsSTEM 💗⚡</h1>
+  <a href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
 </header>
 
-<section class="blog-container">
+<div class="blog-container">
+  <div class="article-card">
 
-  <p class="series-label">Mini Technical Series</p>
-  <h2>🎧 AI & Signal Processing Essentials — Part 1</h2>
-  <h3>What Is Overfitting? (And Why It Happens)</h3>
+    <!-- Meta -->
+    <span class="series-label">Mini Technical Series</span>
+    <div class="series-title">⚡ AI & Signal Processing Essentials — Part 1</div>
+    <h2>What Is Overfitting?<br>And Why It Happens</h2>
+    <div class="article-meta">Beginner-friendly · Machine Learning · Signal Processing</div>
 
-  <p>
-    When we train a machine learning model, our goal is not to make it memorize data,
-    but to help it learn meaningful patterns.
-    <strong>Overfitting</strong> occurs when a model learns the training data too well —
-    including random noise and small fluctuations that do not represent real structure.
-  </p>
+    <!-- Intro -->
+    <p>When we train a machine learning model, our goal is not to make it memorize data, but to help it learn meaningful patterns. <strong>Overfitting</strong> occurs when a model learns the training data too well — including random noise and small fluctuations that do not represent real structure.</p>
 
-  <h3>🧠 Simple Intuition</h3>
-  <p>
-    Imagine memorizing past exam questions perfectly.
-    If the exact same questions appear again, you will score very high.
-    But if the questions change slightly, you may struggle.
-    That happens because you memorized instead of truly understanding the topic.
-  </p>
+    <!-- Intuition -->
+    <h3>🧠 Simple intuition</h3>
+    <div class="highlight-box">
+      <p>Imagine memorizing past exam questions perfectly. If the exact same questions appear again, you will score very high. But if the questions change slightly, you may struggle — because you memorized instead of truly understanding the topic.</p>
+    </div>
+    <p>Overfitting works the same way. The model memorizes the dataset instead of learning generalizable rules.</p>
 
-  <p>
-    Overfitting works the same way.
-    The model memorizes the dataset instead of learning generalizable rules.
-  </p>
+    <!-- Stats -->
+    <h3>📊 Training vs test performance</h3>
+    <div class="stat-row">
+      <div class="stat-chip good"><strong>Training accuracy</strong>Very high</div>
+      <div class="stat-chip bad"><strong>Validation / test accuracy</strong>Significantly lower</div>
+    </div>
+    <p>This gap indicates that the model performs well on data it has seen, but struggles with unseen data.</p>
 
-  <h3>📊 Training vs Test Performance</h3>
-  <ul>
-    <li><strong>Training accuracy</strong> → Very high</li>
-    <li><strong>Validation/Test accuracy</strong> → Significantly lower</li>
-  </ul>
+    <!-- Technical -->
+    <h3>🔬 Technical view</h3>
+    <p>Overfitting typically happens when model capacity is too large relative to the dataset size. Deep neural networks, especially when trained without sufficient data or regularization, can begin modeling random noise instead of meaningful signal patterns.</p>
+    <p>From a statistical perspective, as model complexity increases, variance increases as well. High variance leads to poor generalization performance.</p>
 
-  <p>
-    This gap indicates that the model performs well on data it has seen,
-    but struggles with unseen data.
-  </p>
+    <!-- Why -->
+    <h3>⚡ Why does it happen?</h3>
+    <ul>
+      <li>The model is too complex</li>
+      <li>The dataset is too small</li>
+      <li>Training continues for too many epochs</li>
+      <li>No regularization techniques are applied</li>
+    </ul>
 
-  <h3>🔬 Technical View</h3>
-  <p>
-    Overfitting typically happens when model capacity is too large
-    relative to the dataset size.
-    Deep neural networks, especially when trained without sufficient data
-    or regularization, can begin modeling random noise instead of
-    meaningful signal patterns.
-  </p>
+    <!-- Speech AI -->
+    <h3>🎧 Overfitting in speech AI</h3>
+    <p>In speech-based AI tasks such as deepfake voice detection, overfitting is a common challenge. A model might learn speaker-specific traits or background noise patterns from the training data. This results in very high training accuracy, but poor performance when evaluated on recordings from different environments.</p>
 
-  <p>
-    From a statistical perspective,
-    as model complexity increases, variance increases as well.
-    High variance leads to poor generalization performance.
-  </p>
+    <!-- Prevention -->
+    <h3>🛠 How to prevent it</h3>
+    <ul>
+      <li>Collect more data</li>
+      <li>Apply Dropout and L2 regularization</li>
+      <li>Use Early Stopping</li>
+      <li>Apply Data Augmentation techniques</li>
+    </ul>
 
-  <h3>⚡ Why Does It Happen?</h3>
-  <ul>
-    <li>The model is too complex</li>
-    <li>The dataset is too small</li>
-    <li>Training continues for too many epochs</li>
-    <li>No regularization techniques are applied</li>
-  </ul>
+    <!-- EE -->
+    <h3>🔌 EE perspective</h3>
+    <p>In Electrical & Electronics Engineering, a well-designed system must respond consistently under varying input conditions. AI models are also systems — they should generalize to new signals, not just perform well on previously seen samples.</p>
 
-  <h3>🎧 Overfitting in Speech AI</h3>
-  <p>
-    In speech-based AI tasks such as deepfake voice detection,
-    overfitting is a common challenge.
-  </p>
+    <!-- Takeaway -->
+    <div class="takeaway">
+      <h3>💡 Final takeaway</h3>
+      <p>The goal is not to build a model that memorizes everything. The goal is to build a model that understands what truly matters. A strong model performs well not only on training data, but also on data it has never seen before.</p>
+    </div>
 
-  <p>
-    For example, a model might learn speaker-specific traits
-    or background noise patterns from the training data.
-    This results in very high training accuracy,
-    but poor performance when evaluated on recordings from different environments.
-  </p>
+    <!-- Series nav -->
+    <div class="series-nav">
+      <a class="btn-outline" href="blog.html">← Back to Blog</a>
+      <a class="btn" href="ai-essentials-part2.html">Next: Bias vs Variance →</a>
+    </div>
 
-  <h3>🛠 How to Prevent It</h3>
-  <ul>
-    <li>Collect more data</li>
-    <li>Apply Dropout and L2 regularization</li>
-    <li>Use Early Stopping</li>
-    <li>Apply Data Augmentation techniques</li>
-  </ul>
-
-  <h3>🔌 EE Perspective</h3>
-  <p>
-    In Electrical & Electronics Engineering,
-    a well-designed system must respond consistently
-    under varying input conditions.
-  </p>
-
-  <p>
-    AI models are also systems.
-    They should generalize to new signals,
-    not just perform well on previously seen samples.
-  </p>
-
-  <h3>💡 Final Takeaway</h3>
-  <p>
-    The goal is not to build a model that memorizes everything.
-    The goal is to build a model that understands what truly matters.
-  </p>
-
-  <p>
-    A strong model performs well not only on training data,
-    but also on data it has never seen before.
-  </p>
-
-  <div class="series-nav">
-    <a class="btn-outline" href="blog.html">← Back to Blog</a>
-    <a class="btn" href="ai-essentials-part2.html">Next →</a>
   </div>
-
-</section>
+</div>
 
 <footer>
   <p>Made with 💗 by Buse | SheBuildsSTEM</p>

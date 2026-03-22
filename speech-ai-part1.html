@@ -3,143 +3,581 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>Speech AI Starter Series — Part 1</title>
-
-  <!-- Main Site CSS -->
-  <link rel="stylesheet" href="style.css" />
+  <title>Speech AI Starter Series — Part 1 | SheBuildsSTEM</title>
   <link rel="icon" href="favicon.jpg" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <!-- Font -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap"
-    rel="stylesheet"
-  />
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff);
+      min-height: 100vh;
+      color: #2d2d2d;
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+
+    header a.site-link {
+      display: inline-block;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: white;
+      text-decoration: none;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.12);
+      margin-bottom: 20px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      background: rgba(255,255,255,0.25);
+      color: white;
+      padding: 7px 18px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.4);
+      transition: background 0.2s;
+    }
+
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+
+    .blog-container {
+      max-width: 780px;
+      margin: 0 auto 80px;
+      padding: 0 20px;
+    }
+
+    .article-card {
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.55);
+      border-radius: 28px;
+      padding: 52px 56px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.11);
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .series-label {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      color: white;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .series-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #a855f7;
+      margin-bottom: 8px;
+    }
+
+    .article-card h2 {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: #2d2d2d;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: #888;
+      font-weight: 600;
+      margin-bottom: 32px;
+      padding-bottom: 28px;
+      border-bottom: 2px solid rgba(168,85,247,0.12);
+    }
+
+    .article-card p {
+      font-size: 0.97rem;
+      color: #444;
+      line-height: 1.9;
+      margin-bottom: 18px;
+    }
+
+    .article-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #2d2d2d;
+      margin: 38px 0 14px;
+    }
+
+    /* ── Definition box ── */
+    .definition-box {
+      background: linear-gradient(135deg, rgba(168,85,247,0.07), rgba(255,79,163,0.05));
+      border-left: 4px solid #a855f7;
+      border-radius: 0 16px 16px 0;
+      padding: 18px 22px;
+      margin: 16px 0 22px;
+    }
+
+    .definition-box p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.8; }
+
+    /* ── Problem chips ── */
+    .problem-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 14px 0 20px;
+    }
+
+    .problem-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      border-radius: 12px;
+      padding: 12px 16px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,79,163,0.1);
+      font-size: 0.88rem;
+      color: #444;
+    }
+
+    .problem-item::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      flex-shrink: 0;
+    }
+
+    /* ── Feature wants grid ── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin: 14px 0 20px;
+    }
+
+    .feature-chip {
+      background: white;
+      border-radius: 14px;
+      padding: 14px 16px;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #555;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      border: 1px solid rgba(168,85,247,0.1);
+      transition: transform 0.2s;
+    }
+
+    .feature-chip:hover { transform: translateY(-3px); }
+    .feature-chip .chip-icon { font-size: 1.3rem; margin-bottom: 6px; display: block; }
+
+    /* ── MFCC acronym breakdown ── */
+    .acronym-box {
+      background: white;
+      border-radius: 18px;
+      padding: 22px 24px;
+      margin: 16px 0 22px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .acronym-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      font-size: 0.88rem;
+    }
+
+    .acronym-row:last-child { border-bottom: none; }
+
+    .acronym-letter {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      color: white;
+      font-weight: 800;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .acronym-word { font-weight: 700; color: #2d2d2d; min-width: 90px; }
+    .acronym-desc { color: #666; font-size: 0.82rem; }
+
+    /* ── MFCC computation steps ── */
+    .steps-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 16px 0 22px;
+      position: relative;
+    }
+
+    .step-flow-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      position: relative;
+    }
+
+    .step-flow-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .step-flow-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      color: white;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(255,79,163,0.25);
+      z-index: 1;
+    }
+
+    .step-flow-line {
+      width: 2px;
+      flex: 1;
+      background: linear-gradient(180deg, rgba(255,79,163,0.3), rgba(168,85,247,0.3));
+      min-height: 24px;
+    }
+
+    .step-flow-item:last-child .step-flow-line { display: none; }
+
+    .step-flow-content {
+      padding: 6px 0 24px;
+      flex: 1;
+    }
+
+    .step-flow-content h4 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #2d2d2d;
+      margin-bottom: 4px;
+    }
+
+    .step-flow-content p {
+      font-size: 0.82rem;
+      color: #666;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ── Limitations ── */
+    .limits-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .limit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: rgba(255,79,163,0.04);
+      border: 1px solid rgba(255,79,163,0.12);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .limit-item::before {
+      content: '!';
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(255,79,163,0.15);
+      color: #ff4fa3;
+      font-size: 0.7rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── Personal reflection ── */
+    .reflection-box {
+      background: linear-gradient(135deg, rgba(255,79,163,0.06), rgba(168,85,247,0.06));
+      border-left: 4px solid #ff4fa3;
+      border-radius: 0 16px 16px 0;
+      padding: 20px 24px;
+      margin: 16px 0;
+    }
+
+    .reflection-box p { margin: 0; font-size: 0.93rem; color: #555; line-height: 1.85; font-style: italic; }
+
+    /* ── Coming next ── */
+    .coming-next {
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      border-radius: 18px;
+      padding: 24px 28px;
+      margin-top: 36px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .coming-next h3 { color: white; font-size: 0.85rem; opacity: 0.85; margin-bottom: 4px; }
+    .coming-next p  { color: white; font-size: 1rem; font-weight: 700; margin: 0; }
+
+    .coming-btn {
+      display: inline-block;
+      background: white;
+      color: #ff4fa3;
+      padding: 10px 22px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-decoration: none;
+      transition: transform 0.2s;
+      white-space: nowrap;
+    }
+
+    .coming-btn:hover { transform: translateY(-2px); }
+
+    /* ── Series nav ── */
+    .series-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 36px;
+      padding-top: 28px;
+      border-top: 2px solid rgba(168,85,247,0.1);
+    }
+
+    .btn-outline {
+      display: inline-block;
+      background: transparent;
+      color: #ff4fa3;
+      padding: 11px 26px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+      border: 2px solid #ff4fa3;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .btn-outline:hover {
+      transform: translateY(-3px);
+      background: rgba(255,79,163,0.06);
+    }
+
+    footer {
+      text-align: center;
+      padding: 26px 20px;
+      background: rgba(255,255,255,0.25);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .article-card { padding: 30px 22px; }
+      .article-card h2 { font-size: 1.5rem; }
+      .coming-next { flex-direction: column; }
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- Blog Container -->
-  <section class="post-page">
+<header>
+  <a class="site-link" href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
+</header>
 
-    <div class="post-card">
+<div class="blog-container">
+  <div class="article-card">
 
-      <a class="back-btn" href="blog.html">← Back to Blog</a>
+    <span class="series-label">🎧 Speech AI Starter Series</span>
+    <div class="series-title">Part 1</div>
+    <h2>Understanding Audio Features & MFCC</h2>
+    <div class="subtitle">What is sound to a machine — and how do we make it learnable?</div>
 
-      <h1>🎧 Speech AI Starter Series — Part 1</h1>
-      <p class="subtitle">Understanding Audio Features & MFCC</p>
+    <!-- Intro -->
+    <p>When we record audio, what we actually capture is not "sound" in the way we feel it — we capture a long sequence of numbers representing <strong>air pressure changes over time</strong>. This is called a waveform. Speech, music, noise… everything becomes a signal.</p>
 
-      <p>
-        When we record audio, what we actually capture is not “sound” in the way we feel it —
-        we capture a long sequence of numbers.
-      </p>
-
-      <p>
-        These numbers represent <b>air pressure changes over time</b>.
-        This is called a waveform. Speech, music, noise… everything becomes a signal.
-      </p>
-
-      <hr />
-
-      <h2>🌊 Why Can’t We Use Raw Audio Directly?</h2>
-
-      <p>
-        At first, you might think:
-        <b>“Why not just give the waveform to a machine learning model?”</b>
-      </p>
-
-      <p>The problem is that raw audio is:</p>
-
-      <ul>
-        <li>Extremely long (thousands of samples per second)</li>
-        <li>Very noisy and detailed</li>
-        <li>Hard for classical ML models to understand</li>
-      </ul>
-
-      <p>
-        So instead of using raw samples, we transform audio into something more meaningful:
-        <b>features</b>.
-      </p>
-
-      <hr />
-
-      <h2>✨ Feature Extraction in Speech AI</h2>
-
-      <p>
-        Feature extraction means converting audio into a compact representation that keeps
-        the important information.
-      </p>
-
-      <p>For speech tasks, we want to capture things like:</p>
-
-      <ul>
-        <li>Pitch and tone</li>
-        <li>Pronunciation patterns</li>
-        <li>Frequency structure of speech</li>
-        <li>Language-specific characteristics</li>
-      </ul>
-
-      <p>
-        One of the most famous feature extraction methods is:
-        <b>MFCC</b>.
-      </p>
-
-      <hr />
-
-      <h2>💡 What Is MFCC?</h2>
-
-      <p><b>MFCC = Mel-Frequency Cepstral Coefficients</b></p>
-
-      <p>
-        MFCC is a way to represent speech by focusing on how humans actually hear sound.
-      </p>
-
-      <p>
-        Instead of keeping every raw detail, MFCC captures the <b>shape of the spectrum</b>
-        in a compact form.
-      </p>
-
-      <hr />
-
-      <h2>⚙️ How MFCC Is Computed (Simplified)</h2>
-
-      <ol>
-        <li>Split audio into small frames</li>
-        <li>Apply Fourier Transform</li>
-        <li>Map frequencies onto the Mel scale</li>
-        <li>Take logarithm</li>
-        <li>Apply DCT to compress into coefficients</li>
-      </ol>
-
-      <hr />
-
-      <h2>⚠️ Limitations of MFCC</h2>
-
-      <ul>
-        <li>Handcrafted feature engineering</li>
-        <li>May miss complex patterns</li>
-        <li>Deep learning models outperform it today</li>
-      </ul>
-
-      <hr />
-
-      <h2>🌸 My Experience</h2>
-
-      <p>
-        In my Language Identification project, MFCC was the first method I tried.
-        It helped me understand the basics of speech processing.
-      </p>
-
-      <p>
-        In Part 2, I will explain how CNNs improved the results.
-      </p>
-
-      <h2>➡️ Coming Next</h2>
-      <p><b>Part 2: CNNs for Speech Recognition 🎧⚡</b></p>
-
+    <!-- Why not raw -->
+    <h3>🌊 Why can't we use raw audio directly?</h3>
+    <div class="definition-box">
+      <p>You might think: "Why not just give the waveform to a machine learning model?" The problem is that raw audio is massive, noisy, and hard for classical models to interpret meaningfully.</p>
     </div>
-  </section>
+
+    <div class="problem-list">
+      <div class="problem-item">Extremely long — thousands of samples per second</div>
+      <div class="problem-item">Very noisy with irrelevant detail</div>
+      <div class="problem-item">Hard for classical ML models to find patterns in</div>
+    </div>
+
+    <p>So instead of raw samples, we transform audio into something more meaningful: <strong>features</strong>.</p>
+
+    <!-- Feature extraction -->
+    <h3>✨ Feature extraction in speech AI</h3>
+    <p>Feature extraction means converting audio into a compact representation that keeps the important information. For speech tasks, we want to capture:</p>
+
+    <div class="feature-grid">
+      <div class="feature-chip"><span class="chip-icon">🎵</span>Pitch & tone</div>
+      <div class="feature-chip"><span class="chip-icon">🗣️</span>Pronunciation patterns</div>
+      <div class="feature-chip"><span class="chip-icon">📊</span>Frequency structure</div>
+      <div class="feature-chip"><span class="chip-icon">🌍</span>Language-specific cues</div>
+    </div>
+
+    <p>One of the most famous feature extraction methods is: <strong>MFCC</strong>.</p>
+
+    <!-- What is MFCC -->
+    <h3>💡 What is MFCC?</h3>
+    <div class="acronym-box">
+      <div class="acronym-row">
+        <div class="acronym-letter">M</div>
+        <span class="acronym-word">Mel</span>
+        <span class="acronym-desc">A perceptual scale that matches how humans hear frequencies</span>
+      </div>
+      <div class="acronym-row">
+        <div class="acronym-letter">F</div>
+        <span class="acronym-word">Frequency</span>
+        <span class="acronym-desc">The spectral content of the audio signal</span>
+      </div>
+      <div class="acronym-row">
+        <div class="acronym-letter">C</div>
+        <span class="acronym-word">Cepstral</span>
+        <span class="acronym-desc">A mathematical transformation for compressing the spectrum</span>
+      </div>
+      <div class="acronym-row">
+        <div class="acronym-letter">C</div>
+        <span class="acronym-word">Coefficients</span>
+        <span class="acronym-desc">The compact numerical output — usually 13 to 40 values per frame</span>
+      </div>
+    </div>
+
+    <p>MFCC represents speech by focusing on how humans actually hear sound — instead of every raw detail, it captures the <strong>shape of the spectrum</strong> in compact form.</p>
+
+    <!-- Computation steps -->
+    <h3>⚙️ How MFCC is computed</h3>
+    <div class="steps-flow">
+      <div class="step-flow-item">
+        <div class="step-flow-left">
+          <div class="step-flow-num">1</div>
+          <div class="step-flow-line"></div>
+        </div>
+        <div class="step-flow-content">
+          <h4>Split audio into small frames</h4>
+          <p>The audio signal is divided into short overlapping windows (typically 20–40ms each).</p>
+        </div>
+      </div>
+      <div class="step-flow-item">
+        <div class="step-flow-left">
+          <div class="step-flow-num">2</div>
+          <div class="step-flow-line"></div>
+        </div>
+        <div class="step-flow-content">
+          <h4>Apply Fourier Transform</h4>
+          <p>Each frame is converted from time domain to frequency domain using FFT.</p>
+        </div>
+      </div>
+      <div class="step-flow-item">
+        <div class="step-flow-left">
+          <div class="step-flow-num">3</div>
+          <div class="step-flow-line"></div>
+        </div>
+        <div class="step-flow-content">
+          <h4>Map onto the Mel scale</h4>
+          <p>Frequencies are mapped to the Mel scale — which mimics human hearing perception.</p>
+        </div>
+      </div>
+      <div class="step-flow-item">
+        <div class="step-flow-left">
+          <div class="step-flow-num">4</div>
+          <div class="step-flow-line"></div>
+        </div>
+        <div class="step-flow-content">
+          <h4>Take the logarithm</h4>
+          <p>Log is applied to compress the dynamic range, matching how loudness is perceived.</p>
+        </div>
+      </div>
+      <div class="step-flow-item">
+        <div class="step-flow-left">
+          <div class="step-flow-num">5</div>
+          <div class="step-flow-line"></div>
+        </div>
+        <div class="step-flow-content">
+          <h4>Apply DCT to compress into coefficients</h4>
+          <p>Discrete Cosine Transform compresses the result into a small set of coefficients — the final MFCC features.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Limitations -->
+    <h3>⚠️ Limitations of MFCC</h3>
+    <div class="limits-list">
+      <div class="limit-item">Handcrafted feature engineering — relies on human-designed transformations</div>
+      <div class="limit-item">May miss complex patterns that deep learning can discover automatically</div>
+      <div class="limit-item">Modern deep learning models consistently outperform MFCC-based approaches</div>
+    </div>
+
+    <!-- Personal reflection -->
+    <h3>🌸 My experience</h3>
+    <div class="reflection-box">
+      <p>In my Language Identification project, MFCC was the first method I tried. It helped me understand the basics of speech processing — and even though the results were limited, it gave me a strong foundation before moving to CNNs. You have to understand the classical approach to truly appreciate why deep learning works better.</p>
+    </div>
+
+    <!-- Coming next -->
+    <div class="coming-next">
+      <div>
+        <h3>Coming next in this series</h3>
+        <p>Part 2: CNNs for Speech Recognition 🎧⚡</p>
+      </div>
+      <a class="coming-btn" href="blog.html">Back to Blog →</a>
+    </div>
+
+    <!-- Nav -->
+    <div class="series-nav">
+      <a class="btn-outline" href="blog.html">← Back to Blog</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p>Made with 💗 by Buse | SheBuildsSTEM</p>
+</footer>
 
 </body>
 </html>
-

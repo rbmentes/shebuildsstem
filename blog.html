@@ -4,97 +4,365 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Blog | SheBuildsSTEM</title>
-
   <meta name="description" content="Technical beginner-friendly posts on Speech AI, Machine Learning fundamentals, and engineering reflections.">
-
-  <link rel="stylesheet" href="style.css">
   <link rel="icon" href="favicon.jpg">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff);
+      min-height: 100vh;
+      color: #2d2d2d;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 80px 20px 50px;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      background: rgba(255,255,255,0.3);
+      color: white;
+      padding: 6px 20px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.4);
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: white;
+      text-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      margin-bottom: 14px;
+    }
+
+    header p {
+      color: rgba(255,255,255,0.9);
+      font-size: 1rem;
+      max-width: 520px;
+      margin: 0 auto 30px;
+      line-height: 1.7;
+    }
+
+    .back-btn {
+      display: inline-block;
+      background: rgba(255,255,255,0.25);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.4);
+      transition: background 0.2s;
+    }
+
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+
+    /* ── Main container ── */
+    .hub-container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    /* ── Category cards ── */
+    .hub-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 60px;
+    }
+
+    .hub-card {
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.55);
+      border-radius: 24px;
+      padding: 30px 26px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+      transition: transform 0.25s, box-shadow 0.25s;
+      text-align: center;
+    }
+
+    .hub-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 22px 44px rgba(0,0,0,0.13);
+    }
+
+    .hub-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #2d2d2d;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .hub-card p {
+      font-size: 0.84rem;
+      color: #666;
+      line-height: 1.65;
+      margin-bottom: 18px;
+    }
+
+    /* ── Section headers ── */
+    .series-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 50px 0 20px;
+    }
+
+    .series-header h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: white;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .series-header .series-line {
+      flex: 1;
+      height: 2px;
+      background: rgba(255,255,255,0.35);
+      border-radius: 2px;
+    }
+
+    /* ── Post grid ── */
+    .post-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .post-card {
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.55);
+      border-radius: 20px;
+      padding: 26px 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      transition: transform 0.22s, box-shadow 0.22s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .post-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 36px rgba(0,0,0,0.12);
+    }
+
+    .post-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      width: fit-content;
+    }
+
+    .tag-ml      { background: #fce7f3; color: #be185d; }
+    .tag-ai      { background: #ede9fe; color: #6d28d9; }
+    .tag-reflect { background: #fdf2f8; color: #9d174d; }
+
+    .post-card h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #2d2d2d;
+      line-height: 1.45;
+      flex: 1;
+    }
+
+    .post-card p {
+      font-size: 0.82rem;
+      color: #666;
+      line-height: 1.65;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-block;
+      background: white;
+      color: #ff4fa3;
+      padding: 10px 22px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(255,79,163,0.18);
+      transition: transform 0.2s, box-shadow 0.2s;
+      width: fit-content;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255,79,163,0.25);
+    }
+
+    .btn-outline {
+      display: inline-block;
+      background: transparent;
+      color: white;
+      padding: 10px 22px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-decoration: none;
+      border: 2px solid rgba(255,255,255,0.7);
+      backdrop-filter: blur(8px);
+      transition: transform 0.2s, background 0.2s;
+      width: fit-content;
+    }
+
+    .btn-outline:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.12);
+    }
+
+    /* ── Bottom nav ── */
+    .bottom-nav {
+      margin-top: 50px;
+      text-align: center;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 26px 20px;
+      background: rgba(255,255,255,0.25);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    /* ── Fade-up animation ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up {
+      animation: fadeUp 0.55s ease forwards;
+      opacity: 0;
+    }
+
+    .fade-up:nth-child(1) { animation-delay: 0.1s; }
+    .fade-up:nth-child(2) { animation-delay: 0.2s; }
+    .fade-up:nth-child(3) { animation-delay: 0.3s; }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 2rem; }
+      .series-header h2 { font-size: 1.1rem; }
+    }
+  </style>
 </head>
 
 <body>
 
+<!-- ── Header ── -->
 <header>
+  <div class="hero-eyebrow">Inspire Blog</div>
   <h1>SheBuildsSTEM Blog 💗</h1>
+  <p>Technical beginner-friendly posts + personal engineering reflections.</p>
+  <a class="back-btn" href="index.html">← Back to Home</a>
 </header>
 
-<section class="hub-container">
+<div class="hub-container">
 
-  <h2>📚 Blog Categories</h2>
-  <p>Technical beginner-friendly posts + personal engineering reflections.</p>
-
+  <!-- ── Category cards ── -->
   <div class="hub-grid">
-
-    <div class="hub-card">
+    <div class="hub-card fade-up">
       <h3>🎓 Learn Machine Learning With Me</h3>
       <p>A semester-long journey into ML fundamentals as an engineering student.</p>
       <a class="btn" href="#learn-ml">Explore Series →</a>
     </div>
 
-    <div class="hub-card">
+    <div class="hub-card fade-up">
       <h3>⚡ AI & Signal Processing Essentials</h3>
       <p>Mini technical explanations of core AI and engineering concepts.</p>
       <a class="btn" href="#ai-essentials">Explore Series →</a>
     </div>
 
-    <div class="hub-card">
+    <div class="hub-card fade-up">
       <h3>💗 Engineering Reflections</h3>
       <p>Personal thoughts about studying engineering and growth.</p>
       <a class="btn" href="#reflections">Read Reflections →</a>
     </div>
-
   </div>
 
-  <!-- ================= LEARN ML ================= -->
-  <h2 id="learn-ml">🎓 Learn Machine Learning With Me</h2>
+  <!-- ── Learn ML series ── -->
+  <div class="series-header" id="learn-ml">
+    <h2>🎓 Learn Machine Learning With Me</h2>
+    <div class="series-line"></div>
+  </div>
 
   <div class="post-grid">
-
     <div class="post-card">
-      <h3>Week 1 — What Is Machine Learning?</h3>
-      <p>
-        Introduction to ML fundamentals, supervised vs unsupervised learning,
-        datasets, features, and generalization.
-      </p>
+      <span class="post-tag tag-ml">Week 1</span>
+      <h3>What Is Machine Learning?</h3>
+      <p>Introduction to ML fundamentals, supervised vs unsupervised learning, datasets, features, and generalization.</p>
       <a class="btn" href="learn-ml-week1.html">Read →</a>
     </div>
-
   </div>
 
-  <!-- ================= AI ESSENTIALS ================= -->
-  <h2 id="ai-essentials">⚡ AI & Signal Processing Essentials</h2>
+  <!-- ── AI Essentials series ── -->
+  <div class="series-header" id="ai-essentials">
+    <h2>⚡ AI & Signal Processing Essentials</h2>
+    <div class="series-line"></div>
+  </div>
 
   <div class="post-grid">
-
     <div class="post-card">
-      <h3>Part 1 — What Is Overfitting?</h3>
+      <span class="post-tag tag-ai">Part 1</span>
+      <h3>What Is Overfitting?</h3>
       <a class="btn" href="ai-essentials-part1.html">Read →</a>
     </div>
 
     <div class="post-card">
-      <h3>Part 2 — Bias vs Variance</h3>
+      <span class="post-tag tag-ai">Part 2</span>
+      <h3>Bias vs Variance</h3>
       <a class="btn" href="ai-essentials-part2.html">Read →</a>
     </div>
-
   </div>
 
-  <!-- ================= REFLECTIONS ================= -->
-  <h2 id="reflections">💗 Engineering Reflections</h2>
+  <!-- ── Reflections ── -->
+  <div class="series-header" id="reflections">
+    <h2>💗 Engineering Reflections</h2>
+    <div class="series-line"></div>
+  </div>
 
   <div class="post-grid">
-
     <div class="post-card">
+      <span class="post-tag tag-reflect">Reflection</span>
       <h3>When You Feel Behind in Engineering...</h3>
       <a class="btn" href="feeling-behind.html">Read →</a>
     </div>
-
   </div>
 
-  <br>
-  <a class="btn" href="index.html">← Back to Home</a>
+  <!-- ── Bottom nav ── -->
+  <div class="bottom-nav">
+    <a class="btn-outline" href="index.html">← Back to Home</a>
+  </div>
 
-</section>
+</div>
 
+<!-- ── Footer ── -->
 <footer>
   <p>Made with 💗 by Buse | SheBuildsSTEM</p>
 </footer>

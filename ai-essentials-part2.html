@@ -3,149 +3,505 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Bias vs Variance | AI & Signal Processing Essentials – SheBuildsSTEM</title>
-
   <meta name="description" content="Understanding the bias-variance tradeoff in machine learning with intuitive explanations and speech AI examples.">
-
-  <link rel="stylesheet" href="style.css">
   <link rel="icon" href="favicon.jpg">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff);
+      min-height: 100vh;
+      color: #2d2d2d;
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+
+    header a {
+      display: inline-block;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: white;
+      text-decoration: none;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.12);
+      margin-bottom: 20px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      background: rgba(255,255,255,0.25);
+      color: white;
+      padding: 7px 18px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.4);
+      transition: background 0.2s;
+    }
+
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+
+    .blog-container {
+      max-width: 780px;
+      margin: 0 auto 80px;
+      padding: 0 20px;
+    }
+
+    .article-card {
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.55);
+      border-radius: 28px;
+      padding: 52px 56px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.11);
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .series-label {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      color: white;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .series-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #a855f7;
+      margin-bottom: 8px;
+    }
+
+    .article-card h2 {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: #2d2d2d;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .article-meta {
+      font-size: 0.78rem;
+      color: #999;
+      margin-bottom: 36px;
+      padding-bottom: 28px;
+      border-bottom: 2px solid rgba(168,85,247,0.12);
+    }
+
+    .article-card p {
+      font-size: 0.97rem;
+      color: #444;
+      line-height: 1.9;
+      margin-bottom: 18px;
+    }
+
+    .article-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #2d2d2d;
+      margin: 36px 0 12px;
+    }
+
+    .article-card ul {
+      list-style: none;
+      margin: 0 0 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .article-card ul li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.93rem;
+      color: #444;
+      line-height: 1.7;
+    }
+
+    .article-card ul li::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(168,85,247,0.07));
+      border-left: 4px solid #ff4fa3;
+      border-radius: 0 14px 14px 0;
+      padding: 18px 22px;
+      margin: 20px 0;
+    }
+
+    .highlight-box p { margin: 0; font-size: 0.93rem; color: #555; font-style: italic; }
+
+    /* ── Bias / Variance comparison cards ── */
+    .bv-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 20px 0 26px;
+    }
+
+    .bv-card {
+      border-radius: 18px;
+      padding: 22px 20px;
+      text-align: center;
+    }
+
+    .bv-card.bias {
+      background: rgba(255,79,163,0.07);
+      border: 1.5px solid rgba(255,79,163,0.25);
+    }
+
+    .bv-card.variance {
+      background: rgba(168,85,247,0.07);
+      border: 1.5px solid rgba(168,85,247,0.25);
+    }
+
+    .bv-card .bv-icon { font-size: 2rem; margin-bottom: 8px; display: block; }
+
+    .bv-card h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .bv-card.bias h4   { color: #be185d; }
+    .bv-card.variance h4 { color: #6d28d9; }
+
+    .bv-card p {
+      font-size: 0.82rem;
+      line-height: 1.6;
+      margin: 0;
+      color: #555;
+    }
+
+    .bv-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+      margin-top: 10px;
+    }
+
+    .bias-tag    { background: #fce7f3; color: #be185d; }
+    .variance-tag { background: #ede9fe; color: #6d28d9; }
+
+    /* ── Tradeoff visual ── */
+    .tradeoff-box {
+      background: white;
+      border-radius: 18px;
+      padding: 24px 22px;
+      margin: 20px 0;
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+    }
+
+    .tradeoff-box .tradeoff-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .tradeoff-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 0.85rem;
+    }
+
+    .tradeoff-row:last-child { margin-bottom: 0; }
+
+    .tradeoff-label {
+      width: 120px;
+      font-weight: 600;
+      color: #555;
+      flex-shrink: 0;
+      font-size: 0.8rem;
+    }
+
+    .tradeoff-bar-wrap {
+      flex: 1;
+      height: 10px;
+      background: #f0f0f0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .tradeoff-bar {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.3s;
+    }
+
+    .bar-pink   { background: linear-gradient(90deg, #ff4fa3, #f472b6); }
+    .bar-purple { background: linear-gradient(90deg, #a855f7, #7c3aed); }
+
+    .tradeoff-val {
+      width: 36px;
+      text-align: right;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #888;
+    }
+
+    /* ── Formula box ── */
+    .formula-box {
+      background: #1e1e2e;
+      border-radius: 14px;
+      padding: 20px 26px;
+      margin: 16px 0;
+      text-align: center;
+    }
+
+    .formula-box code {
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      color: #cdd6f4;
+      font-weight: 700;
+    }
+
+    .formula-box code .pink   { color: #f38ba8; }
+    .formula-box code .purple { color: #cba6f7; }
+    .formula-box code .blue   { color: #89b4fa; }
+
+    /* ── Takeaway ── */
+    .takeaway {
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      border-radius: 18px;
+      padding: 26px 28px;
+      margin-top: 36px;
+      color: white;
+    }
+
+    .takeaway h3 { color: white; font-size: 1rem; margin: 0 0 12px; }
+
+    .takeaway-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .takeaway-item {
+      background: rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.95);
+      line-height: 1.5;
+    }
+
+    .takeaway-item strong {
+      display: block;
+      font-size: 0.75rem;
+      opacity: 0.8;
+      margin-bottom: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Series nav ── */
+    .series-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 44px;
+      padding-top: 28px;
+      border-top: 2px solid rgba(168,85,247,0.1);
+    }
+
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      color: white;
+      padding: 11px 26px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+      box-shadow: 0 6px 18px rgba(255,79,163,0.25);
+      transition: transform 0.2s;
+    }
+
+    .btn:hover { transform: translateY(-3px); }
+
+    .btn-outline {
+      display: inline-block;
+      background: transparent;
+      color: #ff4fa3;
+      padding: 11px 26px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+      border: 2px solid #ff4fa3;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .btn-outline:hover {
+      transform: translateY(-3px);
+      background: rgba(255,79,163,0.06);
+    }
+
+    footer {
+      text-align: center;
+      padding: 26px 20px;
+      background: rgba(255,255,255,0.25);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .article-card { padding: 30px 22px; }
+      .article-card h2 { font-size: 1.5rem; }
+      .bv-grid { grid-template-columns: 1fr; }
+      .takeaway-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-  <h1>SheBuildsSTEM 💗⚡</h1>
+  <a href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
 </header>
 
-<section class="blog-container">
+<div class="blog-container">
+  <div class="article-card">
 
-  <p class="series-label">Mini Technical Series</p>
-  <h2>🎧 AI & Signal Processing Essentials — Part 2</h2>
-  <h3>Bias vs Variance (The Core Tradeoff)</h3>
+    <span class="series-label">Mini Technical Series</span>
+    <div class="series-title">⚡ AI & Signal Processing Essentials — Part 2</div>
+    <h2>Bias vs Variance<br>The Core Tradeoff</h2>
+    <div class="article-meta">Beginner-friendly · Machine Learning · Signal Processing</div>
 
-  <p>
-    In Part 1, we discussed overfitting — when a model memorizes instead of generalizes.
-    But to truly understand overfitting, we need to understand two fundamental concepts:
-    <strong>bias</strong> and <strong>variance</strong>.
-  </p>
+    <p>In Part 1, we discussed overfitting — when a model memorizes instead of generalizes. But to truly understand overfitting, we need to understand two fundamental concepts: <strong>bias</strong> and <strong>variance</strong>.</p>
 
-  <h3>🧠 What Is Bias?</h3>
+    <!-- Bias vs Variance cards -->
+    <div class="bv-grid">
+      <div class="bv-card bias">
+        <span class="bv-icon">🎯</span>
+        <h4>Bias</h4>
+        <p>Error from simplifying assumptions. The model is too simple to capture real patterns.</p>
+        <span class="bv-tag bias-tag">Underfitting</span>
+      </div>
+      <div class="bv-card variance">
+        <span class="bv-icon">🌊</span>
+        <h4>Variance</h4>
+        <p>Sensitivity to small changes in training data. The model changes drastically with new data.</p>
+        <span class="bv-tag variance-tag">Overfitting</span>
+      </div>
+    </div>
 
-  <p>
-    Bias refers to the error introduced by simplifying assumptions in the model.
-    A high-bias model is too simple to capture the true structure of the data.
-  </p>
+    <!-- Tradeoff visual -->
+    <h3>⚖ The tradeoff</h3>
+    <p>Bias and variance move in opposite directions as model complexity changes. The goal is finding the sweet spot.</p>
 
-  <p>
-    This often leads to <strong>underfitting</strong> —
-    the model performs poorly on both training and test data.
-  </p>
+    <div class="tradeoff-box">
+      <div class="tradeoff-title">As model complexity increases →</div>
+      <div class="tradeoff-row">
+        <span class="tradeoff-label">Bias</span>
+        <div class="tradeoff-bar-wrap"><div class="tradeoff-bar bar-pink" style="width:20%"></div></div>
+        <span class="tradeoff-val" style="color:#be185d;">Low ↓</span>
+      </div>
+      <div class="tradeoff-row">
+        <span class="tradeoff-label">Variance</span>
+        <div class="tradeoff-bar-wrap"><div class="tradeoff-bar bar-purple" style="width:85%"></div></div>
+        <span class="tradeoff-val" style="color:#6d28d9;">High ↑</span>
+      </div>
+      <div style="margin-top:18px;" class="tradeoff-title">As model complexity decreases →</div>
+      <div class="tradeoff-row">
+        <span class="tradeoff-label">Bias</span>
+        <div class="tradeoff-bar-wrap"><div class="tradeoff-bar bar-pink" style="width:85%"></div></div>
+        <span class="tradeoff-val" style="color:#be185d;">High ↑</span>
+      </div>
+      <div class="tradeoff-row">
+        <span class="tradeoff-label">Variance</span>
+        <div class="tradeoff-bar-wrap"><div class="tradeoff-bar bar-purple" style="width:20%"></div></div>
+        <span class="tradeoff-val" style="color:#6d28d9;">Low ↓</span>
+      </div>
+    </div>
 
-  <h3>📊 What Is Variance?</h3>
+    <!-- Speech AI -->
+    <h3>🎧 Bias vs variance in speech AI</h3>
+    <p>In speech processing tasks like deepfake voice detection:</p>
+    <ul>
+      <li>A very shallow model may have high bias — it misses important acoustic cues.</li>
+      <li>A very deep model may have high variance — it memorizes speaker-specific noise.</li>
+    </ul>
+    <p>Proper regularization and sufficient data help balance this tradeoff.</p>
 
-  <p>
-    Variance measures how sensitive a model is to small changes in the training data.
-    A high-variance model changes drastically when trained on slightly different data.
-  </p>
+    <!-- Formula -->
+    <h3>🔬 Mathematical perspective</h3>
+    <p>The expected prediction error can be decomposed into three parts:</p>
+    <div class="formula-box">
+      <code>Error = <span class="pink">Bias²</span> + <span class="purple">Variance</span> + <span class="blue">Irreducible Noise</span></code>
+    </div>
+    <p>We cannot eliminate irreducible noise — it is always present in real data. But we can control bias and variance through model design choices.</p>
 
-  <p>
-    This leads to <strong>overfitting</strong> —
-    excellent performance on training data,
-    but poor performance on unseen data.
-  </p>
+    <!-- EE -->
+    <h3>🔌 EE perspective</h3>
+    <div class="highlight-box">
+      <p>This tradeoff resembles filter design. A filter that is too rigid ignores important frequencies (high bias). A filter that is too sensitive amplifies noise (high variance). Good engineering means finding the right balance.</p>
+    </div>
 
-  <h3>⚖ The Tradeoff</h3>
+    <!-- Takeaway -->
+    <div class="takeaway">
+      <h3>💡 Final takeaway</h3>
+      <div class="takeaway-grid">
+        <div class="takeaway-item">
+          <strong>Overfitting =</strong>High variance. The model is too sensitive to training data.
+        </div>
+        <div class="takeaway-item">
+          <strong>Underfitting =</strong>High bias. The model is too simple to learn anything useful.
+        </div>
+        <div class="takeaway-item" style="grid-column: 1 / -1;">
+          <strong>The goal =</strong>Balance both. Strong models generalize by sitting in the sweet spot between bias and variance.
+        </div>
+      </div>
+    </div>
 
-  <p>
-    Bias and variance move in opposite directions.
-    When model complexity increases:
-  </p>
+    <!-- Series nav -->
+    <div class="series-nav">
+      <a class="btn-outline" href="ai-essentials-part1.html">← Part 1: Overfitting</a>
+      <a class="btn" href="ai-essentials-part3.html">Next: Part 3 →</a>
+    </div>
 
-  <ul>
-    <li>Bias decreases</li>
-    <li>Variance increases</li>
-  </ul>
-
-  <p>
-    When model complexity decreases:
-  </p>
-
-  <ul>
-    <li>Bias increases</li>
-    <li>Variance decreases</li>
-  </ul>
-
-  <p>
-    The goal is to find the “sweet spot” —
-    a model complex enough to capture real patterns,
-    but simple enough to generalize.
-  </p>
-
-  <h3>🎧 Bias vs Variance in Speech AI</h3>
-
-  <p>
-    In speech processing tasks like deepfake voice detection:
-  </p>
-
-  <ul>
-    <li>A very shallow model may have high bias (miss important acoustic cues).</li>
-    <li>A very deep model may have high variance (memorize speaker-specific noise).</li>
-  </ul>
-
-  <p>
-    Proper regularization and sufficient data help balance this tradeoff.
-  </p>
-
-  <h3>🔬 Mathematical Perspective</h3>
-
-  <p>
-    The expected prediction error can be decomposed into:
-  </p>
-
-  <p>
-    <strong>Error = Bias² + Variance + Irreducible Noise</strong>
-  </p>
-
-  <p>
-    We cannot eliminate noise, but we can control bias and variance.
-  </p>
-
-  <h3>🔌 EE Perspective</h3>
-
-  <p>
-    From an Electrical & Electronics Engineering perspective,
-    this tradeoff resembles filter design.
-  </p>
-
-  <p>
-    A filter that is too rigid ignores important frequencies (high bias).
-    A filter that is too sensitive amplifies noise (high variance).
-  </p>
-
-  <h3>💡 Final Takeaway</h3>
-
-  <p>
-    Overfitting is not random.
-    It is the result of high variance.
-  </p>
-
-  <p>
-    Underfitting is not laziness.
-    It is the result of high bias.
-  </p>
-
-  <p>
-    Strong models are built by balancing both.
-  </p>
-
-  <div class="series-nav">
-    <a class="btn-outline" href="ai-essentials-part1.html">← Previous</a>
-    <a class="btn" href="ai-essentials-part3.html">Next →</a>
   </div>
-
-</section>
+</div>
 
 <footer>
   <p>Made with 💗 by Buse | SheBuildsSTEM</p>

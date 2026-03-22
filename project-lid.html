@@ -2,124 +2,588 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LID Project | SheBuildsSTEM</title>
   <link rel="icon" href="favicon.jpg">
-  <link rel="stylesheet" href="style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff);
+      min-height: 100vh;
+      color: #2d2d2d;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 80px 20px 50px;
+      position: relative;
+    }
+
+    .lang {
+      position: absolute;
+      top: 24px;
+      right: 30px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .lang a {
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .lang a.active {
+      background: rgba(255,255,255,0.9);
+      color: #ff4fa3;
+    }
+
+    .lang a:not(.active) {
+      background: rgba(255,255,255,0.25);
+      color: white;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.35);
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      background: rgba(255,255,255,0.3);
+      color: white;
+      padding: 6px 20px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.4);
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: white;
+      text-shadow: 0 4px 24px rgba(0,0,0,0.12);
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+
+    header p {
+      color: rgba(255,255,255,0.9);
+      font-size: 1rem;
+      max-width: 520px;
+      margin: 0 auto 28px;
+      line-height: 1.7;
+    }
+
+    .tag-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .tag {
+      background: rgba(255,255,255,0.28);
+      color: white;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      backdrop-filter: blur(8px);
+    }
+
+    .back-btn {
+      display: inline-block;
+      background: rgba(255,255,255,0.25);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.4);
+      transition: background 0.2s;
+    }
+
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+
+    /* ── Main card ── */
+    .project-card {
+      max-width: 900px;
+      width: 92%;
+      margin: 0 auto 60px;
+      background: rgba(255,255,255,0.88);
+      border-radius: 28px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.5);
+      overflow: hidden;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    /* ── Hero banner ── */
+    .hero-banner {
+      background: linear-gradient(135deg, #ff4fa3, #a855f7, #3b82f6);
+      padding: 44px 52px;
+      color: white;
+      text-align: center;
+    }
+
+    .hero-banner h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      opacity: 0.9;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .stat-box {
+      background: rgba(255,255,255,0.2);
+      border-radius: 16px;
+      padding: 16px 22px;
+      min-width: 120px;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.3);
+      text-align: center;
+    }
+
+    .stat-box .stat-num {
+      font-size: 1.7rem;
+      font-weight: 800;
+      display: block;
+    }
+
+    .stat-box .stat-label {
+      font-size: 0.72rem;
+      opacity: 0.85;
+      font-weight: 600;
+    }
+
+    /* ── Section blocks ── */
+    .section-block {
+      padding: 40px 52px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .section-block:last-child { border-bottom: none; }
+
+    .section-block h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #2d2d2d;
+    }
+
+    .section-block p {
+      font-size: 0.97rem;
+      color: #444;
+      line-height: 1.85;
+      margin-bottom: 14px;
+    }
+
+    .section-block p:last-child { margin-bottom: 0; }
+
+    /* ── Method steps ── */
+    .method-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 6px;
+    }
+
+    .method-step {
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      background: white;
+      border-radius: 18px;
+      padding: 22px 24px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.04);
+      transition: transform 0.2s;
+    }
+
+    .method-step:hover { transform: translateY(-3px); }
+
+    .method-num {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      color: white;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(255,79,163,0.3);
+    }
+
+    .method-content h3 {
+      font-size: 0.97rem;
+      font-weight: 700;
+      color: #2d2d2d;
+      margin-bottom: 6px;
+    }
+
+    .method-content p {
+      font-size: 0.87rem;
+      color: #666;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    .method-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-top: 8px;
+    }
+
+    .tag-classical { background: #fce7f3; color: #be185d; }
+    .tag-dl        { background: #ede9fe; color: #6d28d9; }
+
+    /* ── Accuracy visual ── */
+    .accuracy-visual {
+      background: white;
+      border-radius: 18px;
+      padding: 24px 26px;
+      margin-top: 6px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .acc-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 14px;
+    }
+
+    .acc-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .acc-row:last-child { margin-bottom: 0; }
+
+    .acc-name {
+      width: 110px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #555;
+      flex-shrink: 0;
+    }
+
+    .acc-bar-wrap {
+      flex: 1;
+      height: 12px;
+      background: #f0f0f0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .acc-bar {
+      height: 100%;
+      border-radius: 8px;
+    }
+
+    .bar-mfcc { background: linear-gradient(90deg, #f472b6, #fb7185); width: 42%; }
+    .bar-cnn  { background: linear-gradient(90deg, #ff4fa3, #a855f7); width: 64.61%; }
+
+    .acc-val {
+      font-size: 0.82rem;
+      font-weight: 700;
+      min-width: 52px;
+      text-align: right;
+    }
+
+    .val-mfcc { color: #be185d; }
+    .val-cnn  { color: #7c3aed; }
+
+    /* ── Tech stack ── */
+    .tech-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .tech-pill {
+      background: white;
+      border-radius: 12px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.05);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #2d2d2d;
+      transition: transform 0.2s;
+    }
+
+    .tech-pill:hover { transform: translateY(-3px); }
+
+    .tech-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    /* ── Learnings ── */
+    .learnings-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .learning-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 0.93rem;
+      color: #444;
+      line-height: 1.7;
+    }
+
+    .learning-item::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+
+    /* ── GitHub button ── */
+    .github-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      color: white;
+      padding: 14px 32px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      box-shadow: 0 8px 22px rgba(255,79,163,0.28);
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 10px;
+    }
+
+    .github-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(255,79,163,0.34);
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 26px 20px;
+      background: rgba(255,255,255,0.25);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 2rem; }
+      .section-block { padding: 28px 24px; }
+      .hero-banner   { padding: 34px 24px; }
+      .lang { top: 14px; right: 14px; }
+    }
+  </style>
 </head>
 
 <body>
 
+<!-- ── Header ── -->
 <header>
-  <!-- Language Switch -->
   <div class="lang">
     <a href="project-lid.html" class="active">🇬🇧 EN</a>
     <a href="project-lid-tr.html">🇹🇷 TR</a>
   </div>
+
+  <div class="hero-eyebrow">Project Showcase</div>
+  <h1>🎤 Language Identification<br>System (LID)</h1>
+  <p>Automatically recognizing spoken languages from short audio recordings using MFCC features and a CNN model.</p>
+
+  <div class="tag-row">
+    <span class="tag">Python</span>
+    <span class="tag">Deep Learning</span>
+    <span class="tag">Speech Processing</span>
+    <span class="tag">CNN</span>
+    <span class="tag">MFCC</span>
+    <span class="tag">Google Colab</span>
+  </div>
+
+  <a class="back-btn" href="index.html">← Back to Home</a>
 </header>
 
-<section>
-  <div class="card project-card">
+<!-- ── Project card ── -->
+<div class="project-card">
 
-    <h1>🎤 Language Identification (LID) Project</h1>
-    <a href="index.html" class="btn2">← Back to Home</a>
-
-    <p>
-      This project was developed as part of my
-      <b>Introduction to Speech Processing</b> course.
-      The main goal was to build a system that can automatically
-      recognize the spoken language from short audio recordings.
-    </p>
-
-    <hr>
-
-    <h2>📂 Dataset</h2>
-    <p>
-      I used an open-source dataset available on Kaggle.
-      The dataset contains short speech samples from multiple languages.
-      Working with real audio data helped me better understand how speech
-      processing systems are trained and evaluated.
-    </p>
-
-    <hr>
-
-    <h2>✨ Methods Implemented</h2>
-
-    <h3>1️⃣ MFCC (Mel-Frequency Cepstral Coefficients)</h3>
-    <p>
-      I started the project with a more classical approach using MFCC features.
-      This was the first stage where I was learning how language identification works.
-      The code was easier to build, but the results were not very strong,
-      since MFCC-based methods are more traditional and limited compared to deep learning.
-    </p>
-
-    <h3>2️⃣ CNN (Convolutional Neural Network)</h3>
-    <p>
-      After that, I moved to a more modern approach using a CNN model.
-      This method produced better performance and improved accuracy.
-    </p>
-
-    <p>
-      The most challenging part of this stage was trying to increase the model’s accuracy.
-      I had to carefully analyze what was causing errors in training and prediction,
-      then adjust parameters and improve the model step by step.
-    </p>
-
-    <hr>
-
-    <h2>📊 Results</h2>
-
-    <p><b>Validation Accuracy:</b> 64.61%</p>
-
-    <p>
-      The CNN model was trained for 10 epochs, and the best model was saved during training.
-      Overall, CNN achieved better results compared to the MFCC baseline method.
-    </p>
-
-    <hr>
-
-    <h2>💻 Tools & Technologies</h2>
-
-    <ul>
-      <li>Python</li>
-      <li>Google Colab</li>
-      <li>Kaggle Dataset</li>
-      <li>Audio Feature Extraction (MFCC)</li>
-      <li>Deep Learning (CNN)</li>
-    </ul>
-
-    <hr>
-
-    <h2>🌷 What This Project Taught Me</h2>
-
-    <p>
-      This project helped me understand how speech-processing projects are developed in Python.
-      I learned how to use Google Colab efficiently, work with audio data,
-      and explore the exciting field of language identification.
-    </p>
-
-    <p>
-      Most importantly, I realized that improving model performance requires patience,
-      experimentation, and a lot of problem-solving — and that’s what made the project so rewarding.
-    </p>
-
-    <hr>
-
-    <h2>🔗 GitHub Repository</h2>
-
-    <p>
-      You can explore the full code and notebooks here:
-    </p>
-
-    <a href="https://github.com/rbmentes/lid-language-identification"
-       target="_blank"
-       class="btn">
-       View on GitHub →
-    </a>
-
+  <!-- Stats banner -->
+  <div class="hero-banner">
+    <h2>Project results at a glance</h2>
+    <div class="stats-row">
+      <div class="stat-box">
+        <span class="stat-num">64.6%</span>
+        <span class="stat-label">CNN accuracy</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">2</span>
+        <span class="stat-label">Methods used</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">10</span>
+        <span class="stat-label">Training epochs</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">💜</span>
+        <span class="stat-label">Built with love</span>
+      </div>
+    </div>
   </div>
-</section>
+
+  <!-- About -->
+  <div class="section-block">
+    <h2>📌 About the project</h2>
+    <p>This project was developed as part of my <strong>Introduction to Speech Processing</strong> course. The main goal was to build a system that can automatically recognize the spoken language from short audio recordings.</p>
+    <p>Working with real audio data helped me better understand how speech processing systems are trained and evaluated — and how much fine-tuning goes into getting a model to perform well.</p>
+  </div>
+
+  <!-- Dataset -->
+  <div class="section-block">
+    <h2>📂 Dataset</h2>
+    <p>I used an open-source dataset from Kaggle containing short speech samples from multiple languages. Using real audio data gave me hands-on experience with the messy, unpredictable nature of real-world speech — no two recordings are the same.</p>
+  </div>
+
+  <!-- Methods -->
+  <div class="section-block">
+    <h2>✨ Methods implemented</h2>
+    <div class="method-steps">
+
+      <div class="method-step">
+        <div class="method-num">1</div>
+        <div class="method-content">
+          <h3>MFCC — Mel-Frequency Cepstral Coefficients</h3>
+          <p>I started with a classical approach using MFCC features. This was the first stage where I learned how language identification works. The code was easier to build, but results were limited compared to deep learning methods.</p>
+          <span class="method-tag tag-classical">Classical method</span>
+        </div>
+      </div>
+
+      <div class="method-step">
+        <div class="method-num">2</div>
+        <div class="method-content">
+          <h3>CNN — Convolutional Neural Network</h3>
+          <p>I then moved to a modern CNN approach which produced significantly better performance. The most challenging part was improving accuracy — I had to carefully analyze errors in training, adjust parameters, and improve the model step by step.</p>
+          <span class="method-tag tag-dl">Deep learning</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="section-block">
+    <h2>📊 Results</h2>
+    <p>The CNN model outperformed the MFCC baseline across all evaluation metrics. It was trained for 10 epochs with the best-performing checkpoint saved during training.</p>
+    <div class="accuracy-visual">
+      <div class="acc-label">Validation accuracy comparison</div>
+      <div class="acc-row">
+        <span class="acc-name">MFCC baseline</span>
+        <div class="acc-bar-wrap"><div class="acc-bar bar-mfcc"></div></div>
+        <span class="acc-val val-mfcc">~42%</span>
+      </div>
+      <div class="acc-row">
+        <span class="acc-name">CNN model</span>
+        <div class="acc-bar-wrap"><div class="acc-bar bar-cnn"></div></div>
+        <span class="acc-val val-cnn">64.61%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tools -->
+  <div class="section-block">
+    <h2>💻 Tools & technologies</h2>
+    <div class="tech-grid">
+      <div class="tech-pill"><div class="tech-dot" style="background:#ff4fa3;"></div>Python</div>
+      <div class="tech-pill"><div class="tech-dot" style="background:#f59e0b;"></div>Google Colab</div>
+      <div class="tech-pill"><div class="tech-dot" style="background:#a855f7;"></div>Kaggle Dataset</div>
+      <div class="tech-pill"><div class="tech-dot" style="background:#3b82f6;"></div>MFCC Feature Extraction</div>
+      <div class="tech-pill"><div class="tech-dot" style="background:#10b981;"></div>CNN Deep Learning</div>
+    </div>
+  </div>
+
+  <!-- Learnings -->
+  <div class="section-block">
+    <h2>🌷 What this project taught me</h2>
+    <div class="learnings-list">
+      <div class="learning-item">How to build end-to-end speech processing pipelines in Python</div>
+      <div class="learning-item">How to use Google Colab efficiently for ML experiments</div>
+      <div class="learning-item">How to work with raw audio data and extract meaningful features</div>
+      <div class="learning-item">That improving model performance requires patience, experimentation, and lots of problem-solving</div>
+      <div class="learning-item">The difference between classical signal features (MFCC) and learned deep features (CNN)</div>
+    </div>
+  </div>
+
+  <!-- GitHub -->
+  <div class="section-block" style="text-align:center;">
+    <h2 style="justify-content:center;">🔗 GitHub repository</h2>
+    <p>Explore the full code, notebooks, and training logs:</p>
+    <a class="github-btn"
+       href="https://github.com/rbmentes/lid-language-identification"
+       target="_blank">
+      View on GitHub →
+    </a>
+  </div>
+
+</div>
+
+<!-- ── Footer ── -->
+<footer>
+  <p>Made with 💗 by Buse | SheBuildsSTEM</p>
+</footer>
 
 </body>
 </html>
-

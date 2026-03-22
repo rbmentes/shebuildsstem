@@ -3,169 +3,595 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Speech AI Starter Series — Part 2 | CNNs for Speech Recognition</title>
+  <title>Speech AI Starter Series — Part 2 | SheBuildsSTEM</title>
   <link rel="icon" href="favicon.jpg">
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff);
+      min-height: 100vh;
+      color: #2d2d2d;
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+
+    header a.site-link {
+      display: inline-block;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: white;
+      text-decoration: none;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.12);
+      margin-bottom: 20px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      background: rgba(255,255,255,0.25);
+      color: white;
+      padding: 7px 18px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.4);
+      transition: background 0.2s;
+    }
+
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+
+    .blog-container {
+      max-width: 780px;
+      margin: 0 auto 80px;
+      padding: 0 20px;
+    }
+
+    .article-card {
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.55);
+      border-radius: 28px;
+      padding: 52px 56px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.11);
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .series-label {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      color: white;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .series-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #a855f7;
+      margin-bottom: 8px;
+    }
+
+    .article-card h2 {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: #2d2d2d;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .article-meta {
+      font-size: 0.78rem;
+      color: #999;
+      font-weight: 600;
+      margin-bottom: 36px;
+      padding-bottom: 28px;
+      border-bottom: 2px solid rgba(168,85,247,0.12);
+    }
+
+    .article-card p {
+      font-size: 0.97rem;
+      color: #444;
+      line-height: 1.9;
+      margin-bottom: 18px;
+    }
+
+    .article-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #2d2d2d;
+      margin: 38px 0 14px;
+    }
+
+    /* ── Definition box ── */
+    .definition-box {
+      background: linear-gradient(135deg, rgba(168,85,247,0.07), rgba(255,79,163,0.05));
+      border-left: 4px solid #a855f7;
+      border-radius: 0 16px 16px 0;
+      padding: 18px 22px;
+      margin: 16px 0 22px;
+    }
+
+    .definition-box p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.8; }
+
+    /* ── Audio to image flow ── */
+    .transform-flow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 16px 0 22px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .transform-box {
+      background: white;
+      border-radius: 14px;
+      padding: 16px 20px;
+      text-align: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.05);
+      flex: 1;
+      min-width: 130px;
+    }
+
+    .transform-box .t-icon { font-size: 1.6rem; margin-bottom: 6px; display: block; }
+    .transform-box .t-label { font-size: 0.8rem; font-weight: 700; color: #2d2d2d; margin-bottom: 3px; }
+    .transform-box .t-desc  { font-size: 0.72rem; color: #888; line-height: 1.5; }
+
+    .transform-arrow {
+      font-size: 1.2rem;
+      color: #ff4fa3;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ── CNN layers ── */
+    .cnn-layers {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 16px 0 22px;
+    }
+
+    .cnn-layer {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-radius: 14px;
+      padding: 14px 18px;
+      transition: transform 0.2s;
+    }
+
+    .cnn-layer:hover { transform: translateX(5px); }
+
+    .cnn-layer.conv   { background: rgba(255,79,163,0.07);  border: 1.5px solid rgba(255,79,163,0.18); }
+    .cnn-layer.activ  { background: rgba(168,85,247,0.07);  border: 1.5px solid rgba(168,85,247,0.18); }
+    .cnn-layer.pool   { background: rgba(59,130,246,0.07);  border: 1.5px solid rgba(59,130,246,0.18); }
+    .cnn-layer.fc     { background: rgba(16,185,129,0.07);  border: 1.5px solid rgba(16,185,129,0.18); }
+
+    .layer-badge {
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 10px;
+      flex-shrink: 0;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    .conv  .layer-badge { background: #fce7f3; color: #be185d; }
+    .activ .layer-badge { background: #ede9fe; color: #6d28d9; }
+    .pool  .layer-badge { background: #dbeafe; color: #1d4ed8; }
+    .fc    .layer-badge { background: #d1fae5; color: #065f46; }
+
+    .layer-info h4 { font-size: 0.9rem; font-weight: 700; color: #2d2d2d; margin-bottom: 3px; }
+    .layer-info p  { font-size: 0.8rem; color: #666; margin: 0; line-height: 1.5; }
+
+    /* ── What CNN learns ── */
+    .learns-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin: 14px 0 20px;
+    }
+
+    .learns-chip {
+      background: white;
+      border-radius: 12px;
+      padding: 12px 14px;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #555;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      border: 1px solid rgba(168,85,247,0.1);
+    }
+
+    .learns-chip .chip-icon { font-size: 1.2rem; display: block; margin-bottom: 6px; }
+
+    /* ── Why CNN advantages ── */
+    .advantages-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .advantage-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      color: #444;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      border: 1px solid rgba(16,185,129,0.1);
+      transition: transform 0.2s;
+    }
+
+    .advantage-item:hover { transform: translateX(4px); }
+
+    .advantage-item::before {
+      content: '✓';
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10b981, #34d399);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── MFCC vs CNN comparison ── */
+    .vs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 16px 0 22px;
+    }
+
+    .vs-card {
+      border-radius: 18px;
+      padding: 22px 20px;
+    }
+
+    .vs-card.mfcc { background: rgba(255,79,163,0.07); border: 1.5px solid rgba(255,79,163,0.2); }
+    .vs-card.cnn  { background: rgba(168,85,247,0.07); border: 1.5px solid rgba(168,85,247,0.2); }
+
+    .vs-card .vs-icon { font-size: 1.8rem; margin-bottom: 8px; display: block; }
+    .vs-card h4 { font-size: 0.92rem; font-weight: 700; margin-bottom: 8px; }
+    .vs-card.mfcc h4 { color: #be185d; }
+    .vs-card.cnn  h4 { color: #6d28d9; }
+    .vs-card p { font-size: 0.82rem; color: #666; line-height: 1.6; margin: 0 0 8px; }
+    .vs-card p:last-child { margin: 0; }
+
+    /* ── Hybrid box ── */
+    .hybrid-box {
+      background: linear-gradient(135deg, rgba(255,79,163,0.06), rgba(168,85,247,0.06));
+      border-radius: 18px;
+      padding: 22px 24px;
+      border: 1px solid rgba(168,85,247,0.15);
+      margin: 16px 0;
+    }
+
+    .hybrid-box h4 { font-size: 0.92rem; font-weight: 700; color: #6d28d9; margin-bottom: 12px; }
+
+    .hybrid-steps {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .hybrid-step {
+      background: white;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #2d2d2d;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .hybrid-arrow { color: #a855f7; font-weight: 700; font-size: 1rem; }
+
+    /* ── Coming next ── */
+    .coming-next {
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      border-radius: 18px;
+      padding: 24px 28px;
+      margin-top: 36px;
+      color: white;
+    }
+
+    .coming-next h3 { color: white; font-size: 0.85rem; opacity: 0.85; margin-bottom: 10px; }
+
+    .coming-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 18px;
+    }
+
+    .coming-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .coming-list li::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.7);
+      flex-shrink: 0;
+    }
+
+    .coming-btn {
+      display: inline-block;
+      background: white;
+      color: #ff4fa3;
+      padding: 10px 22px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+
+    .coming-btn:hover { transform: translateY(-2px); }
+
+    /* ── Series nav ── */
+    .series-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 36px;
+      padding-top: 28px;
+      border-top: 2px solid rgba(168,85,247,0.1);
+    }
+
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      color: white;
+      padding: 11px 26px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+      box-shadow: 0 6px 18px rgba(255,79,163,0.25);
+      transition: transform 0.2s;
+    }
+
+    .btn:hover { transform: translateY(-3px); }
+
+    .btn-outline {
+      display: inline-block;
+      background: transparent;
+      color: #ff4fa3;
+      padding: 11px 26px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+      border: 2px solid #ff4fa3;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .btn-outline:hover {
+      transform: translateY(-3px);
+      background: rgba(255,79,163,0.06);
+    }
+
+    footer {
+      text-align: center;
+      padding: 26px 20px;
+      background: rgba(255,255,255,0.25);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .article-card { padding: 30px 22px; }
+      .article-card h2 { font-size: 1.5rem; }
+      .vs-grid { grid-template-columns: 1fr; }
+      .transform-flow { flex-direction: column; }
+      .transform-arrow { transform: rotate(90deg); }
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-  <h1>SheBuildsSTEM 💗⚡</h1>
+  <a class="site-link" href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
 </header>
 
-<section class="blog-container">
+<div class="blog-container">
+  <div class="article-card">
 
-  <h2>🎧 Speech AI Starter Series — Part 2</h2>
-  <h3>CNNs for Speech Recognition</h3>
+    <span class="series-label">🎧 Speech AI Starter Series</span>
+    <div class="series-title">Part 2</div>
+    <h2>CNNs for Speech Recognition</h2>
+    <div class="article-meta">Beginner-friendly · Deep Learning · Speech Processing</div>
 
-  <p>
-    In Part 1, we learned why raw audio is not directly suitable for machine learning models 
-    and why we use feature extraction methods like MFCC.
-  </p>
+    <!-- Recap -->
+    <p>In Part 1, we learned why raw audio is not directly suitable for ML models and why we use feature extraction methods like MFCC. Now we move to something more powerful: <strong>Convolutional Neural Networks (CNNs)</strong>.</p>
 
-  <p>
-    Now we move to something more powerful: <strong>Convolutional Neural Networks (CNNs)</strong>.
-  </p>
+    <!-- Why neural networks -->
+    <h3>🧠 Why do we need neural networks for speech?</h3>
+    <div class="definition-box">
+      <p>Traditional ML models rely on handcrafted features. But speech is complex — it contains patterns across time and frequency that are difficult to manually design features for. Instead of manually defining what is important, neural networks learn patterns directly from data.</p>
+    </div>
 
-  <hr>
+    <!-- Audio to image -->
+    <h3>📊 Turning audio into an image</h3>
+    <p>CNNs were originally designed for image processing. The trick for speech is elegant — convert audio into a 2D representation and treat it like an image:</p>
 
-  <h3>🧠 Why Do We Need Neural Networks for Speech?</h3>
+    <div class="transform-flow">
+      <div class="transform-box">
+        <span class="t-icon">🎤</span>
+        <div class="t-label">Raw audio</div>
+        <div class="t-desc">1D waveform over time</div>
+      </div>
+      <div class="transform-arrow">→</div>
+      <div class="transform-box">
+        <span class="t-icon">📊</span>
+        <div class="t-label">Spectrogram</div>
+        <div class="t-desc">2D matrix: time × frequency</div>
+      </div>
+      <div class="transform-arrow">→</div>
+      <div class="transform-box">
+        <span class="t-icon">🖼️</span>
+        <div class="t-label">Image input</div>
+        <div class="t-desc">CNN scans for patterns</div>
+      </div>
+    </div>
 
-  <p>
-    Traditional machine learning models rely heavily on handcrafted features.
-    But speech is complex. It contains patterns across time and frequency that are 
-    difficult to manually design features for.
-  </p>
+    <p>A spectrogram shows how frequency content changes over time — it visually represents speech patterns that a CNN can then scan and detect.</p>
 
-  <p>
-    This is where deep learning comes in.
-  </p>
+    <!-- CNN layers -->
+    <h3>🔍 How CNN works on speech</h3>
+    <p>A CNN for speech processes the spectrogram image through a series of layers:</p>
 
-  <p>
-    Instead of manually defining what is important, neural networks learn the patterns directly from data.
-  </p>
+    <div class="cnn-layers">
+      <div class="cnn-layer conv">
+        <span class="layer-badge">Conv</span>
+        <div class="layer-info">
+          <h4>Convolution layers</h4>
+          <p>Detect local patterns — frequency transitions, energy bursts, phoneme shapes</p>
+        </div>
+      </div>
+      <div class="cnn-layer activ">
+        <span class="layer-badge">ReLU</span>
+        <div class="layer-info">
+          <h4>Activation functions</h4>
+          <p>Introduce non-linearity so the network can learn complex relationships</p>
+        </div>
+      </div>
+      <div class="cnn-layer pool">
+        <span class="layer-badge">Pooling</span>
+        <div class="layer-info">
+          <h4>Pooling layers</h4>
+          <p>Reduce dimensionality — keep the most important features, discard detail</p>
+        </div>
+      </div>
+      <div class="cnn-layer fc">
+        <span class="layer-badge">FC</span>
+        <div class="layer-info">
+          <h4>Fully connected layers</h4>
+          <p>Combine all learned features and output a final classification decision</p>
+        </div>
+      </div>
+    </div>
 
-  <hr>
+    <!-- What CNN learns -->
+    <h3>What CNN filters learn from speech</h3>
+    <div class="learns-grid">
+      <div class="learns-chip"><span class="chip-icon">🌊</span>Frequency transitions</div>
+      <div class="learns-chip"><span class="chip-icon">⚡</span>Energy concentration</div>
+      <div class="learns-chip"><span class="chip-icon">🗣️</span>Phoneme structures</div>
+      <div class="learns-chip"><span class="chip-icon">🌍</span>Language patterns</div>
+    </div>
 
-  <h3>📊 Turning Audio into an Image</h3>
+    <!-- Why CNN works well -->
+    <h3>⚙️ Why CNNs work well for speech</h3>
+    <div class="advantages-list">
+      <div class="advantage-item">Capture local frequency-time patterns automatically</div>
+      <div class="advantage-item">Handle noise better than traditional methods</div>
+      <div class="advantage-item">Require far less manual feature engineering</div>
+      <div class="advantage-item">Scale well with larger datasets</div>
+    </div>
 
-  <p>
-    CNNs were originally designed for image processing.
-    So how can we use them for speech?
-  </p>
+    <!-- MFCC vs CNN -->
+    <h3>🧩 CNN vs MFCC — what's the difference?</h3>
+    <div class="vs-grid">
+      <div class="vs-card mfcc">
+        <span class="vs-icon">🛠️</span>
+        <h4>MFCC</h4>
+        <p>Handcrafted feature extraction.</p>
+        <p>Human-designed rules decide what matters.</p>
+        <p>Fast, interpretable, limited.</p>
+      </div>
+      <div class="vs-card cnn">
+        <span class="vs-icon">🧠</span>
+        <h4>CNN</h4>
+        <p>Learning-based pattern extraction.</p>
+        <p>The model discovers what matters from data.</p>
+        <p>Slower to train, more powerful.</p>
+      </div>
+    </div>
 
-  <p>
-    The trick is simple:
-  </p>
+    <p>Many modern systems combine both approaches in a hybrid pipeline:</p>
 
-  <ul>
-    <li>Convert audio into a spectrogram</li>
-    <li>Represent it as a 2D matrix (time × frequency)</li>
-    <li>Treat it like an image</li>
-  </ul>
+    <div class="hybrid-box">
+      <h4>💡 Hybrid approach — very common in practice</h4>
+      <div class="hybrid-steps">
+        <div class="hybrid-step">🎤 Raw audio</div>
+        <div class="hybrid-arrow">→</div>
+        <div class="hybrid-step">📊 Extract MFCC</div>
+        <div class="hybrid-arrow">→</div>
+        <div class="hybrid-step">🧠 Feed into CNN</div>
+        <div class="hybrid-arrow">→</div>
+        <div class="hybrid-step">🎯 Prediction</div>
+      </div>
+    </div>
 
-  <p>
-    A spectrogram shows how frequency content changes over time.
-    It visually represents speech patterns.
-  </p>
+    <!-- Coming next -->
+    <div class="coming-next">
+      <h3>Coming next in Part 3</h3>
+      <ul class="coming-list">
+        <li>What is a spectrogram in detail?</li>
+        <li>How convolution actually works mathematically</li>
+        <li>How to build a simple CNN for speech classification</li>
+      </ul>
+      <a class="coming-btn" href="blog.html">Back to Blog →</a>
+    </div>
 
-  <p>
-    Now a CNN can scan this "image" and detect patterns.
-  </p>
+    <!-- Nav -->
+    <div class="series-nav">
+      <a class="btn-outline" href="speech-ai-part1.html">← Part 1: MFCC</a>
+      <a class="btn" href="blog.html">Back to Blog →</a>
+    </div>
 
-  <hr>
-
-  <h3>🔍 How CNN Works on Speech</h3>
-
-  <p>
-    A Convolutional Neural Network consists of:
-  </p>
-
-  <ul>
-    <li><strong>Convolution layers</strong> → detect local patterns</li>
-    <li><strong>Activation functions</strong> → introduce non-linearity</li>
-    <li><strong>Pooling layers</strong> → reduce dimensionality</li>
-    <li><strong>Fully connected layers</strong> → perform classification</li>
-  </ul>
-
-  <p>
-    In speech tasks, convolution filters learn:
-  </p>
-
-  <ul>
-    <li>Frequency transitions</li>
-    <li>Energy concentration patterns</li>
-    <li>Phoneme-related structures</li>
-  </ul>
-
-  <p>
-    Instead of manually extracting features like MFCC, 
-    CNN automatically learns discriminative patterns.
-  </p>
-
-  <hr>
-
-  <h3>⚙️ Why CNNs Work Well for Speech</h3>
-
-  <ul>
-    <li>Capture local frequency-time patterns</li>
-    <li>Handle noise better than traditional methods</li>
-    <li>Require less manual feature engineering</li>
-    <li>Scale well with larger datasets</li>
-  </ul>
-
-  <p>
-    That’s why CNN-based models often outperform classical ML approaches in:
-  </p>
-
-  <ul>
-    <li>Speech recognition</li>
-    <li>Language identification</li>
-    <li>Speaker recognition</li>
-  </ul>
-
-  <hr>
-
-  <h3>🧩 CNN vs MFCC — What’s the Difference?</h3>
-
-  <p>
-    MFCC is a handcrafted feature extraction method.
-    CNN is a learning-based pattern extraction method.
-  </p>
-
-  <p>
-    Many modern systems combine both:
-  </p>
-
-  <ul>
-    <li>Extract MFCC features</li>
-    <li>Feed them into a CNN model</li>
-  </ul>
-
-  <p>
-    This hybrid approach is very common in practical speech AI systems.
-  </p>
-
-  <hr>
-
-  <h3>🚀 What Comes Next?</h3>
-
-  <p>
-    In the next part, we will explore:
-  </p>
-
-  <ul>
-    <li>What is a spectrogram in detail?</li>
-    <li>How convolution actually works mathematically</li>
-    <li>How to build a simple CNN for speech classification</li>
-  </ul>
-
-  <br>
-  <a class="btn" href="blog.html">← Back to Blog</a>
-
-</section>
+  </div>
+</div>
 
 <footer>
   <p>Made with 💗 by Buse | SheBuildsSTEM</p>

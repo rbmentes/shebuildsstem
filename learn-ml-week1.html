@@ -3,166 +3,543 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Learn Machine Learning With Me — Week 1 | SheBuildsSTEM</title>
-
   <meta name="description" content="Week 1 of my Machine Learning journey. What is ML, types of learning, datasets, and generalization explained step by step.">
-
-  <link rel="stylesheet" href="style.css">
   <link rel="icon" href="favicon.jpg">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff);
+      min-height: 100vh;
+      color: #2d2d2d;
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+
+    header a {
+      display: inline-block;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: white;
+      text-decoration: none;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.12);
+      margin-bottom: 20px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      background: rgba(255,255,255,0.25);
+      color: white;
+      padding: 7px 18px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.4);
+      transition: background 0.2s;
+    }
+
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+
+    .blog-container {
+      max-width: 780px;
+      margin: 0 auto 80px;
+      padding: 0 20px;
+    }
+
+    .article-card {
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.55);
+      border-radius: 28px;
+      padding: 52px 56px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.11);
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .series-label {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      color: white;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .week-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #a855f7;
+      margin-bottom: 8px;
+    }
+
+    .article-card h2 {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: #2d2d2d;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .article-meta {
+      font-size: 0.78rem;
+      color: #bbb;
+      font-weight: 600;
+      margin-bottom: 36px;
+      padding-bottom: 28px;
+      border-bottom: 2px solid rgba(168,85,247,0.12);
+    }
+
+    .article-card p {
+      font-size: 0.97rem;
+      color: #444;
+      line-height: 1.9;
+      margin-bottom: 18px;
+    }
+
+    .article-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #2d2d2d;
+      margin: 38px 0 14px;
+    }
+
+    /* ── Definition box ── */
+    .definition-box {
+      background: linear-gradient(135deg, rgba(168,85,247,0.07), rgba(255,79,163,0.05));
+      border-left: 4px solid #a855f7;
+      border-radius: 0 16px 16px 0;
+      padding: 18px 22px;
+      margin: 16px 0 22px;
+    }
+
+    .definition-box p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.8;
+    }
+
+    /* ── ML Types cards ── */
+    .ml-types {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+      margin: 16px 0 24px;
+    }
+
+    .ml-type-card {
+      border-radius: 18px;
+      padding: 22px 18px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+
+    .ml-type-card:hover { transform: translateY(-5px); }
+
+    .ml-type-card.supervised {
+      background: rgba(255,79,163,0.07);
+      border: 1.5px solid rgba(255,79,163,0.2);
+    }
+
+    .ml-type-card.unsupervised {
+      background: rgba(168,85,247,0.07);
+      border: 1.5px solid rgba(168,85,247,0.2);
+    }
+
+    .ml-type-card.reinforcement {
+      background: rgba(59,130,246,0.07);
+      border: 1.5px solid rgba(59,130,246,0.2);
+    }
+
+    .ml-type-card .type-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+
+    .ml-type-card h4 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .supervised h4    { color: #be185d; }
+    .unsupervised h4  { color: #6d28d9; }
+    .reinforcement h4 { color: #1d4ed8; }
+
+    .ml-type-card p {
+      font-size: 0.78rem;
+      color: #666;
+      line-height: 1.6;
+      margin: 0 0 10px;
+    }
+
+    .type-example {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    .supervised .type-example    { background: #fce7f3; color: #be185d; }
+    .unsupervised .type-example  { background: #ede9fe; color: #6d28d9; }
+    .reinforcement .type-example { background: #dbeafe; color: #1d4ed8; }
+
+    /* ── Comparison chips ── */
+    .compare-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 14px 0 22px;
+    }
+
+    .compare-chip {
+      border-radius: 14px;
+      padding: 16px 18px;
+    }
+
+    .compare-chip.reg {
+      background: rgba(255,79,163,0.07);
+      border: 1.5px solid rgba(255,79,163,0.18);
+    }
+
+    .compare-chip.cls {
+      background: rgba(168,85,247,0.07);
+      border: 1.5px solid rgba(168,85,247,0.18);
+    }
+
+    .compare-chip strong {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 4px;
+    }
+
+    .compare-chip.reg strong { color: #be185d; }
+    .compare-chip.cls strong { color: #6d28d9; }
+
+    .compare-chip p {
+      font-size: 0.8rem;
+      color: #666;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* ── Term glossary ── */
+    .glossary {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 14px 0 22px;
+    }
+
+    .glossary-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: white;
+      border-radius: 14px;
+      padding: 14px 18px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .glossary-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 10px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-x  { background: #fce7f3; color: #be185d; }
+    .badge-y  { background: #ede9fe; color: #6d28d9; }
+
+    .glossary-item p {
+      font-size: 0.86rem;
+      color: #555;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .glossary-item p strong { color: #2d2d2d; }
+
+    /* ── Split train/test visual ── */
+    .split-visual {
+      background: white;
+      border-radius: 16px;
+      padding: 20px 22px;
+      margin: 14px 0 22px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .split-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+
+    .split-bar {
+      display: flex;
+      border-radius: 10px;
+      overflow: hidden;
+      height: 36px;
+      margin-bottom: 10px;
+    }
+
+    .split-train {
+      background: linear-gradient(90deg, #ff4fa3, #f472b6);
+      flex: 0 0 80%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .split-test {
+      background: linear-gradient(90deg, #a855f7, #c084fc);
+      flex: 0 0 20%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .split-desc {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #888;
+    }
+
+    /* ── Highlight box ── */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(168,85,247,0.07));
+      border-left: 4px solid #ff4fa3;
+      border-radius: 0 14px 14px 0;
+      padding: 18px 22px;
+      margin: 20px 0;
+    }
+
+    .highlight-box p { margin: 0; font-size: 0.93rem; color: #555; font-style: italic; }
+
+    /* ── Takeaway ── */
+    .takeaway {
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      border-radius: 18px;
+      padding: 26px 28px;
+      margin-top: 36px;
+      color: white;
+    }
+
+    .takeaway h3 { color: white; font-size: 1rem; margin: 0 0 10px; }
+    .takeaway p  { color: rgba(255,255,255,0.92); font-size: 0.93rem; margin: 0; line-height: 1.75; }
+
+    /* ── Series nav ── */
+    .series-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 44px;
+      padding-top: 28px;
+      border-top: 2px solid rgba(168,85,247,0.1);
+    }
+
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      color: white;
+      padding: 11px 26px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+      box-shadow: 0 6px 18px rgba(255,79,163,0.25);
+      transition: transform 0.2s;
+    }
+
+    .btn:hover { transform: translateY(-3px); }
+
+    .btn-outline {
+      display: inline-block;
+      background: transparent;
+      color: #ff4fa3;
+      padding: 11px 26px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+      border: 2px solid #ff4fa3;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .btn-outline:hover {
+      transform: translateY(-3px);
+      background: rgba(255,79,163,0.06);
+    }
+
+    footer {
+      text-align: center;
+      padding: 26px 20px;
+      background: rgba(255,255,255,0.25);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .article-card { padding: 30px 22px; }
+      .article-card h2 { font-size: 1.5rem; }
+      .compare-row { grid-template-columns: 1fr; }
+      .ml-types { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-  <h1>SheBuildsSTEM 💗⚡</h1>
+  <a href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
 </header>
 
-<section class="blog-container">
+<div class="blog-container">
+  <div class="article-card">
 
-  <p class="series-label">Learn Machine Learning With Me</p>
-  <h2>Week 1 — What Is Machine Learning?</h2>
+    <span class="series-label">🎓 Learn Machine Learning With Me</span>
+    <div class="week-label">Week 1</div>
+    <h2>What Is Machine Learning?</h2>
+    <div class="article-meta">Spring 2026 · Beginner-friendly · From an engineering student</div>
 
-  <p class="date">Spring 2026</p>
+    <!-- Why -->
+    <h3>📌 Why I'm starting this series</h3>
+    <p>This semester, I'm taking Machine Learning for the first time. Instead of just studying for exams, I decided to document what I learn — step by step.</p>
+    <div class="highlight-box">
+      <p>This series is not written as an expert. It's written as an engineering student building understanding from the ground up.</p>
+    </div>
 
-  <h3>📌 Why I’m Starting This Series</h3>
-  <p>
-    This semester, I’m taking Machine Learning for the first time.
-    Instead of just studying for exams, I decided to document what I learn —
-    step by step.
-  </p>
+    <!-- What is ML -->
+    <h3>🧠 What is machine learning?</h3>
+    <div class="definition-box">
+      <p>Machine Learning is a field of study that gives computers the ability to learn patterns from data — without being explicitly programmed for every rule.</p>
+    </div>
+    <p>Instead of writing rules manually, we provide data, examples, and sometimes expected outputs. The model learns the relationship on its own.</p>
 
-  <p>
-    This series is not written as an expert.
-    It’s written as an engineering student building understanding from the ground up.
-  </p>
+    <!-- Types -->
+    <h3>🔍 Types of machine learning</h3>
+    <div class="ml-types">
+      <div class="ml-type-card supervised">
+        <span class="type-icon">🏷️</span>
+        <h4>Supervised Learning</h4>
+        <p>Learns from labeled data — every input has a known correct output.</p>
+        <span class="type-example">e.g. Deepfake detection</span>
+      </div>
+      <div class="ml-type-card unsupervised">
+        <span class="type-icon">🔎</span>
+        <h4>Unsupervised Learning</h4>
+        <p>Finds structure in unlabeled data — no correct answers given.</p>
+        <span class="type-example">e.g. Audio clustering</span>
+      </div>
+      <div class="ml-type-card reinforcement">
+        <span class="type-icon">🎮</span>
+        <h4>Reinforcement Learning</h4>
+        <p>Learns by interacting with an environment and receiving rewards.</p>
+        <span class="type-example">e.g. Game-playing AI</span>
+      </div>
+    </div>
 
-  <h3>🧠 What Is Machine Learning?</h3>
+    <!-- Regression vs Classification -->
+    <h3>📊 Regression vs classification</h3>
+    <p>In supervised learning, two main task types appear:</p>
+    <div class="compare-row">
+      <div class="compare-chip reg">
+        <strong>Regression</strong>
+        <p>Output is a continuous number — e.g. house price, temperature.</p>
+      </div>
+      <div class="compare-chip cls">
+        <strong>Classification</strong>
+        <p>Output is a category — e.g. real / fake, spam / not spam.</p>
+      </div>
+    </div>
+    <p>In my deepfake detection project, I worked on classification — predicting whether a voice sample is real or AI-generated.</p>
 
-  <p>
-    Machine Learning (ML) is a field of study that gives computers
-    the ability to learn patterns from data without being explicitly programmed.
-  </p>
+    <!-- Dataset -->
+    <h3>📂 Dataset, features and labels</h3>
+    <p>Every ML dataset is built from two things:</p>
+    <div class="glossary">
+      <div class="glossary-item">
+        <span class="glossary-badge badge-x">X</span>
+        <p><strong>Features</strong> — the input variables the model learns from. In speech: MFCCs, spectrogram values, pitch.</p>
+      </div>
+      <div class="glossary-item">
+        <span class="glossary-badge badge-y">y</span>
+        <p><strong>Labels</strong> — the target outputs we want to predict. In speech: Real or Fake.</p>
+      </div>
+    </div>
 
-  <p>
-    Instead of writing rules manually, we provide:
-  </p>
+    <!-- Train/test split -->
+    <h3>🎯 Training vs test set</h3>
+    <p>We always split our data before training:</p>
+    <div class="split-visual">
+      <div class="split-label">Typical 80/20 data split</div>
+      <div class="split-bar">
+        <div class="split-train">Training set — 80%</div>
+        <div class="split-test">Test — 20%</div>
+      </div>
+      <div class="split-desc">
+        <span>Model learns patterns here</span>
+        <span>Model is evaluated here</span>
+      </div>
+    </div>
+    <p>This split helps us measure generalization — the model's ability to perform well on data it has never seen before.</p>
 
-  <ul>
-    <li>Data</li>
-    <li>Examples</li>
-    <li>Expected outputs (sometimes)</li>
-  </ul>
+    <!-- Generalization -->
+    <h3>⚡ Why generalization matters</h3>
+    <div class="highlight-box">
+      <p>A model that memorizes training data but fails on new data is not useful. This connects directly to overfitting — a concept I explained in my AI Essentials series.</p>
+    </div>
 
-  <p>
-    And the model learns the relationship.
-  </p>
+    <!-- Takeaway -->
+    <div class="takeaway">
+      <h3>💡 What I realized this week</h3>
+      <p>Machine Learning is not magic. It is structured pattern recognition powered by mathematics. Understanding the vocabulary is the first step — and now you have it.</p>
+    </div>
 
-  <h3>🔍 Types of Machine Learning</h3>
+    <!-- Nav -->
+    <div class="series-nav">
+      <a class="btn-outline" href="blog.html">← Back to Blog</a>
+      <a class="btn" href="learn-ml-week2.html">Week 2 →</a>
+    </div>
 
-  <h4>1️⃣ Supervised Learning</h4>
-  <p>
-    The model learns from labeled data.
-  </p>
-  <p>
-    Example:
-    Predicting house prices (regression) or detecting fake voices (classification).
-  </p>
-
-  <h4>2️⃣ Unsupervised Learning</h4>
-  <p>
-    The model finds structure in unlabeled data.
-  </p>
-  <p>
-    Example:
-    Clustering similar audio samples.
-  </p>
-
-  <h4>3️⃣ Reinforcement Learning</h4>
-  <p>
-    The model learns by interacting with an environment and receiving rewards.
-  </p>
-
-  <h3>📊 Regression vs Classification</h3>
-
-  <p>
-    In supervised learning, two main tasks appear:
-  </p>
-
-  <ul>
-    <li><strong>Regression</strong> → Output is continuous (e.g., price, temperature).</li>
-    <li><strong>Classification</strong> → Output is categorical (e.g., real/fake).</li>
-  </ul>
-
-  <p>
-    In my deepfake detection project, I worked on classification.
-  </p>
-
-  <h3>📂 Dataset, Features, and Labels</h3>
-
-  <p>
-    A dataset usually consists of:
-  </p>
-
-  <ul>
-    <li><strong>Features (X)</strong> → Input variables</li>
-    <li><strong>Labels (y)</strong> → Target outputs</li>
-  </ul>
-
-  <p>
-    In speech processing:
-  </p>
-
-  <ul>
-    <li>Features → MFCCs, spectrogram values</li>
-    <li>Label → Real or Fake</li>
-  </ul>
-
-  <h3>🎯 Training vs Test Set</h3>
-
-  <p>
-    We split data into:
-  </p>
-
-  <ul>
-    <li>Training set → Model learns from this</li>
-    <li>Test set → Model is evaluated on this</li>
-  </ul>
-
-  <p>
-    This helps us measure generalization —
-    the ability to perform well on unseen data.
-  </p>
-
-  <h3>⚡ Why Generalization Matters</h3>
-
-  <p>
-    A model that memorizes training data but fails on new data
-    is not useful.
-  </p>
-
-  <p>
-    This connects directly to overfitting —
-    a concept I explained in my previous series.
-  </p>
-
-  <h3>💡 What I Realized This Week</h3>
-
-  <p>
-    Machine Learning is not magic.
-    It is structured pattern recognition powered by mathematics.
-  </p>
-
-  <p>
-    Understanding the vocabulary is the first step.
-  </p>
-
-  <div class="series-nav">
-    <a class="btn" href="learn-ml-week2.html">Next Week →</a>
   </div>
-
-</section>
+</div>
 
 <footer>
   <p>Made with 💗 by Buse | SheBuildsSTEM</p>

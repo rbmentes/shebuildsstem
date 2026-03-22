@@ -5,104 +5,326 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>When You Feel Behind in Engineering | SheBuildsSTEM</title>
   <link rel="icon" href="favicon.jpg">
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff);
+      min-height: 100vh;
+      color: #2d2d2d;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+
+    header a {
+      display: inline-block;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: white;
+      text-decoration: none;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.12);
+      margin-bottom: 20px;
+    }
+
+    .back-btn {
+      display: inline-block;
+      background: rgba(255,255,255,0.25);
+      color: white;
+      padding: 7px 18px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.4);
+      transition: background 0.2s;
+    }
+
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+
+    /* ── Container ── */
+    .blog-container {
+      max-width: 720px;
+      margin: 0 auto 80px;
+      padding: 0 20px;
+    }
+
+    /* ── Article card ── */
+    .article-card {
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.55);
+      border-radius: 28px;
+      padding: 52px 56px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.11);
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    /* ── Series label ── */
+    .series-label {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff4fa3, #f472b6);
+      color: white;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    /* ── Title ── */
+    .article-card h2 {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: #2d2d2d;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .date {
+      font-size: 0.78rem;
+      color: #bbb;
+      font-weight: 600;
+      margin-bottom: 32px;
+      padding-bottom: 28px;
+      border-bottom: 2px solid rgba(255,79,163,0.1);
+    }
+
+    /* ── Body text — softer and more spacious for personal writing ── */
+    .article-card p {
+      font-size: 1rem;
+      color: #4a4a4a;
+      line-height: 2;
+      margin-bottom: 22px;
+      font-weight: 400;
+    }
+
+    /* ── Section headings ── */
+    .article-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #2d2d2d;
+      margin: 40px 0 14px;
+    }
+
+    /* ── Pull quote — for emotional moments ── */
+    .pull-quote {
+      border-left: 4px solid #ff4fa3;
+      background: linear-gradient(135deg, rgba(255,79,163,0.06), rgba(168,85,247,0.04));
+      border-radius: 0 16px 16px 0;
+      padding: 20px 24px;
+      margin: 26px 0;
+      font-size: 1.05rem;
+      color: #555;
+      font-style: italic;
+      line-height: 1.85;
+    }
+
+    /* ── Warm highlight box ── */
+    .warm-box {
+      background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(251,191,219,0.1));
+      border-radius: 18px;
+      padding: 22px 26px;
+      margin: 22px 0;
+      border: 1px solid rgba(255,79,163,0.12);
+    }
+
+    .warm-box p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.85;
+    }
+
+    /* ── Affirmations list ── */
+    .affirmations {
+      list-style: none;
+      margin: 20px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .affirmations li {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 1rem;
+      color: #2d2d2d;
+      font-weight: 600;
+      background: white;
+      padding: 16px 20px;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      border: 1px solid rgba(255,79,163,0.1);
+      transition: transform 0.2s;
+    }
+
+    .affirmations li:hover { transform: translateX(6px); }
+
+    .affirmations li .aff-icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    /* ── Closing banner ── */
+    .closing-banner {
+      background: linear-gradient(135deg, #ff4fa3, #a855f7);
+      border-radius: 20px;
+      padding: 32px 28px;
+      margin-top: 40px;
+      text-align: center;
+      color: white;
+    }
+
+    .closing-banner p {
+      color: rgba(255,255,255,0.95);
+      font-size: 1rem;
+      line-height: 1.8;
+      margin: 0;
+      font-style: italic;
+    }
+
+    .closing-banner .closing-sig {
+      margin-top: 14px;
+      font-size: 0.85rem;
+      opacity: 0.8;
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    /* ── Bottom nav ── */
+    .series-nav {
+      margin-top: 44px;
+      padding-top: 28px;
+      border-top: 2px solid rgba(255,79,163,0.1);
+      text-align: center;
+    }
+
+    .btn-outline {
+      display: inline-block;
+      background: transparent;
+      color: #ff4fa3;
+      padding: 11px 26px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+      border: 2px solid #ff4fa3;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .btn-outline:hover {
+      transform: translateY(-3px);
+      background: rgba(255,79,163,0.06);
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 26px 20px;
+      background: rgba(255,255,255,0.25);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .article-card { padding: 32px 24px; }
+      .article-card h2 { font-size: 1.5rem; }
+    }
+  </style>
 </head>
 
 <body>
 
+<!-- ── Header ── -->
 <header>
-  <h1>SheBuildsSTEM 💗⚡</h1>
+  <a href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
 </header>
 
-<section class="blog-container">
+<div class="blog-container">
+  <div class="article-card">
 
-  <h2>When You Feel Behind in Engineering...</h2>
-  <p class="date">February 2026</p>
+    <span class="series-label">💗 Engineering Reflections</span>
+    <h2>When You Feel Behind in Engineering...</h2>
+    <div class="date">February 2026</div>
 
-  <p>
-    For a long time as an engineering student, I’ve carried a quiet feeling:
-    the feeling of being behind.
-  </p>
+    <p>For a long time as an engineering student, I've carried a quiet feeling: the feeling of being behind.</p>
 
-  <p>
-    Not just “a little behind”… but a feeling that follows you
-    even after class ends — into your social life,
-    your silent moments, and the way you see yourself.
-  </p>
+    <div class="pull-quote">
+      Not just "a little behind"… but a feeling that follows you even after class ends — into your social life, your silent moments, and the way you see yourself.
+    </div>
 
-  <p>
-    Sometimes it feels like I need to work twice as hard
-    to understand things others grasp immediately.
-    I rewrite notes. I study for hours.
-    I repeat the same topics again and again.
-    And still… some things don’t click.
-  </p>
+    <p>Sometimes it feels like I need to work twice as hard to understand things others grasp immediately. I rewrite notes. I study for hours. I repeat the same topics again and again. And still… some things don't click.</p>
 
-  <h3>💗 Retaking a Course Is Not Failure</h3>
+    <!-- Retaking -->
+    <h3>💗 Retaking a Course Is Not Failure</h3>
+    <p>One of the hardest parts of my journey was retaking some courses. It made me feel inadequate. As if I would never be good enough.</p>
 
-  <p>
-    One of the hardest parts of my journey was retaking some courses.
-    It made me feel inadequate.
-    As if I would never be good enough.
-  </p>
+    <div class="warm-box">
+      <p>Movies show the "smart engineer" who understands everything instantly. But real life is not like that. Real engineering is messy, slow, and full of repetition — and that is completely okay.</p>
+    </div>
 
-  <p>
-    Movies show the “smart engineer” who understands everything instantly.
-    But real life is not like that.
-  </p>
+    <!-- EE courses -->
+    <h3>⚡ Electrical Courses Were My Biggest Challenge</h3>
+    <p>For me, electrical and circuit courses were the most difficult. Labs, problem-solving, building circuits… it wasn't easy. Honestly, it's still not fully easy.</p>
 
-  <h3>⚡ Electrical Courses Were My Biggest Challenge</h3>
+    <p>Retaking those courses hurt my confidence deeply. I felt like I was failing.</p>
 
-  <p>
-    For me, electrical and circuit courses were the most difficult.
-    Labs, problem-solving, building circuits…
-    It wasn’t easy.
-    Honestly, it’s still not fully easy.
-  </p>
+    <!-- Something changed -->
+    <h3>🌷 But Something Changed</h3>
+    <p>Even in my hardest courses, something shifted. I began enjoying certain parts. Working on electronics projects started to excite me.</p>
 
-  <p>
-    Retaking those courses hurt my confidence deeply.
-    I felt like I was failing.
-  </p>
+    <div class="pull-quote">
+      When I had elective choices, I chose courses in these areas. Because despite the difficulty, there was still curiosity inside me — and I chose to follow it.
+    </div>
 
-  <h3>🌷 But Something Changed</h3>
+    <!-- Comparison -->
+    <h3>✨ Comparison Is a Trap</h3>
+    <p>I compare myself to others. "They're ahead, I'm behind." But engineering is not about being perfect. It's about continuing — even when it's hard, even when it's slow, even when it hurts.</p>
 
-  <p>
-    Even in my hardest courses, something shifted.
-    I began enjoying certain parts.
-    Working on electronics projects started to excite me.
-  </p>
+    <!-- Affirmations -->
+    <h3>💗 Feeling Behind Is Not the End</h3>
+    <p>If you're reading this and you feel the same way, I want you to remember:</p>
 
-  <p>
-    When I had elective choices,
-    I chose courses in these areas.
-    Because despite the difficulty,
-    there was still curiosity inside me.
-  </p>
+    <ul class="affirmations">
+      <li><span class="aff-icon">💗</span> You are not alone.</li>
+      <li><span class="aff-icon">⚡</span> You are not incapable.</li>
+      <li><span class="aff-icon">🌷</span> You are still growing.</li>
+    </ul>
 
-  <h3>✨ Comparison Is a Trap</h3>
+    <!-- Closing -->
+    <div class="closing-banner">
+      <p>"The engineers who changed the world weren't the ones who never struggled. They were the ones who kept going anyway."</p>
+      <div class="closing-sig">— Written with love, Buse 💗</div>
+    </div>
 
-  <p>
-    I compare myself to others.
-    “They’re ahead, I’m behind.”
-    But engineering is not about being perfect.
-    It’s about continuing.
-  </p>
+    <!-- Nav -->
+    <div class="series-nav">
+      <a class="btn-outline" href="blog.html">← Back to Blog</a>
+    </div>
 
-  <h3>💗 Feeling Behind Is Not the End</h3>
+  </div>
+</div>
 
-  <ul>
-    <li>💗 You are not alone.</li>
-    <li>⚡ You are not incapable.</li>
-    <li>🌷 You are still growing.</li>
-  </ul>
-
-  <br>
-  <a class="btn" href="blog.html">← Back to Blog</a>
-
-</section>
-
+<!-- ── Footer ── -->
 <footer>
   <p>Made with 💗 by Buse | SheBuildsSTEM</p>
 </footer>
