@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regularization | AI & Signal Processing Essentials – SheBuildsSTEM</title>
+  <meta name="description" content="Part 5 of AI Essentials — Dropout, L1, and L2 regularization explained with visuals.">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
+    header { text-align: center; padding: 60px 20px 40px; }
+    header a.site-link { display: inline-block; font-size: 1.3rem; font-weight: 900; color: white; text-decoration: none; text-shadow: 0 2px 12px rgba(0,0,0,0.12); margin-bottom: 20px; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 7px 18px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+    .blog-container { max-width: 780px; margin: 0 auto 80px; padding: 0 20px; }
+    .article-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 28px; padding: 52px 56px; box-shadow: 0 20px 50px rgba(0,0,0,0.11); animation: fadeUp 0.6s ease forwards; }
+    .series-label { display: inline-block; background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; padding: 5px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 18px; }
+    .series-title { font-size: 0.9rem; font-weight: 700; color: #a855f7; margin-bottom: 8px; }
+    .article-card h2 { font-size: 1.9rem; font-weight: 900; color: #2d2d2d; line-height: 1.25; margin-bottom: 6px; }
+    .article-meta { font-size: 0.78rem; color: #999; font-weight: 600; margin-bottom: 36px; padding-bottom: 28px; border-bottom: 2px solid rgba(168,85,247,0.12); }
+    .article-card p { font-size: 0.97rem; color: #444; line-height: 1.9; margin-bottom: 18px; }
+    .article-card h3 { font-size: 1.1rem; font-weight: 700; color: #2d2d2d; margin: 38px 0 14px; }
+    .definition-box { background: linear-gradient(135deg, rgba(168,85,247,0.07), rgba(255,79,163,0.05)); border-left: 4px solid #a855f7; border-radius: 0 16px 16px 0; padding: 18px 22px; margin: 16px 0 22px; }
+    .definition-box p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.8; }
+    .highlight-box { background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(168,85,247,0.07)); border-left: 4px solid #ff4fa3; border-radius: 0 14px 14px 0; padding: 18px 22px; margin: 20px 0; }
+    .highlight-box p { margin: 0; font-size: 0.93rem; color: #555; font-style: italic; }
+
+    /* ── Regularization method cards ── */
+    .reg-cards { display: flex; flex-direction: column; gap: 18px; margin: 14px 0 22px; }
+    .reg-card { background: white; border-radius: 18px; padding: 24px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04); }
+    .reg-header { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+    .reg-badge { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 800; flex-shrink: 0; color: white; }
+    .reg-badge.dropout { background: linear-gradient(135deg, #ff4fa3, #f472b6); }
+    .reg-badge.l2      { background: linear-gradient(135deg, #a855f7, #7c3aed); }
+    .reg-badge.l1      { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .reg-info h4 { font-size: 1rem; font-weight: 700; color: #2d2d2d; margin-bottom: 2px; }
+    .reg-info .reg-aka { font-size: 0.76rem; color: #999; font-weight: 600; }
+    .reg-desc { font-size: 0.87rem; color: #555; line-height: 1.7; margin-bottom: 14px; }
+
+    /* ── Dropout visual ── */
+    .dropout-visual { background: #f9f9f9; border-radius: 12px; padding: 16px; display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+    .dv-network { display: flex; gap: 6px; align-items: center; }
+    .dv-col { display: flex; flex-direction: column; gap: 5px; }
+    .dv-node { width: 28px; height: 28px; border-radius: 50%; border: 2px solid; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 700; }
+    .dv-node.active  { background: #ede9fe; border-color: #a855f7; color: #6d28d9; }
+    .dv-node.dropped { background: #f3f4f6; border-color: #d1d5db; color: #9ca3af; opacity: 0.4; }
+    .dv-arrow { color: #ccc; font-size: 0.8rem; }
+    .dv-label { font-size: 0.72rem; color: #888; font-weight: 600; }
+
+    /* ── L1 vs L2 comparison ── */
+    .l1l2-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0 20px; }
+    .l1l2-card { border-radius: 14px; padding: 16px; }
+    .l1l2-card.l1 { background: rgba(59,130,246,0.07); border: 1.5px solid rgba(59,130,246,0.2); }
+    .l1l2-card.l2 { background: rgba(168,85,247,0.07); border: 1.5px solid rgba(168,85,247,0.2); }
+    .l1l2-card h4 { font-size: 0.88rem; font-weight: 700; margin-bottom: 8px; }
+    .l1l2-card.l1 h4 { color: #1d4ed8; }
+    .l1l2-card.l2 h4 { color: #6d28d9; }
+    .l1l2-card p { font-size: 0.8rem; color: #666; line-height: 1.6; margin: 0; }
+
+    /* ── Formula box ── */
+    .formula-box { background: #1e1e2e; border-radius: 14px; padding: 16px 22px; margin: 12px 0 18px; text-align: center; }
+    .formula-box code { font-family: 'Courier New', monospace; font-size: 0.9rem; color: #cdd6f4; font-weight: 700; }
+    .formula-box code .pink   { color: #f38ba8; }
+    .formula-box code .purple { color: #cba6f7; }
+    .formula-box code .blue   { color: #89b4fa; }
+
+    /* ── When to use table ── */
+    .use-table { width: 100%; border-collapse: collapse; margin: 14px 0 22px; font-size: 0.86rem; }
+    .use-table th { background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; padding: 11px 14px; text-align: left; font-weight: 700; font-size: 0.78rem; }
+    .use-table th:first-child { border-radius: 12px 0 0 0; }
+    .use-table th:last-child  { border-radius: 0 12px 0 0; }
+    .use-table td { padding: 11px 14px; border-bottom: 1px solid rgba(0,0,0,0.05); color: #444; vertical-align: top; line-height: 1.5; }
+    .use-table tr:last-child td { border-bottom: none; }
+    .use-table tr:nth-child(even) td { background: rgba(255,79,163,0.03); }
+    .use-table td:first-child { font-weight: 700; color: #2d2d2d; }
+
+    /* ── Checklist ── */
+    .checklist { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
+    .check-item { display: flex; align-items: center; gap: 12px; background: white; border-radius: 12px; padding: 12px 16px; font-size: 0.88rem; color: #444; box-shadow: 0 3px 10px rgba(0,0,0,0.05); border: 1px solid rgba(16,185,129,0.1); }
+    .check-item::before { content: '✓'; width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #34d399); color: white; font-size: 0.7rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    /* ── Takeaway ── */
+    .takeaway { background: linear-gradient(135deg, #ff4fa3, #a855f7); border-radius: 18px; padding: 26px 28px; margin-top: 36px; color: white; }
+    .takeaway h3 { color: white; font-size: 1rem; margin: 0 0 10px; }
+    .takeaway p { color: rgba(255,255,255,0.92); font-size: 0.93rem; margin: 0; line-height: 1.75; }
+
+    .series-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 44px; padding-top: 28px; border-top: 2px solid rgba(168,85,247,0.1); }
+    .btn { display: inline-block; background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; box-shadow: 0 6px 18px rgba(255,79,163,0.25); transition: transform 0.2s; }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-outline { display: inline-block; background: transparent; color: #ff4fa3; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; border: 2px solid #ff4fa3; transition: transform 0.2s, background 0.2s; }
+    .btn-outline:hover { transform: translateY(-3px); background: rgba(255,79,163,0.06); }
+    footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) { .article-card { padding: 30px 22px; } .article-card h2 { font-size: 1.5rem; } .l1l2-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="site-link" href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
+</header>
+
+<div class="blog-container">
+  <div class="article-card">
+
+    <span class="series-label">⚡ AI & Signal Processing Essentials</span>
+    <div class="series-title">Part 5</div>
+    <h2>Regularization Techniques</h2>
+    <div class="article-meta">Beginner-friendly · Neural Networks · Fighting Overfitting</div>
+
+    <p>In Parts 1 and 2 we learned that overfitting is the enemy of good models. In Part 4 we saw how networks learn via backpropagation. Now the question is — how do we <em>stop</em> a network from overfitting while it learns? The answer is <strong>regularization</strong>.</p>
+
+    <h3>🛡️ What is regularization?</h3>
+    <div class="definition-box">
+      <p>Regularization is a set of techniques that constrain a model during training to prevent it from memorizing the training data. Instead of fitting every detail, the model is forced to learn only the most important patterns — patterns that will generalize to new data.</p>
+    </div>
+
+    <div class="highlight-box">
+      <p>Think of it like studying for an exam. Memorizing every practice question is overfitting. Understanding the underlying concepts is regularization — it prepares you for questions you've never seen before.</p>
+    </div>
+
+    <!-- Three techniques -->
+    <h3>🔧 The three main regularization techniques</h3>
+
+    <div class="reg-cards">
+
+      <!-- Dropout -->
+      <div class="reg-card">
+        <div class="reg-header">
+          <div class="reg-badge dropout">DO</div>
+          <div class="reg-info">
+            <h4>Dropout</h4>
+            <div class="reg-aka">Most popular in deep learning</div>
+          </div>
+        </div>
+        <div class="reg-desc">During each training step, randomly "drop" (set to zero) a percentage of neurons. This forces the remaining neurons to learn redundant representations — the network can't rely on any single neuron and becomes more robust.</div>
+        <div class="dropout-visual">
+          <div>
+            <div class="dv-label" style="margin-bottom:8px;">Without dropout</div>
+            <div class="dv-network">
+              <div class="dv-col">
+                <div class="dv-node active">i₁</div>
+                <div class="dv-node active">i₂</div>
+              </div>
+              <div class="dv-arrow">→</div>
+              <div class="dv-col">
+                <div class="dv-node active">h₁</div>
+                <div class="dv-node active">h₂</div>
+                <div class="dv-node active">h₃</div>
+              </div>
+              <div class="dv-arrow">→</div>
+              <div class="dv-col">
+                <div class="dv-node active">o</div>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:1.2rem;color:#ccc;">→</div>
+          <div>
+            <div class="dv-label" style="margin-bottom:8px;">With dropout (50%)</div>
+            <div class="dv-network">
+              <div class="dv-col">
+                <div class="dv-node active">i₁</div>
+                <div class="dv-node active">i₂</div>
+              </div>
+              <div class="dv-arrow">→</div>
+              <div class="dv-col">
+                <div class="dv-node active">h₁</div>
+                <div class="dv-node dropped">✕</div>
+                <div class="dv-node active">h₃</div>
+              </div>
+              <div class="dv-arrow">→</div>
+              <div class="dv-col">
+                <div class="dv-node active">o</div>
+              </div>
+            </div>
+          </div>
+          <div class="dv-label">Dropped neuron is different each step</div>
+        </div>
+      </div>
+
+      <!-- L2 -->
+      <div class="reg-card">
+        <div class="reg-header">
+          <div class="reg-badge l2">L2</div>
+          <div class="reg-info">
+            <h4>L2 Regularization</h4>
+            <div class="reg-aka">Also called Weight Decay or Ridge</div>
+          </div>
+        </div>
+        <div class="reg-desc">Adds a penalty to the loss function proportional to the square of the weights. This discourages large weights — keeping the model simple and preventing extreme over-reliance on any one feature.</div>
+        <div class="formula-box">
+          <code><span class="pink">Loss</span> = Original Loss + <span class="purple">λ</span> × Σ<span class="blue">w²</span></code>
+        </div>
+        <div class="reg-desc" style="margin:0;">λ (lambda) controls the strength of regularization. Larger λ = stronger penalty = simpler model.</div>
+      </div>
+
+      <!-- L1 -->
+      <div class="reg-card">
+        <div class="reg-header">
+          <div class="reg-badge l1">L1</div>
+          <div class="reg-info">
+            <h4>L1 Regularization</h4>
+            <div class="reg-aka">Also called Lasso</div>
+          </div>
+        </div>
+        <div class="reg-desc">Similar to L2 but uses the absolute value of weights instead of squares. L1 pushes some weights all the way to zero — effectively removing those features from the model. This produces a sparse model.</div>
+        <div class="formula-box">
+          <code><span class="pink">Loss</span> = Original Loss + <span class="purple">λ</span> × Σ|<span class="blue">w</span>|</code>
+        </div>
+        <div class="reg-desc" style="margin:0;">L1 is useful for feature selection — it automatically discards unimportant inputs by zeroing their weights.</div>
+      </div>
+
+    </div>
+
+    <!-- L1 vs L2 -->
+    <h3>⚖️ L1 vs L2 — key differences</h3>
+    <div class="l1l2-grid">
+      <div class="l1l2-card l1">
+        <h4>L1 (Lasso)</h4>
+        <p>Produces sparse models. Some weights become exactly zero. Good for feature selection. Works well when only a few features matter.</p>
+      </div>
+      <div class="l1l2-card l2">
+        <h4>L2 (Ridge)</h4>
+        <p>Keeps all weights small but non-zero. Good for preventing overfitting when all features contribute. More stable than L1.</p>
+      </div>
+    </div>
+
+    <!-- When to use -->
+    <h3>📊 When to use which technique</h3>
+    <table class="use-table">
+      <thead><tr><th>Technique</th><th>Best for</th><th>Typical rate</th></tr></thead>
+      <tbody>
+        <tr><td>Dropout</td><td>Large neural networks, image/speech models</td><td>20–50% of neurons</td></tr>
+        <tr><td>L2 (Ridge)</td><td>Most neural networks as default regularizer</td><td>λ = 0.0001–0.01</td></tr>
+        <tr><td>L1 (Lasso)</td><td>When you want automatic feature selection</td><td>λ = 0.0001–0.01</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Checklist -->
+    <h3>✅ Regularization checklist — before training</h3>
+    <div class="checklist">
+      <div class="check-item">Add Dropout after large dense layers (rate 0.2–0.5)</div>
+      <div class="check-item">Use L2 weight decay in your optimizer settings</div>
+      <div class="check-item">Monitor validation loss — if it rises while train loss falls, you need more regularization</div>
+      <div class="check-item">Use Early Stopping to halt training when validation loss stops improving</div>
+      <div class="check-item">Collect more data — regularization helps but more data is always better</div>
+    </div>
+
+    <div class="takeaway">
+      <h3>💡 Final takeaway</h3>
+      <p>Overfitting is not bad luck — it is predictable and preventable. Dropout forces your network to be robust. L2 keeps weights small. L1 removes noise features. Use them together and your model will generalise far better to data it has never seen. These techniques are what separate a toy model from a production-ready one.</p>
+    </div>
+
+    <div class="series-nav">
+      <a class="btn-outline" href="ai-essentials-part4.html">← Part 4: Backpropagation</a>
+      <a class="btn" href="blog.html">Back to Blog →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer><p>Made with 💗 by Buse | SheBuildsSTEM</p></footer>
+</body>
+</html>

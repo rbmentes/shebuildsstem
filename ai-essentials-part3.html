@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Activation Functions | AI & Signal Processing Essentials – SheBuildsSTEM</title>
+  <meta name="description" content="Part 3 of AI Essentials — understanding ReLU, Sigmoid, and Tanh activation functions with visual examples.">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
+    header { text-align: center; padding: 60px 20px 40px; }
+    header a.site-link { display: inline-block; font-size: 1.3rem; font-weight: 900; color: white; text-decoration: none; text-shadow: 0 2px 12px rgba(0,0,0,0.12); margin-bottom: 20px; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 7px 18px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+    .blog-container { max-width: 780px; margin: 0 auto 80px; padding: 0 20px; }
+    .article-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 28px; padding: 52px 56px; box-shadow: 0 20px 50px rgba(0,0,0,0.11); animation: fadeUp 0.6s ease forwards; }
+    .series-label { display: inline-block; background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; padding: 5px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 18px; }
+    .series-title { font-size: 0.9rem; font-weight: 700; color: #a855f7; margin-bottom: 8px; }
+    .article-card h2 { font-size: 1.9rem; font-weight: 900; color: #2d2d2d; line-height: 1.25; margin-bottom: 6px; }
+    .article-meta { font-size: 0.78rem; color: #999; font-weight: 600; margin-bottom: 36px; padding-bottom: 28px; border-bottom: 2px solid rgba(168,85,247,0.12); }
+    .article-card p { font-size: 0.97rem; color: #444; line-height: 1.9; margin-bottom: 18px; }
+    .article-card h3 { font-size: 1.1rem; font-weight: 700; color: #2d2d2d; margin: 38px 0 14px; }
+    .definition-box { background: linear-gradient(135deg, rgba(168,85,247,0.07), rgba(255,79,163,0.05)); border-left: 4px solid #a855f7; border-radius: 0 16px 16px 0; padding: 18px 22px; margin: 16px 0 22px; }
+    .definition-box p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.8; }
+    .highlight-box { background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(168,85,247,0.07)); border-left: 4px solid #ff4fa3; border-radius: 0 14px 14px 0; padding: 18px 22px; margin: 20px 0; }
+    .highlight-box p { margin: 0; font-size: 0.93rem; color: #555; font-style: italic; }
+
+    /* ── Why we need activation functions ── */
+    .without-with { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0 22px; }
+    .ww-card { border-radius: 16px; padding: 18px; }
+    .ww-card.without { background: rgba(239,68,68,0.06); border: 1.5px solid rgba(239,68,68,0.2); }
+    .ww-card.with    { background: rgba(16,185,129,0.06); border: 1.5px solid rgba(16,185,129,0.2); }
+    .ww-card h4 { font-size: 0.88rem; font-weight: 700; margin-bottom: 8px; }
+    .ww-card.without h4 { color: #dc2626; }
+    .ww-card.with h4    { color: #065f46; }
+    .ww-card p { font-size: 0.8rem; color: #666; line-height: 1.6; margin: 0; }
+
+    /* ── Activation function cards ── */
+    .activation-cards { display: flex; flex-direction: column; gap: 18px; margin: 14px 0 22px; }
+    .act-card { background: white; border-radius: 18px; padding: 22px 24px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04); }
+    .act-header { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+    .act-badge { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 800; flex-shrink: 0; color: white; }
+    .act-badge.relu    { background: linear-gradient(135deg, #ff4fa3, #f472b6); }
+    .act-badge.sigmoid { background: linear-gradient(135deg, #a855f7, #7c3aed); }
+    .act-badge.tanh    { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .act-info h4 { font-size: 1rem; font-weight: 700; color: #2d2d2d; margin-bottom: 2px; }
+    .act-info .act-formula { font-family: 'Courier New', monospace; font-size: 0.78rem; color: #888; }
+    .act-desc { font-size: 0.86rem; color: #555; line-height: 1.7; margin-bottom: 12px; }
+
+    /* ── Mini curve visual ── */
+    .curve-wrap { background: #f9f9f9; border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 16px; }
+    .curve-svg { flex-shrink: 0; }
+    .curve-facts { display: flex; flex-direction: column; gap: 4px; }
+    .fact-row { display: flex; gap: 8px; align-items: flex-start; font-size: 0.76rem; color: #666; }
+    .fact-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+
+    /* ── When to use table ── */
+    .use-table { width: 100%; border-collapse: collapse; margin: 14px 0 22px; font-size: 0.86rem; }
+    .use-table th { background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; padding: 11px 14px; text-align: left; font-weight: 700; font-size: 0.78rem; }
+    .use-table th:first-child { border-radius: 12px 0 0 0; }
+    .use-table th:last-child  { border-radius: 0 12px 0 0; }
+    .use-table td { padding: 11px 14px; border-bottom: 1px solid rgba(0,0,0,0.05); color: #444; vertical-align: top; line-height: 1.5; }
+    .use-table tr:last-child td { border-bottom: none; }
+    .use-table tr:nth-child(even) td { background: rgba(255,79,163,0.03); }
+    .use-table td:first-child { font-weight: 700; color: #2d2d2d; }
+
+    /* ── Dead neuron warning ── */
+    .warning-box { background: rgba(239,68,68,0.06); border-left: 4px solid #ef4444; border-radius: 0 14px 14px 0; padding: 18px 22px; margin: 16px 0 22px; }
+    .warning-box p { margin: 0; font-size: 0.93rem; color: #666; line-height: 1.8; }
+    .warning-box strong { color: #dc2626; }
+
+    /* ── Takeaway ── */
+    .takeaway { background: linear-gradient(135deg, #ff4fa3, #a855f7); border-radius: 18px; padding: 26px 28px; margin-top: 36px; color: white; }
+    .takeaway h3 { color: white; font-size: 1rem; margin: 0 0 10px; }
+    .takeaway p { color: rgba(255,255,255,0.92); font-size: 0.93rem; margin: 0; line-height: 1.75; }
+
+    .series-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 44px; padding-top: 28px; border-top: 2px solid rgba(168,85,247,0.1); }
+    .btn { display: inline-block; background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; box-shadow: 0 6px 18px rgba(255,79,163,0.25); transition: transform 0.2s; }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-outline { display: inline-block; background: transparent; color: #ff4fa3; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; border: 2px solid #ff4fa3; transition: transform 0.2s, background 0.2s; }
+    .btn-outline:hover { transform: translateY(-3px); background: rgba(255,79,163,0.06); }
+    footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) { .article-card { padding: 30px 22px; } .article-card h2 { font-size: 1.5rem; } .without-with { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="site-link" href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
+</header>
+
+<div class="blog-container">
+  <div class="article-card">
+
+    <span class="series-label">⚡ AI & Signal Processing Essentials</span>
+    <div class="series-title">Part 3</div>
+    <h2>Activation Functions</h2>
+    <div class="article-meta">Beginner-friendly · Neural Networks · Deep Learning</div>
+
+    <p>In Parts 1 and 2 we covered overfitting and the bias-variance tradeoff. Now we go deeper into how neural networks actually work — starting with one of the most important building blocks: <strong>activation functions</strong>.</p>
+
+    <!-- Why needed -->
+    <h3>🧠 Why do we need activation functions?</h3>
+    <div class="definition-box">
+      <p>Without activation functions, a neural network — no matter how many layers it has — is just doing linear math. It can only draw straight lines through data. Activation functions introduce non-linearity, allowing networks to learn complex patterns.</p>
+    </div>
+
+    <div class="without-with">
+      <div class="ww-card without">
+        <h4>Without activation</h4>
+        <p>Every layer is just a linear transformation. Stack 100 layers and it still behaves like a single layer — useless for complex problems.</p>
+      </div>
+      <div class="ww-card with">
+        <h4>With activation</h4>
+        <p>Each layer can learn non-linear patterns. The network can model curves, boundaries, and complex structures in data.</p>
+      </div>
+    </div>
+
+    <!-- The three functions -->
+    <h3>⚡ The three most important activation functions</h3>
+
+    <div class="activation-cards">
+
+      <!-- ReLU -->
+      <div class="act-card">
+        <div class="act-header">
+          <div class="act-badge relu">R</div>
+          <div class="act-info">
+            <h4>ReLU — Rectified Linear Unit</h4>
+            <div class="act-formula">f(x) = max(0, x)</div>
+          </div>
+        </div>
+        <div class="act-desc">The most popular activation function today. Outputs the input directly if positive, otherwise outputs zero. Simple, fast, and works surprisingly well.</div>
+        <div class="curve-wrap">
+          <svg class="curve-svg" width="100" height="70" viewBox="0 0 100 70">
+            <line x1="0" y1="35" x2="100" y2="35" stroke="#e5e7eb" stroke-width="1"/>
+            <line x1="50" y1="0" x2="50" y2="70" stroke="#e5e7eb" stroke-width="1"/>
+            <polyline points="0,35 50,35 100,5" fill="none" stroke="#ff4fa3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="curve-facts">
+            <div class="fact-row"><div class="fact-dot" style="background:#10b981;"></div>Output range: 0 to +∞</div>
+            <div class="fact-row"><div class="fact-dot" style="background:#10b981;"></div>Fast to compute</div>
+            <div class="fact-row"><div class="fact-dot" style="background:#ef4444;"></div>Can cause "dead neurons"</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sigmoid -->
+      <div class="act-card">
+        <div class="act-header">
+          <div class="act-badge sigmoid">σ</div>
+          <div class="act-info">
+            <h4>Sigmoid</h4>
+            <div class="act-formula">f(x) = 1 / (1 + e⁻ˣ)</div>
+          </div>
+        </div>
+        <div class="act-desc">Squashes any input into a value between 0 and 1 — perfect for binary classification outputs (probability). Historically popular but now mostly used only in output layers.</div>
+        <div class="curve-wrap">
+          <svg class="curve-svg" width="100" height="70" viewBox="0 0 100 70">
+            <line x1="0" y1="35" x2="100" y2="35" stroke="#e5e7eb" stroke-width="1"/>
+            <line x1="50" y1="0" x2="50" y2="70" stroke="#e5e7eb" stroke-width="1"/>
+            <path d="M 5 63 C 20 60 35 50 50 35 C 65 20 80 10 95 7" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <div class="curve-facts">
+            <div class="fact-row"><div class="fact-dot" style="background:#10b981;"></div>Output range: 0 to 1</div>
+            <div class="fact-row"><div class="fact-dot" style="background:#10b981;"></div>Good for probabilities</div>
+            <div class="fact-row"><div class="fact-dot" style="background:#ef4444;"></div>Vanishing gradient problem</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tanh -->
+      <div class="act-card">
+        <div class="act-header">
+          <div class="act-badge tanh">T</div>
+          <div class="act-info">
+            <h4>Tanh — Hyperbolic Tangent</h4>
+            <div class="act-formula">f(x) = (eˣ - e⁻ˣ) / (eˣ + e⁻ˣ)</div>
+          </div>
+        </div>
+        <div class="act-desc">Similar to Sigmoid but outputs values between -1 and 1. Because it is centred at zero, it often trains better than Sigmoid in hidden layers. Still suffers from vanishing gradients at extremes.</div>
+        <div class="curve-wrap">
+          <svg class="curve-svg" width="100" height="70" viewBox="0 0 100 70">
+            <line x1="0" y1="35" x2="100" y2="35" stroke="#e5e7eb" stroke-width="1"/>
+            <line x1="50" y1="0" x2="50" y2="70" stroke="#e5e7eb" stroke-width="1"/>
+            <path d="M 5 65 C 18 62 35 50 50 35 C 65 20 82 8 95 5" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <div class="curve-facts">
+            <div class="fact-row"><div class="fact-dot" style="background:#10b981;"></div>Output range: -1 to +1</div>
+            <div class="fact-row"><div class="fact-dot" style="background:#10b981;"></div>Zero-centred output</div>
+            <div class="fact-row"><div class="fact-dot" style="background:#ef4444;"></div>Slow at extreme values</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dead neurons -->
+    <h3>💀 The dying ReLU problem</h3>
+    <div class="warning-box">
+      <p>If a neuron's input is always negative, ReLU always outputs zero — and the neuron <strong>never updates</strong> during training. It becomes "dead." This is solved by Leaky ReLU which allows a small negative output instead of zero: <strong>f(x) = max(0.01x, x)</strong>.</p>
+    </div>
+
+    <!-- When to use -->
+    <h3>📊 When to use which activation</h3>
+    <table class="use-table">
+      <thead><tr><th>Function</th><th>Use it when</th><th>Avoid when</th></tr></thead>
+      <tbody>
+        <tr><td>ReLU</td><td>Hidden layers — default choice for most networks</td><td>You have many dead neurons</td></tr>
+        <tr><td>Sigmoid</td><td>Binary classification output layer</td><td>Hidden layers — causes vanishing gradients</td></tr>
+        <tr><td>Tanh</td><td>Hidden layers when zero-centred output matters</td><td>Very deep networks — still has vanishing gradient</td></tr>
+      </tbody>
+    </table>
+
+    <div class="takeaway">
+      <h3>💡 Final takeaway</h3>
+      <p>Activation functions are what give neural networks their power. Without them, deep networks would be mathematically equivalent to a single layer. ReLU is your default — fast, simple, effective. Sigmoid lives at the output for binary problems. Tanh is the zero-centred alternative for hidden layers.</p>
+    </div>
+
+    <div class="series-nav">
+      <a class="btn-outline" href="ai-essentials-part2.html">← Part 2: Bias vs Variance</a>
+      <a class="btn" href="ai-essentials-part4.html">Part 4: Backpropagation →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer><p>Made with 💗 by Buse | SheBuildsSTEM</p></footer>
+</body>
+</html>

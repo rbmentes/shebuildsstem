@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backpropagation | AI & Signal Processing Essentials – SheBuildsSTEM</title>
+  <meta name="description" content="Part 4 of AI Essentials — how backpropagation works, the chain rule, and how neural networks learn.">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
+    header { text-align: center; padding: 60px 20px 40px; }
+    header a.site-link { display: inline-block; font-size: 1.3rem; font-weight: 900; color: white; text-decoration: none; text-shadow: 0 2px 12px rgba(0,0,0,0.12); margin-bottom: 20px; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 7px 18px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+    .blog-container { max-width: 780px; margin: 0 auto 80px; padding: 0 20px; }
+    .article-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 28px; padding: 52px 56px; box-shadow: 0 20px 50px rgba(0,0,0,0.11); animation: fadeUp 0.6s ease forwards; }
+    .series-label { display: inline-block; background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; padding: 5px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 18px; }
+    .series-title { font-size: 0.9rem; font-weight: 700; color: #a855f7; margin-bottom: 8px; }
+    .article-card h2 { font-size: 1.9rem; font-weight: 900; color: #2d2d2d; line-height: 1.25; margin-bottom: 6px; }
+    .article-meta { font-size: 0.78rem; color: #999; font-weight: 600; margin-bottom: 36px; padding-bottom: 28px; border-bottom: 2px solid rgba(168,85,247,0.12); }
+    .article-card p { font-size: 0.97rem; color: #444; line-height: 1.9; margin-bottom: 18px; }
+    .article-card h3 { font-size: 1.1rem; font-weight: 700; color: #2d2d2d; margin: 38px 0 14px; }
+    .definition-box { background: linear-gradient(135deg, rgba(168,85,247,0.07), rgba(255,79,163,0.05)); border-left: 4px solid #a855f7; border-radius: 0 16px 16px 0; padding: 18px 22px; margin: 16px 0 22px; }
+    .definition-box p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.8; }
+    .highlight-box { background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(168,85,247,0.07)); border-left: 4px solid #ff4fa3; border-radius: 0 14px 14px 0; padding: 18px 22px; margin: 20px 0; }
+    .highlight-box p { margin: 0; font-size: 0.93rem; color: #555; font-style: italic; }
+
+    /* ── Forward pass visual ── */
+    .network-visual { background: white; border-radius: 18px; padding: 24px; margin: 16px 0 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); }
+    .nv-title { font-size: 0.75rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; text-align: center; margin-bottom: 18px; }
+    .nv-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+    .nv-layer { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+    .nv-node { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; }
+    .nv-node.input  { background: #dbeafe; color: #1d4ed8; border: 2px solid #93c5fd; }
+    .nv-node.hidden { background: #ede9fe; color: #6d28d9; border: 2px solid #c4b5fd; }
+    .nv-node.output { background: #d1fae5; color: #065f46; border: 2px solid #6ee7b7; }
+    .nv-node.error  { background: #fce7f3; color: #be185d; border: 2px solid #fbcfe8; }
+    .nv-label { font-size: 0.65rem; font-weight: 700; color: #999; margin-top: 6px; text-align: center; }
+    .nv-arrow { font-size: 1rem; color: #a855f7; font-weight: 700; }
+    .nv-arrow.back { color: #ff4fa3; }
+    .nv-arrow-label { font-size: 0.65rem; font-weight: 700; text-align: center; margin-top: 4px; }
+    .fwd { color: #a855f7; }
+    .bwd { color: #ff4fa3; }
+
+    /* ── Steps ── */
+    .steps-list { display: flex; flex-direction: column; gap: 0; margin: 14px 0 22px; }
+    .step-item { display: flex; gap: 14px; align-items: flex-start; }
+    .step-left { display: flex; flex-direction: column; align-items: center; }
+    .step-num { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(255,79,163,0.25); }
+    .step-line { width: 2px; flex: 1; background: linear-gradient(180deg, rgba(255,79,163,0.3), rgba(168,85,247,0.3)); min-height: 20px; }
+    .step-item:last-child .step-line { display: none; }
+    .step-content { padding: 4px 0 22px; flex: 1; }
+    .step-content h4 { font-size: 0.92rem; font-weight: 700; color: #2d2d2d; margin-bottom: 4px; }
+    .step-content p { font-size: 0.84rem; color: #666; margin: 0; line-height: 1.65; }
+
+    /* ── Formula box ── */
+    .formula-box { background: #1e1e2e; border-radius: 14px; padding: 18px 24px; margin: 14px 0 22px; text-align: center; }
+    .formula-box code { font-family: 'Courier New', monospace; font-size: 0.95rem; color: #cdd6f4; font-weight: 700; }
+    .formula-box code .pink   { color: #f38ba8; }
+    .formula-box code .purple { color: #cba6f7; }
+    .formula-box code .blue   { color: #89b4fa; }
+    .formula-box code .green  { color: #a6e3a1; }
+
+    /* ── Gradient descent visual ── */
+    .gd-visual { background: white; border-radius: 18px; padding: 22px 24px; margin: 14px 0 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); }
+    .gd-title { font-size: 0.75rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; text-align: center; }
+    .gd-row { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .gd-step { background: white; border-radius: 12px; padding: 12px 16px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); min-width: 110px; flex: 1; }
+    .gd-step .gs-num { font-size: 1.3rem; font-weight: 800; display: block; margin-bottom: 2px; }
+    .gd-step .gs-label { font-size: 0.7rem; color: #888; font-weight: 600; }
+    .gd-step:nth-child(1) .gs-num { color: #ff4fa3; }
+    .gd-step:nth-child(3) .gs-num { color: #a855f7; }
+    .gd-step:nth-child(5) .gs-num { color: #3b82f6; }
+    .gd-step:nth-child(7) .gs-num { color: #10b981; }
+    .gd-arrow { color: #ccc; font-size: 1rem; }
+
+    /* ── Takeaway ── */
+    .takeaway { background: linear-gradient(135deg, #ff4fa3, #a855f7); border-radius: 18px; padding: 26px 28px; margin-top: 36px; color: white; }
+    .takeaway h3 { color: white; font-size: 1rem; margin: 0 0 10px; }
+    .takeaway p { color: rgba(255,255,255,0.92); font-size: 0.93rem; margin: 0; line-height: 1.75; }
+
+    .series-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 44px; padding-top: 28px; border-top: 2px solid rgba(168,85,247,0.1); }
+    .btn { display: inline-block; background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; box-shadow: 0 6px 18px rgba(255,79,163,0.25); transition: transform 0.2s; }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-outline { display: inline-block; background: transparent; color: #ff4fa3; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; border: 2px solid #ff4fa3; transition: transform 0.2s, background 0.2s; }
+    .btn-outline:hover { transform: translateY(-3px); background: rgba(255,79,163,0.06); }
+    footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) { .article-card { padding: 30px 22px; } .article-card h2 { font-size: 1.5rem; } .nv-row { gap: 4px; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="site-link" href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
+</header>
+
+<div class="blog-container">
+  <div class="article-card">
+
+    <span class="series-label">⚡ AI & Signal Processing Essentials</span>
+    <div class="series-title">Part 4</div>
+    <h2>How Backpropagation Works</h2>
+    <div class="article-meta">Beginner-friendly · Neural Networks · The Math Behind Learning</div>
+
+    <p>In Part 3 we learned that activation functions give neural networks their power. But how does a network actually <em>learn</em>? How does it know which weights to adjust? The answer is <strong>backpropagation</strong> — the algorithm that makes deep learning possible.</p>
+
+    <h3>🧠 The big picture</h3>
+    <div class="definition-box">
+      <p>Backpropagation is how a neural network learns from its mistakes. It measures the error in the output, then works backwards through the network — layer by layer — adjusting weights to reduce that error. Repeat this thousands of times and the network gradually improves.</p>
+    </div>
+
+    <!-- Network visual -->
+    <div class="network-visual">
+      <div class="nv-title">Forward pass → compute error → backward pass → update weights</div>
+      <div class="nv-row">
+        <div class="nv-layer">
+          <div class="nv-node input">x₁</div>
+          <div class="nv-node input">x₂</div>
+          <div class="nv-label">Input</div>
+        </div>
+        <div>
+          <div class="nv-arrow fwd">→</div>
+          <div class="nv-arrow-label fwd" style="font-size:0.6rem;">forward</div>
+        </div>
+        <div class="nv-layer">
+          <div class="nv-node hidden">h₁</div>
+          <div class="nv-node hidden">h₂</div>
+          <div class="nv-node hidden">h₃</div>
+          <div class="nv-label">Hidden</div>
+        </div>
+        <div>
+          <div class="nv-arrow fwd">→</div>
+          <div class="nv-arrow-label fwd" style="font-size:0.6rem;">forward</div>
+        </div>
+        <div class="nv-layer">
+          <div class="nv-node output">ŷ</div>
+          <div class="nv-label">Output</div>
+        </div>
+        <div>
+          <div class="nv-arrow fwd">→</div>
+          <div class="nv-arrow-label fwd" style="font-size:0.6rem;">compare</div>
+        </div>
+        <div class="nv-layer">
+          <div class="nv-node error">Loss</div>
+          <div class="nv-label">Error</div>
+        </div>
+        <div>
+          <div class="nv-arrow back">←</div>
+          <div class="nv-arrow-label bwd" style="font-size:0.6rem;">backprop</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <h3>🔄 The four steps of training</h3>
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-left"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <h4>Forward pass</h4>
+          <p>Input data flows through the network layer by layer. Each layer applies weights, biases, and activation functions until an output prediction is produced.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-left"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <h4>Compute the loss</h4>
+          <p>The prediction is compared to the true label using a loss function (e.g. Mean Squared Error or Cross-Entropy). This gives a single number measuring how wrong the network was.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-left"><div class="step-num">3</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <h4>Backward pass — compute gradients</h4>
+          <p>Using the chain rule from calculus, the gradient of the loss is computed with respect to every weight in the network — starting from the output and working backwards.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-left"><div class="step-num">4</div><div class="step-line"></div></div>
+        <div class="step-content">
+          <h4>Update weights</h4>
+          <p>Each weight is nudged in the direction that reduces the loss. The size of the nudge is controlled by the learning rate.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chain rule -->
+    <h3>🔗 The chain rule — the math behind it</h3>
+    <p>Backpropagation relies on the chain rule from calculus. To find how a weight deep in the network affects the final loss, we multiply the gradients along each step of the path:</p>
+    <div class="formula-box">
+      <code>∂<span class="pink">Loss</span>/∂<span class="blue">w</span> = ∂<span class="pink">Loss</span>/∂<span class="green">output</span> × ∂<span class="green">output</span>/∂<span class="purple">hidden</span> × ∂<span class="purple">hidden</span>/∂<span class="blue">w</span></code>
+    </div>
+    <div class="highlight-box">
+      <p>Think of it like a chain of responsibility. The last layer is most directly responsible for the error. Earlier layers are responsible through their effect on later layers. The chain rule links them all together.</p>
+    </div>
+
+    <!-- Gradient descent -->
+    <h3>📉 Gradient descent — how weights are updated</h3>
+    <p>Once we have the gradients, we update each weight by subtracting a small fraction of the gradient:</p>
+    <div class="formula-box">
+      <code><span class="blue">w</span> = <span class="blue">w</span> - <span class="purple">η</span> × ∂<span class="pink">Loss</span>/∂<span class="blue">w</span></code>
+    </div>
+    <p>Where <strong>η (eta)</strong> is the learning rate — a small number like 0.001 that controls how big each update step is.</p>
+
+    <div class="gd-visual">
+      <div class="gd-title">One training iteration</div>
+      <div class="gd-row">
+        <div class="gd-step"><span class="gs-num">📥</span><span class="gs-label">Forward pass</span></div>
+        <div class="gd-arrow">→</div>
+        <div class="gd-step"><span class="gs-num">📊</span><span class="gs-label">Compute loss</span></div>
+        <div class="gd-arrow">→</div>
+        <div class="gd-step"><span class="gs-num">↩️</span><span class="gs-label">Backward pass</span></div>
+        <div class="gd-arrow">→</div>
+        <div class="gd-step"><span class="gs-num">🔧</span><span class="gs-label">Update weights</span></div>
+      </div>
+    </div>
+
+    <!-- Vanishing gradient -->
+    <h3>⚠️ The vanishing gradient problem</h3>
+    <p>In very deep networks, gradients can become extremely small as they travel backwards through many layers. By the time they reach the early layers, the updates are nearly zero — those layers barely learn. This is called the <strong>vanishing gradient problem</strong> and it's one reason ReLU became popular over Sigmoid.</p>
+
+    <div class="takeaway">
+      <h3>💡 Final takeaway</h3>
+      <p>Backpropagation is the engine of deep learning. Forward pass makes a prediction, loss measures the error, backward pass figures out who is responsible, and gradient descent fixes it. Repeat millions of times — and the network learns. Understanding this loop is the foundation for understanding everything else in deep learning.</p>
+    </div>
+
+    <div class="series-nav">
+      <a class="btn-outline" href="ai-essentials-part3.html">← Part 3: Activation Functions</a>
+      <a class="btn" href="ai-essentials-part5.html">Part 5: Regularization →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer><p>Made with 💗 by Buse | SheBuildsSTEM</p></footer>
+</body>
+</html>
