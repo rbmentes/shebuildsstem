@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn ML Week 2 — How Models Learn | SheBuildsSTEM</title>
+  <meta name="description" content="Week 2 of Learn ML With Me — loss functions, gradient descent, and how machine learning models actually improve.">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
+    header { text-align: center; padding: 60px 20px 40px; }
+    header a.site-link { display: inline-block; font-size: 1.3rem; font-weight: 900; color: white; text-decoration: none; text-shadow: 0 2px 12px rgba(0,0,0,0.12); margin-bottom: 20px; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 7px 18px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+    .blog-container { max-width: 780px; margin: 0 auto 80px; padding: 0 20px; }
+    .article-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 28px; padding: 52px 56px; box-shadow: 0 20px 50px rgba(0,0,0,0.11); animation: fadeUp 0.6s ease forwards; }
+    .series-label { display: inline-block; background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; padding: 5px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 18px; }
+    .week-label { font-size: 0.9rem; font-weight: 700; color: #a855f7; margin-bottom: 8px; }
+    .article-card h2 { font-size: 1.9rem; font-weight: 900; color: #2d2d2d; line-height: 1.25; margin-bottom: 6px; }
+    .article-meta { font-size: 0.78rem; color: #bbb; font-weight: 600; margin-bottom: 36px; padding-bottom: 28px; border-bottom: 2px solid rgba(168,85,247,0.12); }
+    .article-card p { font-size: 0.97rem; color: #444; line-height: 1.9; margin-bottom: 18px; }
+    .article-card h3 { font-size: 1.1rem; font-weight: 700; color: #2d2d2d; margin: 38px 0 14px; }
+    .definition-box { background: linear-gradient(135deg, rgba(168,85,247,0.07), rgba(255,79,163,0.05)); border-left: 4px solid #a855f7; border-radius: 0 16px 16px 0; padding: 18px 22px; margin: 16px 0 22px; }
+    .definition-box p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.8; }
+    .highlight-box { background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(168,85,247,0.07)); border-left: 4px solid #ff4fa3; border-radius: 0 14px 14px 0; padding: 18px 22px; margin: 20px 0; }
+    .highlight-box p { margin: 0; font-size: 0.93rem; color: #555; font-style: italic; }
+
+    /* ── Prediction vs reality visual ── */
+    .pred-visual { background: white; border-radius: 18px; padding: 22px 24px; margin: 16px 0 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); }
+    .pv-title { font-size: 0.75rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; text-align: center; }
+    .pv-row { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+    .pv-label { font-size: 0.78rem; font-weight: 700; color: #555; min-width: 90px; }
+    .pv-bar-wrap { flex: 1; height: 28px; background: #f3f4f6; border-radius: 8px; overflow: hidden; min-width: 100px; }
+    .pv-bar { height: 100%; border-radius: 8px; display: flex; align-items: center; padding-left: 10px; font-size: 0.7rem; font-weight: 700; color: white; }
+    .bar-pred   { background: linear-gradient(90deg, #a855f7, #c084fc); }
+    .bar-actual { background: linear-gradient(90deg, #10b981, #34d399); }
+    .bar-error  { background: linear-gradient(90deg, #ff4fa3, #f472b6); }
+    .pv-val { font-size: 0.78rem; font-weight: 700; min-width: 36px; text-align: right; }
+
+    /* ── Loss functions ── */
+    .loss-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0 22px; }
+    .loss-card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); transition: transform 0.2s; }
+    .loss-card:hover { transform: translateY(-4px); }
+    .loss-card:nth-child(1) { border-top: 3px solid #ff4fa3; }
+    .loss-card:nth-child(2) { border-top: 3px solid #a855f7; }
+    .loss-icon { font-size: 1.5rem; margin-bottom: 8px; display: block; }
+    .loss-card h4 { font-size: 0.92rem; font-weight: 700; color: #2d2d2d; margin-bottom: 4px; }
+    .loss-card .loss-use { font-size: 0.72rem; font-weight: 700; color: #999; margin-bottom: 8px; }
+    .loss-card p { font-size: 0.82rem; color: #666; line-height: 1.6; margin: 0; }
+
+    /* ── Formula box ── */
+    .formula-box { background: #1e1e2e; border-radius: 14px; padding: 16px 22px; margin: 12px 0 18px; text-align: center; }
+    .formula-box code { font-family: 'Courier New', monospace; font-size: 0.9rem; color: #cdd6f4; font-weight: 700; }
+    .formula-box code .pink   { color: #f38ba8; }
+    .formula-box code .purple { color: #cba6f7; }
+    .formula-box code .green  { color: #a6e3a1; }
+
+    /* ── Gradient descent hill visual ── */
+    .hill-visual { background: white; border-radius: 18px; padding: 22px 24px; margin: 16px 0 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); }
+    .hill-title { font-size: 0.75rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; text-align: center; }
+
+    /* ── Learning rate comparison ── */
+    .lr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0 22px; }
+    .lr-card { border-radius: 14px; padding: 16px 14px; text-align: center; }
+    .lr-card.small  { background: rgba(59,130,246,0.07);  border: 1.5px solid rgba(59,130,246,0.2); }
+    .lr-card.good   { background: rgba(16,185,129,0.07);  border: 1.5px solid rgba(16,185,129,0.2); }
+    .lr-card.large  { background: rgba(239,68,68,0.07);   border: 1.5px solid rgba(239,68,68,0.2); }
+    .lr-card .lr-icon { font-size: 1.6rem; display: block; margin-bottom: 8px; }
+    .lr-card h4 { font-size: 0.82rem; font-weight: 700; margin-bottom: 6px; }
+    .lr-card.small h4 { color: #1d4ed8; }
+    .lr-card.good h4  { color: #065f46; }
+    .lr-card.large h4 { color: #dc2626; }
+    .lr-card p { font-size: 0.74rem; color: #666; line-height: 1.5; margin: 0; }
+
+    /* ── Training loop ── */
+    .loop-steps { display: flex; gap: 0; align-items: center; justify-content: center; flex-wrap: wrap; margin: 14px 0 22px; }
+    .loop-step { background: white; border-radius: 14px; padding: 14px 16px; text-align: center; box-shadow: 0 3px 10px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); min-width: 110px; flex: 1; max-width: 140px; }
+    .loop-step .ls-icon { font-size: 1.4rem; display: block; margin-bottom: 6px; }
+    .loop-step .ls-num  { font-size: 0.65rem; font-weight: 800; color: #ff4fa3; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+    .loop-step .ls-label { font-size: 0.76rem; font-weight: 700; color: #2d2d2d; }
+    .loop-arrow { font-size: 1rem; color: #ccc; padding: 0 4px; }
+
+    /* ── Epochs explanation ── */
+    .epoch-visual { background: white; border-radius: 16px; padding: 18px 22px; margin: 14px 0; box-shadow: 0 3px 10px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); }
+    .epoch-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .epoch-row:last-child { margin-bottom: 0; }
+    .epoch-num { font-size: 0.72rem; font-weight: 800; color: #a855f7; min-width: 60px; }
+    .epoch-bar-wrap { flex: 1; height: 10px; background: #f0f0f0; border-radius: 6px; overflow: hidden; }
+    .epoch-bar { height: 100%; border-radius: 6px; background: linear-gradient(90deg, #ff4fa3, #a855f7); transition: width 0.3s; }
+    .epoch-acc { font-size: 0.72rem; font-weight: 700; color: #555; min-width: 40px; text-align: right; }
+
+    /* ── Takeaway ── */
+    .takeaway { background: linear-gradient(135deg, #ff4fa3, #a855f7); border-radius: 18px; padding: 26px 28px; margin-top: 36px; color: white; }
+    .takeaway h3 { color: white; font-size: 1rem; margin: 0 0 10px; }
+    .takeaway p { color: rgba(255,255,255,0.92); font-size: 0.93rem; margin: 0; line-height: 1.75; }
+
+    .series-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 44px; padding-top: 28px; border-top: 2px solid rgba(168,85,247,0.1); }
+    .btn { display: inline-block; background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; box-shadow: 0 6px 18px rgba(255,79,163,0.25); transition: transform 0.2s; }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-outline { display: inline-block; background: transparent; color: #ff4fa3; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; border: 2px solid #ff4fa3; transition: transform 0.2s, background 0.2s; }
+    .btn-outline:hover { transform: translateY(-3px); background: rgba(255,79,163,0.06); }
+    footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) { .article-card { padding: 30px 22px; } .article-card h2 { font-size: 1.5rem; } .loss-cards { grid-template-columns: 1fr; } .lr-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="site-link" href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
+</header>
+
+<div class="blog-container">
+  <div class="article-card">
+
+    <span class="series-label">🎓 Learn Machine Learning With Me</span>
+    <div class="week-label">Week 2</div>
+    <h2>How Do Models Actually Learn?</h2>
+    <div class="article-meta">Spring 2026 · Beginner-friendly · Loss Functions & Gradient Descent</div>
+
+    <p>In Week 1 we learned what machine learning is — models that find patterns in data. But there's a question I had immediately after: <em>how exactly does a model get better?</em> How does it know when it's wrong, and how does it fix itself? This week answers that.</p>
+
+    <!-- Loss -->
+    <h3>🎯 Step 1 — measuring how wrong the model is</h3>
+    <div class="definition-box">
+      <p>A <strong>loss function</strong> (also called a cost function) measures the difference between what the model predicted and what the correct answer actually was. It gives a single number — the lower the loss, the better the model is performing.</p>
+    </div>
+
+    <!-- Prediction vs reality -->
+    <div class="pred-visual">
+      <div class="pv-title">Example — predicting house price (in $1000s)</div>
+      <div class="pv-row">
+        <span class="pv-label">Model predicted</span>
+        <div class="pv-bar-wrap"><div class="pv-bar bar-pred" style="width:72%;">$720k</div></div>
+        <span class="pv-val" style="color:#7c3aed;">720</span>
+      </div>
+      <div class="pv-row">
+        <span class="pv-label">Actual price</span>
+        <div class="pv-bar-wrap"><div class="pv-bar bar-actual" style="width:85%;">$850k</div></div>
+        <span class="pv-val" style="color:#065f46;">850</span>
+      </div>
+      <div class="pv-row">
+        <span class="pv-label">Error (loss)</span>
+        <div class="pv-bar-wrap"><div class="pv-bar bar-error" style="width:13%;">$130k</div></div>
+        <span class="pv-val" style="color:#be185d;">130</span>
+      </div>
+    </div>
+
+    <p>The model was off by $130k. The loss function turns this mistake into a number the model can learn from. The goal of training is to make this number as small as possible.</p>
+
+    <!-- Loss functions -->
+    <h3>📊 Common loss functions</h3>
+    <div class="loss-cards">
+      <div class="loss-card">
+        <span class="loss-icon">📏</span>
+        <h4>Mean Squared Error (MSE)</h4>
+        <div class="loss-use">Used for: Regression problems</div>
+        <p>Takes the average of squared differences between predictions and actual values. Squaring means large errors are punished more heavily.</p>
+        <div class="formula-box" style="margin-top:10px;">
+          <code><span class="pink">MSE</span> = (1/n) × Σ(<span class="green">y</span> - <span class="purple">ŷ</span>)²</code>
+        </div>
+      </div>
+      <div class="loss-card">
+        <span class="loss-icon">🎯</span>
+        <h4>Cross-Entropy Loss</h4>
+        <div class="loss-use">Used for: Classification problems</div>
+        <p>Measures how different the predicted probability distribution is from the true labels. Higher confidence in the wrong answer = higher loss.</p>
+        <div class="formula-box" style="margin-top:10px;">
+          <code><span class="pink">Loss</span> = -Σ <span class="green">y</span> × log(<span class="purple">ŷ</span>)</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gradient descent intuition -->
+    <h3>⛰️ Step 2 — gradient descent</h3>
+    <p>Now we know how wrong the model is. But how does it get better? The answer is <strong>gradient descent</strong> — the algorithm that adjusts the model's weights to reduce the loss.</p>
+
+    <div class="highlight-box">
+      <p>Imagine you're standing on a hilly landscape in the dark and you want to reach the lowest point. You can't see far — but you can feel the slope under your feet. So you take a small step downhill. Then another. Then another. Eventually you reach the bottom. That's gradient descent.</p>
+    </div>
+
+    <!-- Hill SVG -->
+    <div class="hill-visual">
+      <div class="hill-title">Loss landscape — gradient descent finds the minimum</div>
+      <svg width="100%" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="hillgrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#cbb6ff" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#cbb6ff" stop-opacity="0.05"/>
+          </linearGradient>
+        </defs>
+        <path d="M 20 30 Q 80 180 150 160 Q 220 140 260 80 Q 300 20 340 10 Q 380 0 420 60 Q 460 120 500 150 Q 540 175 580 170" fill="none" stroke="#cbb6ff" stroke-width="2.5"/>
+        <path d="M 20 30 Q 80 180 150 160 Q 220 140 260 80 Q 300 20 340 10 Q 380 0 420 60 Q 460 120 500 150 Q 540 175 580 170 L 580 200 L 20 200 Z" fill="url(#hillgrad)"/>
+        <!-- Ball positions -->
+        <circle cx="150" cy="157" r="7" fill="#ff4fa3"/>
+        <circle cx="200" cy="147" r="7" fill="#f472b6" opacity="0.7"/>
+        <circle cx="240" cy="100" r="7" fill="#a855f7" opacity="0.6"/>
+        <circle cx="280" cy="55"  r="7" fill="#7c3aed" opacity="0.5"/>
+        <circle cx="320" cy="18"  r="9" fill="#ff4fa3" stroke="white" stroke-width="2"/>
+        <!-- Arrow down each step -->
+        <path d="M 150 150 L 196 144" fill="none" stroke="#ff4fa3" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <path d="M 200 140 L 236 96"  fill="none" stroke="#ff4fa3" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <path d="M 240 93  L 276 51"  fill="none" stroke="#ff4fa3" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <path d="M 280 48  L 316 14"  fill="none" stroke="#ff4fa3" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <defs>
+          <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="#ff4fa3" stroke-width="2" stroke-linecap="round"/>
+          </marker>
+        </defs>
+        <!-- Labels -->
+        <text x="130" y="185" font-size="10" fill="#888" font-family="Poppins, sans-serif" font-weight="600">Start</text>
+        <text x="298" y="12"  font-size="10" fill="#ff4fa3" font-family="Poppins, sans-serif" font-weight="700">Minimum (best model)</text>
+        <text x="10"  y="20"  font-size="10" fill="#999" font-family="Poppins, sans-serif">High loss ↑</text>
+        <text x="10"  y="195" font-size="10" fill="#999" font-family="Poppins, sans-serif">Low loss ↓</text>
+      </svg>
+    </div>
+
+    <!-- Learning rate -->
+    <h3>🎚️ The learning rate — how big are the steps?</h3>
+    <p>The learning rate controls how large each step down the hill is. It's one of the most important settings in ML training — too small and training is painfully slow, too large and you overshoot the minimum entirely.</p>
+
+    <div class="lr-grid">
+      <div class="lr-card small">
+        <span class="lr-icon">🐌</span>
+        <h4>Too small (e.g. 0.00001)</h4>
+        <p>Takes tiny steps. Training is very slow and may never converge in reasonable time.</p>
+      </div>
+      <div class="lr-card good">
+        <span class="lr-icon">✓</span>
+        <h4>Just right (e.g. 0.001)</h4>
+        <p>Takes steady steps. Converges smoothly to a good minimum. This is typical for most models.</p>
+      </div>
+      <div class="lr-card large">
+        <span class="lr-icon">💥</span>
+        <h4>Too large (e.g. 0.1)</h4>
+        <p>Overshoots the minimum. Loss bounces up and down and never settles. Model fails to learn.</p>
+      </div>
+    </div>
+
+    <!-- Training loop -->
+    <h3>🔄 Putting it together — the training loop</h3>
+    <p>Every time a model trains it repeats this loop over and over — thousands or millions of times:</p>
+
+    <div class="loop-steps">
+      <div class="loop-step">
+        <span class="ls-icon">📥</span>
+        <div class="ls-num">Step 1</div>
+        <div class="ls-label">Feed data in</div>
+      </div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step">
+        <span class="ls-icon">🔮</span>
+        <div class="ls-num">Step 2</div>
+        <div class="ls-label">Make prediction</div>
+      </div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step">
+        <span class="ls-icon">📊</span>
+        <div class="ls-num">Step 3</div>
+        <div class="ls-label">Compute loss</div>
+      </div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step">
+        <span class="ls-icon">🔧</span>
+        <div class="ls-num">Step 4</div>
+        <div class="ls-label">Update weights</div>
+      </div>
+    </div>
+
+    <!-- Epochs -->
+    <h3>📅 What is an epoch?</h3>
+    <p>One <strong>epoch</strong> = the model has seen every training sample once. We usually train for many epochs — each pass through the data the model improves a little:</p>
+
+    <div class="epoch-visual">
+      <div class="epoch-row"><span class="epoch-num">Epoch 1</span><div class="epoch-bar-wrap"><div class="epoch-bar" style="width:22%;"></div></div><span class="epoch-acc">22%</span></div>
+      <div class="epoch-row"><span class="epoch-num">Epoch 5</span><div class="epoch-bar-wrap"><div class="epoch-bar" style="width:55%;"></div></div><span class="epoch-acc">55%</span></div>
+      <div class="epoch-row"><span class="epoch-num">Epoch 10</span><div class="epoch-bar-wrap"><div class="epoch-bar" style="width:78%;"></div></div><span class="epoch-acc">78%</span></div>
+      <div class="epoch-row"><span class="epoch-num">Epoch 20</span><div class="epoch-bar-wrap"><div class="epoch-bar" style="width:91%;"></div></div><span class="epoch-acc">91%</span></div>
+      <div class="epoch-row"><span class="epoch-num">Epoch 40</span><div class="epoch-bar-wrap"><div class="epoch-bar" style="width:97%;"></div></div><span class="epoch-acc">97%</span></div>
+    </div>
+
+    <div class="takeaway">
+      <h3>💡 What I learned this week</h3>
+      <p>Learning in ML is really just one loop: predict → measure the mistake → take a small step to fix it → repeat. The loss function is the report card, gradient descent is the study session, and the learning rate controls how fast you study. Understanding this loop is the foundation for understanding every ML model that exists.</p>
+    </div>
+
+    <div class="series-nav">
+      <a class="btn-outline" href="learn-ml-week1.html">← Week 1: What is ML?</a>
+      <a class="btn" href="learn-ml-week3.html">Week 3: Decision Trees →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer><p>Made with 💗 by Buse | SheBuildsSTEM</p></footer>
+</body>
+</html>
