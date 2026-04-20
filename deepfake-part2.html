@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deepfake Detection Part 2 — The Dataset | SheBuildsSTEM</title>
+  <meta name="description" content="Part 2 of my Deepfake Detection graduation project — ASVspoof2019 and building a custom Turkish speech dataset.">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
+    header { text-align: center; padding: 60px 20px 40px; }
+    header a.site-link { display: inline-block; font-size: 1.3rem; font-weight: 900; color: white; text-decoration: none; text-shadow: 0 2px 12px rgba(0,0,0,0.12); margin-bottom: 20px; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 7px 18px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+    .blog-container { max-width: 780px; margin: 0 auto 80px; padding: 0 20px; }
+    .article-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 28px; padding: 52px 56px; box-shadow: 0 20px 50px rgba(0,0,0,0.11); animation: fadeUp 0.6s ease forwards; }
+    .series-label { display: inline-block; background: linear-gradient(135deg, #3b82f6, #7c3aed); color: white; padding: 5px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 18px; }
+    .series-title { font-size: 0.9rem; font-weight: 700; color: #3b82f6; margin-bottom: 8px; }
+    .article-card h2 { font-size: 1.9rem; font-weight: 900; color: #2d2d2d; line-height: 1.25; margin-bottom: 6px; }
+    .article-meta { font-size: 0.78rem; color: #bbb; font-weight: 600; margin-bottom: 36px; padding-bottom: 28px; border-bottom: 2px solid rgba(59,130,246,0.12); }
+    .article-card p { font-size: 0.97rem; color: #444; line-height: 1.9; margin-bottom: 18px; }
+    .article-card h3 { font-size: 1.1rem; font-weight: 700; color: #2d2d2d; margin: 38px 0 14px; }
+    .definition-box { background: linear-gradient(135deg, rgba(59,130,246,0.07), rgba(124,58,237,0.05)); border-left: 4px solid #3b82f6; border-radius: 0 16px 16px 0; padding: 18px 22px; margin: 16px 0 22px; }
+    .definition-box p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.8; }
+    .highlight-box { background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(168,85,247,0.07)); border-left: 4px solid #ff4fa3; border-radius: 0 14px 14px 0; padding: 18px 22px; margin: 20px 0; }
+    .highlight-box p { margin: 0; font-size: 0.93rem; color: #555; font-style: italic; }
+
+    /* Dataset stats */
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin: 14px 0 22px; }
+    .stat-chip { background: white; border-radius: 14px; padding: 16px 14px; text-align: center; box-shadow: 0 3px 10px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); }
+    .stat-chip .sc-num { font-size: 1.5rem; font-weight: 800; display: block; margin-bottom: 3px; }
+    .stat-chip .sc-label { font-size: 0.7rem; font-weight: 600; color: #888; }
+    .stat-chip:nth-child(1) .sc-num { color: #3b82f6; }
+    .stat-chip:nth-child(2) .sc-num { color: #10b981; }
+    .stat-chip:nth-child(3) .sc-num { color: #ff4fa3; }
+    .stat-chip:nth-child(4) .sc-num { color: #a855f7; }
+
+    /* Dataset comparison table */
+    .ds-table { width: 100%; border-collapse: collapse; margin: 14px 0 22px; font-size: 0.86rem; }
+    .ds-table th { background: linear-gradient(135deg, #3b82f6, #7c3aed); color: white; padding: 11px 14px; text-align: left; font-weight: 700; font-size: 0.78rem; }
+    .ds-table th:first-child { border-radius: 12px 0 0 0; }
+    .ds-table th:last-child  { border-radius: 0 12px 0 0; }
+    .ds-table td { padding: 11px 14px; border-bottom: 1px solid rgba(0,0,0,0.05); color: #444; vertical-align: top; line-height: 1.5; }
+    .ds-table tr:last-child td { border-bottom: none; }
+    .ds-table tr:nth-child(even) td { background: rgba(59,130,246,0.03); }
+    .ds-table td:first-child { font-weight: 700; color: #2d2d2d; }
+
+    /* Turkish sentences */
+    .sentence-list { display: flex; flex-direction: column; gap: 10px; margin: 14px 0 22px; }
+    .sentence-item { background: white; border-radius: 12px; padding: 14px 18px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); border-left: 3px solid #3b82f6; }
+    .sentence-item .si-tr { font-size: 0.9rem; font-weight: 600; color: #1d4ed8; margin-bottom: 4px; }
+    .sentence-item .si-en { font-size: 0.8rem; color: #888; font-style: italic; }
+
+    /* Collection steps */
+    .steps-list { display: flex; flex-direction: column; gap: 0; margin: 14px 0 22px; }
+    .step-item { display: flex; gap: 14px; align-items: flex-start; }
+    .step-left { display: flex; flex-direction: column; align-items: center; }
+    .step-num { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #7c3aed); color: white; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .step-line { width: 2px; flex: 1; background: linear-gradient(180deg, rgba(59,130,246,0.3), rgba(124,58,237,0.3)); min-height: 16px; }
+    .step-item:last-child .step-line { display: none; }
+    .step-content { padding: 4px 0 20px; flex: 1; }
+    .step-content h4 { font-size: 0.92rem; font-weight: 700; color: #2d2d2d; margin-bottom: 4px; }
+    .step-content p { font-size: 0.84rem; color: #666; margin: 0; line-height: 1.65; }
+
+    /* Challenges */
+    .challenge-list { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
+    .challenge-item { display: flex; gap: 12px; align-items: flex-start; background: rgba(239,68,68,0.05); border-radius: 12px; padding: 12px 16px; font-size: 0.88rem; color: #555; border: 1px solid rgba(239,68,68,0.15); }
+    .challenge-item::before { content: '!'; width: 20px; height: 20px; border-radius: 50%; background: rgba(239,68,68,0.15); color: #dc2626; font-size: 0.7rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+
+    /* Personal box */
+    .personal-box { background: linear-gradient(135deg, rgba(255,79,163,0.06), rgba(168,85,247,0.06)); border-left: 4px solid #ff4fa3; border-radius: 0 16px 16px 0; padding: 20px 24px; margin: 20px 0; }
+    .personal-box p { margin: 0; font-size: 0.93rem; color: #555; line-height: 1.85; font-style: italic; }
+    .personal-box .pb-sig { font-style: normal; font-weight: 700; color: #ff4fa3; margin-top: 8px; display: block; font-size: 0.82rem; }
+
+    /* Takeaway */
+    .takeaway { background: linear-gradient(135deg, #3b82f6, #7c3aed); border-radius: 18px; padding: 26px 28px; margin-top: 36px; color: white; }
+    .takeaway h3 { color: white; font-size: 1rem; margin: 0 0 10px; }
+    .takeaway p  { color: rgba(255,255,255,0.92); font-size: 0.93rem; margin: 0; line-height: 1.75; }
+
+    .series-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 44px; padding-top: 28px; border-top: 2px solid rgba(59,130,246,0.1); }
+    .btn { display: inline-block; background: linear-gradient(135deg, #3b82f6, #7c3aed); color: white; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; box-shadow: 0 6px 18px rgba(59,130,246,0.25); transition: transform 0.2s; }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-outline { display: inline-block; background: transparent; color: #3b82f6; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; border: 2px solid #3b82f6; transition: transform 0.2s, background 0.2s; }
+    .btn-outline:hover { transform: translateY(-3px); background: rgba(59,130,246,0.06); }
+    footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) { .article-card { padding: 30px 22px; } .article-card h2 { font-size: 1.5rem; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="site-link" href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
+</header>
+
+<div class="blog-container">
+  <div class="article-card">
+
+    <span class="series-label">🔍 Deepfake Detection Series</span>
+    <div class="series-title">Part 2 — My Graduation Project</div>
+    <h2>The Dataset — ASVspoof2019 and My Custom Turkish Speech Dataset</h2>
+    <div class="article-meta">Graduation Project EEE 497 · Data Collection & Preparation</div>
+
+    <p>Every ML project starts with data. For my deepfake detection system I used two sources: the standard ASVspoof2019 benchmark dataset, and a custom Turkish speech dataset I built myself from scratch. This part explains both — what they contain, why I chose them, and what made collecting my own dataset challenging and rewarding.</p>
+
+    <h3>📦 Dataset 1 — ASVspoof2019</h3>
+    <div class="definition-box">
+      <p>ASVspoof2019 is the standard benchmark for evaluating automatic speaker verification systems against spoofing. It provides two scenarios — Logical Access (LA) with synthetic speech, and Physical Access (PA) with replay attacks — each with training, development, and evaluation splits and clearly labelled genuine/spoof samples.</p>
+    </div>
+
+    <p>This dataset is used by researchers worldwide, which means my results can be directly compared to other published work. Using a standard benchmark was essential for validating that my model actually works — not just on my own data, but on a dataset everyone agrees is representative of the problem.</p>
+
+    <h3>🎤 Dataset 2 — my custom Turkish speech dataset</h3>
+    <p>ASVspoof2019 is English-only. I wanted to test whether a model trained on English deepfakes could detect Turkish deepfakes — a cross-language generalization challenge that is rarely studied in the literature.</p>
+
+    <p>So I built my own dataset. Here are the numbers:</p>
+
+    <div class="stats-row">
+      <div class="stat-chip"><span class="sc-num">315</span><span class="sc-label">Total recordings</span></div>
+      <div class="stat-chip"><span class="sc-num">164</span><span class="sc-label">Real (genuine)</span></div>
+      <div class="stat-chip"><span class="sc-num">151</span><span class="sc-label">Fake (synthetic)</span></div>
+      <div class="stat-chip"><span class="sc-num">26</span><span class="sc-label">Speakers</span></div>
+    </div>
+
+    <h3>📝 The sentences I recorded</h3>
+    <p>Each participant recorded these three Turkish sentences twice — giving natural variation in speed, intonation, and style:</p>
+
+    <div class="sentence-list">
+      <div class="sentence-item">
+        <div class="si-tr">"Bugün hava oldukça güzel ve yeni projeler üzerinde çalışıyorum."</div>
+        <div class="si-en">"Today the weather is quite nice and I am working on new projects."</div>
+      </div>
+      <div class="sentence-item">
+        <div class="si-tr">"Yapay zeka teknolojileri her geçen gün daha hızlı gelişiyor."</div>
+        <div class="si-en">"Artificial intelligence technologies are developing faster every day."</div>
+      </div>
+      <div class="sentence-item">
+        <div class="si-tr">"Bu kayıt bir ses işleme araştırması için hazırlanmıştır."</div>
+        <div class="si-en">"This recording was prepared for a speech processing research study."</div>
+      </div>
+    </div>
+
+    <h3>🤖 Generating the fake samples</h3>
+    <p>The same three sentences were also fed into multiple text-to-speech platforms including ElevenLabs and similar services. Using multiple TTS systems ensures diversity in the synthetic samples — the model cannot just learn to detect one specific TTS artifact.</p>
+
+    <h3>🔨 How I collected the real recordings</h3>
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-left"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-content"><h4>Recruited 26 participants</h4><p>Friends, classmates, and family members with different ages, genders, and voice characteristics.</p></div>
+      </div>
+      <div class="step-item">
+        <div class="step-left"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-content"><h4>Standardized recording setup</h4><p>Each participant read the same three sentences twice in a quiet environment using their smartphone or laptop microphone.</p></div>
+      </div>
+      <div class="step-item">
+        <div class="step-left"><div class="step-num">3</div><div class="step-line"></div></div>
+        <div class="step-content"><h4>Generated synthetic counterparts</h4><p>The exact same sentences were synthesized using TTS platforms, creating matched genuine-fake pairs for fair comparison.</p></div>
+      </div>
+      <div class="step-item">
+        <div class="step-left"><div class="step-num">4</div><div class="step-line"></div></div>
+        <div class="step-content"><h4>Labeled and organized</h4><p>All 315 recordings labeled as genuine (0) or fake (1), organized into folders for model evaluation.</p></div>
+      </div>
+    </div>
+
+    <h3>⚠️ Challenges this dataset introduced</h3>
+    <div class="challenge-list">
+      <div class="challenge-item">Language mismatch — the model was trained on English but tested on Turkish speech patterns</div>
+      <div class="challenge-item">Diverse recording conditions — different microphones, rooms, background noise levels</div>
+      <div class="challenge-item">Multiple TTS systems — different spoofing techniques that the model had never seen</div>
+      <div class="challenge-item">Small dataset size — only 315 samples vs tens of thousands in ASVspoof2019</div>
+    </div>
+
+    <div class="personal-box">
+      <p>Collecting the data was actually one of my favorite parts of the project. Asking 26 people to read sentences for me — explaining what I was building and why it mattered — made it feel real. It wasn't just an academic exercise anymore. These were real voices. And I was building something that could protect them.</p>
+      <span class="pb-sig">— Buse</span>
+    </div>
+
+    <h3>📊 Dataset summary</h3>
+    <table class="ds-table">
+      <thead><tr><th>Dataset</th><th>Type</th><th>Language</th><th>Attack type</th><th>Size</th></tr></thead>
+      <tbody>
+        <tr><td>ASVspoof2019 LA</td><td>Benchmark</td><td>English</td><td>TTS, Voice Conversion</td><td>Large-scale</td></tr>
+        <tr><td>ASVspoof2019 PA</td><td>Benchmark</td><td>English</td><td>Replay attacks</td><td>Large-scale</td></tr>
+        <tr><td>Custom Turkish</td><td>Self-collected</td><td>Turkish</td><td>TTS (multiple platforms)</td><td>315 samples</td></tr>
+      </tbody>
+    </table>
+
+    <div class="takeaway">
+      <h3>💡 What I learned about data collection</h3>
+      <p>Building your own dataset is much harder than using an existing one — but far more valuable. It forces you to think about every assumption your model makes: which languages, which recording conditions, which spoofing techniques. My custom dataset revealed limitations in the model that the benchmark never would have shown. That is exactly the point of cross-dataset evaluation.</p>
+    </div>
+
+    <div class="series-nav">
+      <a class="btn-outline" href="deepfake-part1.html">← Part 1: What Is Deepfake Audio?</a>
+      <a class="btn" href="deepfake-part3.html">Part 3: The LCNN Model →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer><p>Made with 💗 by Buse | SheBuildsSTEM</p></footer>
+</body>
+</html>

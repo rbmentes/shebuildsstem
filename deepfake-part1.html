@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deepfake Detection Part 1 — What Is Deepfake Audio? | SheBuildsSTEM</title>
+  <meta name="description" content="Part 1 of my Deepfake Detection graduation project series — what deepfake audio is, why it matters, and how it is created.">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
+    header { text-align: center; padding: 60px 20px 40px; }
+    header a.site-link { display: inline-block; font-size: 1.3rem; font-weight: 900; color: white; text-decoration: none; text-shadow: 0 2px 12px rgba(0,0,0,0.12); margin-bottom: 20px; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 7px 18px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+    .blog-container { max-width: 780px; margin: 0 auto 80px; padding: 0 20px; }
+    .article-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 28px; padding: 52px 56px; box-shadow: 0 20px 50px rgba(0,0,0,0.11); animation: fadeUp 0.6s ease forwards; }
+    .series-label { display: inline-block; background: linear-gradient(135deg, #3b82f6, #7c3aed); color: white; padding: 5px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 18px; }
+    .series-title { font-size: 0.9rem; font-weight: 700; color: #3b82f6; margin-bottom: 8px; }
+    .article-card h2 { font-size: 1.9rem; font-weight: 900; color: #2d2d2d; line-height: 1.25; margin-bottom: 6px; }
+    .article-meta { font-size: 0.78rem; color: #bbb; font-weight: 600; margin-bottom: 36px; padding-bottom: 28px; border-bottom: 2px solid rgba(59,130,246,0.12); }
+    .article-card p { font-size: 0.97rem; color: #444; line-height: 1.9; margin-bottom: 18px; }
+    .article-card h3 { font-size: 1.1rem; font-weight: 700; color: #2d2d2d; margin: 38px 0 14px; }
+    .definition-box { background: linear-gradient(135deg, rgba(59,130,246,0.07), rgba(124,58,237,0.05)); border-left: 4px solid #3b82f6; border-radius: 0 16px 16px 0; padding: 18px 22px; margin: 16px 0 22px; }
+    .definition-box p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.8; }
+    .warning-box { background: rgba(239,68,68,0.06); border-left: 4px solid #ef4444; border-radius: 0 14px 14px 0; padding: 18px 22px; margin: 20px 0; }
+    .warning-box p { margin: 0; font-size: 0.93rem; color: #666; line-height: 1.8; }
+
+    /* Attack type cards */
+    .attack-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0 22px; }
+    .attack-card { border-radius: 18px; padding: 22px 20px; }
+    .attack-card.tts  { background: rgba(239,68,68,0.07);  border: 1.5px solid rgba(239,68,68,0.2); }
+    .attack-card.vc   { background: rgba(245,158,11,0.07); border: 1.5px solid rgba(245,158,11,0.2); }
+    .attack-card.rep  { background: rgba(59,130,246,0.07); border: 1.5px solid rgba(59,130,246,0.2); }
+    .attack-card.dl   { background: rgba(168,85,247,0.07); border: 1.5px solid rgba(168,85,247,0.2); }
+    .attack-card .ac-icon { font-size: 1.8rem; margin-bottom: 8px; display: block; }
+    .attack-card h4 { font-size: 0.92rem; font-weight: 700; margin-bottom: 6px; }
+    .attack-card.tts h4 { color: #dc2626; }
+    .attack-card.vc  h4 { color: #b45309; }
+    .attack-card.rep h4 { color: #1d4ed8; }
+    .attack-card.dl  h4 { color: #6d28d9; }
+    .attack-card p { font-size: 0.8rem; color: #666; line-height: 1.6; margin: 0; }
+
+    /* Threat scenarios */
+    .threat-list { display: flex; flex-direction: column; gap: 10px; margin: 14px 0 22px; }
+    .threat-item { display: flex; gap: 12px; align-items: flex-start; background: white; border-radius: 12px; padding: 13px 16px; font-size: 0.88rem; color: #444; box-shadow: 0 3px 10px rgba(0,0,0,0.05); border-left: 3px solid #ef4444; }
+    .threat-item .t-icon { font-size: 1.1rem; flex-shrink: 0; }
+
+    /* LA vs PA comparison */
+    .la-pa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0 22px; }
+    .la-pa-card { border-radius: 16px; padding: 20px; }
+    .la-pa-card.la { background: rgba(59,130,246,0.07);  border: 1.5px solid rgba(59,130,246,0.2); }
+    .la-pa-card.pa { background: rgba(245,158,11,0.07);  border: 1.5px solid rgba(245,158,11,0.2); }
+    .la-pa-card h4 { font-size: 0.92rem; font-weight: 700; margin-bottom: 8px; }
+    .la-pa-card.la h4 { color: #1d4ed8; }
+    .la-pa-card.pa h4 { color: #b45309; }
+    .la-pa-card p { font-size: 0.82rem; color: #666; line-height: 1.6; margin: 0; }
+
+    /* Personal note */
+    .personal-box { background: linear-gradient(135deg, rgba(255,79,163,0.06), rgba(168,85,247,0.06)); border-left: 4px solid #ff4fa3; border-radius: 0 16px 16px 0; padding: 20px 24px; margin: 20px 0; }
+    .personal-box p { margin: 0; font-size: 0.93rem; color: #555; line-height: 1.85; font-style: italic; }
+    .personal-box .pb-sig { font-style: normal; font-weight: 700; color: #ff4fa3; margin-top: 8px; display: block; font-size: 0.82rem; }
+
+    /* Takeaway */
+    .takeaway { background: linear-gradient(135deg, #3b82f6, #7c3aed); border-radius: 18px; padding: 26px 28px; margin-top: 36px; color: white; }
+    .takeaway h3 { color: white; font-size: 1rem; margin: 0 0 10px; }
+    .takeaway p  { color: rgba(255,255,255,0.92); font-size: 0.93rem; margin: 0; line-height: 1.75; }
+
+    .series-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 44px; padding-top: 28px; border-top: 2px solid rgba(59,130,246,0.1); }
+    .btn { display: inline-block; background: linear-gradient(135deg, #3b82f6, #7c3aed); color: white; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; box-shadow: 0 6px 18px rgba(59,130,246,0.25); transition: transform 0.2s; }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-outline { display: inline-block; background: transparent; color: #3b82f6; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; border: 2px solid #3b82f6; transition: transform 0.2s, background 0.2s; }
+    .btn-outline:hover { transform: translateY(-3px); background: rgba(59,130,246,0.06); }
+    footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) { .article-card { padding: 30px 22px; } .article-card h2 { font-size: 1.5rem; } .attack-grid, .la-pa-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="site-link" href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
+</header>
+
+<div class="blog-container">
+  <div class="article-card">
+
+    <span class="series-label">🔍 Deepfake Detection Series</span>
+    <div class="series-title">Part 1 — My Graduation Project</div>
+    <h2>What Is Deepfake Audio and Why Does It Matter?</h2>
+    <div class="article-meta">Graduation Project EEE 497 · Adana Alparslan Türkeş Science and Technology University</div>
+
+    <p>For my graduation project in Electrical and Electronics Engineering, I built a deepfake speech detection system. This series documents everything — the problem, the data, the model, the results, and what I learned along the way. This first post covers the basics: what deepfake audio actually is and why detecting it is so important.</p>
+
+    <div class="personal-box">
+      <p>I chose this topic because it sits at the intersection of two things I care about: signal processing and AI. Deepfake audio is not a hypothetical threat — it is being used for fraud and misinformation right now. Building a system to detect it felt meaningful.</p>
+      <span class="pb-sig">— Buse, EEE student</span>
+    </div>
+
+    <h3>🎭 What is deepfake audio?</h3>
+    <div class="definition-box">
+      <p>Deepfake audio is synthetic speech that sounds like a real person but was generated by an AI system. Using deep learning techniques, these systems can clone voices, generate new speech, or replay existing recordings — often with the intent to deceive.</p>
+    </div>
+
+    <p>The rapid advancement of text-to-speech (TTS) and voice conversion (VC) technologies means that today anyone can generate convincing synthetic speech using tools like ElevenLabs, Resemble AI, or open source models. What once required a recording studio and hours of editing now takes seconds.</p>
+
+    <h3>⚠️ Why is this dangerous?</h3>
+    <div class="threat-list">
+      <div class="threat-item"><span class="t-icon">🎭</span>Identity spoofing — impersonating someone's voice to bypass voice authentication systems</div>
+      <div class="threat-item"><span class="t-icon">💰</span>Financial fraud — calling bank systems or employees pretending to be someone else</div>
+      <div class="threat-item"><span class="t-icon">📰</span>Misinformation — fabricating audio of politicians, public figures, or experts saying things they never said</div>
+      <div class="threat-item"><span class="t-icon">🔐</span>Unauthorized impersonation — using someone's voice without consent in harmful contexts</div>
+    </div>
+
+    <h3>🔬 How deepfake audio is created</h3>
+    <div class="attack-grid">
+      <div class="attack-card tts">
+        <span class="ac-icon">🗣️</span>
+        <h4>Text-to-Speech (TTS)</h4>
+        <p>An AI model converts written text into speech that sounds like a specific person. The model is trained on recordings of that person.</p>
+      </div>
+      <div class="attack-card vc">
+        <span class="ac-icon">🔄</span>
+        <h4>Voice Conversion (VC)</h4>
+        <p>The speaker's identity in an existing recording is changed to sound like someone else — same content, different voice.</p>
+      </div>
+      <div class="attack-card rep">
+        <span class="ac-icon">📼</span>
+        <h4>Replay Attacks</h4>
+        <p>A genuine recording is played back through a speaker and re-recorded. Simple but surprisingly effective against some detection systems.</p>
+      </div>
+      <div class="attack-card dl">
+        <span class="ac-icon">🧠</span>
+        <h4>Neural Vocoders</h4>
+        <p>Deep learning models like WaveNet, HiFi-GAN generate ultra-realistic speech waveforms that are nearly indistinguishable from real recordings.</p>
+      </div>
+    </div>
+
+    <h3>📋 The ASVspoof benchmark</h3>
+    <p>Researchers have created standardized datasets to evaluate detection systems. The most important is the <strong>ASVspoof2019 dataset</strong>, which I used in my project. It has two scenarios:</p>
+
+    <div class="la-pa-grid">
+      <div class="la-pa-card la">
+        <h4>🔵 Logical Access (LA)</h4>
+        <p>Synthetic speech from TTS and voice conversion algorithms. The fake audio is generated by software — there is no physical recording involved.</p>
+      </div>
+      <div class="la-pa-card pa">
+        <h4>🟡 Physical Access (PA)</h4>
+        <p>Replay attacks — real speech recorded, played back through a speaker, and re-recorded. The challenge is the acoustic artifacts introduced.</p>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <p>The LA scenario is significantly easier than PA. A deepfake generated by an algorithm leaves distinct spectral artifacts. A replay attack sounds much more like genuine speech — the model needs to detect subtle acoustic distortions introduced by the playback device and room acoustics.</p>
+    </div>
+
+    <h3>🎯 What my project does</h3>
+    <p>My graduation project builds an LCNN (Light Convolutional Neural Network) based system that takes an audio recording, extracts log-Mel spectrogram features, and classifies it as <strong>genuine</strong> or <strong>fake</strong>. I trained and evaluated it on both the ASVspoof2019 LA and PA datasets, and additionally created a custom Turkish speech dataset to test cross-language generalization.</p>
+
+    <div class="takeaway">
+      <h3>💡 Key takeaway from Part 1</h3>
+      <p>Deepfake audio is not a future problem — it exists now and is being misused. The field of deepfake detection is active and challenging, especially when it comes to generalizing across different languages, recording conditions, and spoofing techniques. In Part 2, I'll walk through the datasets I used and how I built my own Turkish speech dataset from scratch.</p>
+    </div>
+
+    <div class="series-nav">
+      <a class="btn-outline" href="blog.html">← Back to Blog</a>
+      <a class="btn" href="deepfake-part2.html">Part 2: The Dataset →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer><p>Made with 💗 by Buse | SheBuildsSTEM</p></footer>
+</body>
+</html>

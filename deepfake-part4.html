@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deepfake Detection Part 4 — Results & Conclusions | SheBuildsSTEM</title>
+  <meta name="description" content="Part 4 of my Deepfake Detection graduation project — experimental results, cross-dataset evaluation, noise robustness, and what I learned.">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
+    header { text-align: center; padding: 60px 20px 40px; }
+    header a.site-link { display: inline-block; font-size: 1.3rem; font-weight: 900; color: white; text-decoration: none; text-shadow: 0 2px 12px rgba(0,0,0,0.12); margin-bottom: 20px; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 7px 18px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+    .blog-container { max-width: 780px; margin: 0 auto 80px; padding: 0 20px; }
+    .article-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 28px; padding: 52px 56px; box-shadow: 0 20px 50px rgba(0,0,0,0.11); animation: fadeUp 0.6s ease forwards; }
+    .series-label { display: inline-block; background: linear-gradient(135deg, #3b82f6, #7c3aed); color: white; padding: 5px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 18px; }
+    .series-title { font-size: 0.9rem; font-weight: 700; color: #3b82f6; margin-bottom: 8px; }
+    .article-card h2 { font-size: 1.9rem; font-weight: 900; color: #2d2d2d; line-height: 1.25; margin-bottom: 6px; }
+    .article-meta { font-size: 0.78rem; color: #bbb; font-weight: 600; margin-bottom: 36px; padding-bottom: 28px; border-bottom: 2px solid rgba(59,130,246,0.12); }
+    .article-card p { font-size: 0.97rem; color: #444; line-height: 1.9; margin-bottom: 18px; }
+    .article-card h3 { font-size: 1.1rem; font-weight: 700; color: #2d2d2d; margin: 38px 0 14px; }
+    .highlight-box { background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(168,85,247,0.07)); border-left: 4px solid #ff4fa3; border-radius: 0 14px 14px 0; padding: 18px 22px; margin: 20px 0; }
+    .highlight-box p { margin: 0; font-size: 0.93rem; color: #555; font-style: italic; }
+
+    /* Results stats */
+    .results-banner { background: linear-gradient(135deg, #3b82f6, #7c3aed); border-radius: 20px; padding: 28px; margin: 16px 0 28px; color: white; }
+    .rb-title { font-size: 0.8rem; font-weight: 700; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 18px; text-align: center; }
+    .rb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; }
+    .rb-stat { background: rgba(255,255,255,0.15); border-radius: 14px; padding: 14px; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
+    .rb-stat .rs-num { font-size: 1.6rem; font-weight: 800; display: block; margin-bottom: 3px; }
+    .rb-stat .rs-label { font-size: 0.68rem; opacity: 0.85; font-weight: 600; }
+    .rb-stat.good .rs-num { color: #a6e3a1; }
+    .rb-stat.mid  .rs-num { color: #f9e2af; }
+    .rb-stat.hard .rs-num { color: #f38ba8; }
+
+    /* Experiment results table */
+    .exp-table { width: 100%; border-collapse: collapse; margin: 14px 0 22px; font-size: 0.86rem; }
+    .exp-table th { background: linear-gradient(135deg, #3b82f6, #7c3aed); color: white; padding: 11px 14px; text-align: left; font-weight: 700; font-size: 0.78rem; }
+    .exp-table th:first-child { border-radius: 12px 0 0 0; }
+    .exp-table th:last-child  { border-radius: 0 12px 0 0; }
+    .exp-table td { padding: 11px 14px; border-bottom: 1px solid rgba(0,0,0,0.05); color: #444; vertical-align: middle; }
+    .exp-table tr:last-child td { border-bottom: none; }
+    .exp-table tr:nth-child(even) td { background: rgba(59,130,246,0.03); }
+    .exp-table td:first-child { font-weight: 700; color: #2d2d2d; }
+    .eer-good { color: #065f46; font-weight: 700; }
+    .eer-mid  { color: #92400e; font-weight: 700; }
+    .eer-hard { color: #dc2626; font-weight: 700; }
+
+    /* Noise visual */
+    .noise-visual { background: white; border-radius: 18px; padding: 20px 22px; margin: 14px 0 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); }
+    .nv-title { font-size: 0.75rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+    .nv-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .nv-row:last-child { margin-bottom: 0; }
+    .nv-label { font-size: 0.78rem; font-weight: 600; color: #555; min-width: 80px; }
+    .nv-bar-wrap { flex: 1; height: 11px; background: #f0f0f0; border-radius: 6px; overflow: hidden; }
+    .nv-bar { height: 100%; border-radius: 6px; }
+    .nv-val { font-size: 0.76rem; font-weight: 700; min-width: 48px; text-align: right; }
+
+    /* Key learnings */
+    .learning-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0 22px; }
+    .learning-card { background: white; border-radius: 14px; padding: 18px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); }
+    .learning-card h4 { font-size: 0.88rem; font-weight: 700; color: #2d2d2d; margin-bottom: 6px; }
+    .learning-card p  { font-size: 0.8rem; color: #666; line-height: 1.6; margin: 0; }
+    .learning-card:nth-child(1) { border-top: 3px solid #10b981; }
+    .learning-card:nth-child(2) { border-top: 3px solid #ef4444; }
+    .learning-card:nth-child(3) { border-top: 3px solid #3b82f6; }
+    .learning-card:nth-child(4) { border-top: 3px solid #a855f7; }
+
+    /* Personal reflection */
+    .personal-box { background: linear-gradient(135deg, rgba(255,79,163,0.06), rgba(168,85,247,0.06)); border-left: 4px solid #ff4fa3; border-radius: 0 16px 16px 0; padding: 20px 24px; margin: 20px 0; }
+    .personal-box p { margin: 0 0 8px; font-size: 0.93rem; color: #555; line-height: 1.85; font-style: italic; }
+    .personal-box p:last-child { margin: 0; }
+    .personal-box .pb-sig { font-style: normal; font-weight: 700; color: #ff4fa3; font-size: 0.82rem; }
+
+    /* Takeaway */
+    .takeaway { background: linear-gradient(135deg, #3b82f6, #7c3aed); border-radius: 18px; padding: 26px 28px; margin-top: 36px; color: white; }
+    .takeaway h3 { color: white; font-size: 1rem; margin: 0 0 10px; }
+    .takeaway p  { color: rgba(255,255,255,0.92); font-size: 0.93rem; margin: 0; line-height: 1.75; }
+
+    .series-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 44px; padding-top: 28px; border-top: 2px solid rgba(59,130,246,0.1); }
+    .btn { display: inline-block; background: linear-gradient(135deg, #3b82f6, #7c3aed); color: white; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; box-shadow: 0 6px 18px rgba(59,130,246,0.25); transition: transform 0.2s; }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-outline { display: inline-block; background: transparent; color: #3b82f6; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; border: 2px solid #3b82f6; transition: transform 0.2s, background 0.2s; }
+    .btn-outline:hover { transform: translateY(-3px); background: rgba(59,130,246,0.06); }
+    footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) { .article-card { padding: 30px 22px; } .article-card h2 { font-size: 1.5rem; } .learning-cards { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="site-link" href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
+</header>
+
+<div class="blog-container">
+  <div class="article-card">
+
+    <span class="series-label">🔍 Deepfake Detection Series</span>
+    <div class="series-title">Part 4 — My Graduation Project</div>
+    <h2>Results, Cross-Dataset Challenges & What I Learned</h2>
+    <div class="article-meta">Graduation Project EEE 497 · Experimental Results & Conclusions</div>
+
+    <p>Four experiments, two languages, one custom dataset I built myself, and results that surprised me in both directions. This final part of the series covers everything the model achieved — and everything it struggled with.</p>
+
+    <!-- Results banner -->
+    <div class="results-banner">
+      <div class="rb-title">Key results at a glance</div>
+      <div class="rb-grid">
+        <div class="rb-stat good"><span class="rs-num">99.27%</span><span class="rs-label">LA accuracy</span></div>
+        <div class="rb-stat good"><span class="rs-num">1.41%</span><span class="rs-label">LA EER</span></div>
+        <div class="rb-stat mid"><span class="rs-num">11.01%</span><span class="rs-label">PA EER (augmented)</span></div>
+        <div class="rb-stat mid"><span class="rs-num">6.67%</span><span class="rs-label">LA→Turkish EER</span></div>
+        <div class="rb-stat hard"><span class="rs-num">18.76%</span><span class="rs-label">PA→Turkish EER</span></div>
+        <div class="rb-stat good"><span class="rs-num">0.955</span><span class="rs-label">PA AUC (augmented)</span></div>
+      </div>
+    </div>
+
+    <h3>🧪 The four experiments</h3>
+
+    <table class="exp-table">
+      <thead><tr><th>Experiment</th><th>Train on</th><th>Test on</th><th>EER</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>ASVspoof LA</td><td>ASVspoof LA</td><td class="eer-good">1.41%</td><td>Excellent — matched condition</td></tr>
+        <tr><td>2</td><td>ASVspoof PA</td><td>ASVspoof PA</td><td class="eer-mid">11.01%</td><td>Harder — replay artifacts are subtle</td></tr>
+        <tr><td>3</td><td>ASVspoof LA</td><td>Custom Turkish</td><td class="eer-mid">6.67%</td><td>Cross-language — still reasonable</td></tr>
+        <tr><td>4</td><td>ASVspoof PA</td><td>Custom Turkish</td><td class="eer-hard">18.76%</td><td>Hardest — attack type mismatch</td></tr>
+      </tbody>
+    </table>
+
+    <h3>✅ Experiment 1 — LA baseline (the strong result)</h3>
+    <p>The model trained and tested on the LA dataset achieved 99.27% accuracy and an EER of just 1.41%. This is an excellent result — the confusion matrix shows only 87 false positives and 93 false negatives out of over 24,000 samples. The ROC curve hugs the top-left corner, the training loss decreased smoothly, and the EER kept improving with each epoch down to 1.41% by epoch 4.</p>
+
+    <div class="highlight-box">
+      <p>This result tells us the model can reliably detect algorithmically generated speech when trained and tested on the same distribution. The LCNN architecture with log-Mel spectrograms is highly effective for this task.</p>
+    </div>
+
+    <h3>⚠️ Experiment 2 — PA baseline (the harder task)</h3>
+    <p>Replay attacks are harder to detect. The baseline model achieved an EER of 12.77% — significantly higher than LA. This makes sense: a replay attack is real human speech that has been recorded, played back, and re-recorded. The speech content is genuine. Only subtle acoustic distortions from the playback device and room acoustics make it "fake."</p>
+    <p>After applying data augmentation (adding noise during training), the EER improved to 11.01% — a 13.79% relative improvement. The AUC increased from 0.937 to 0.955. Augmentation helps because it forces the model to look beyond surface noise patterns and find the real acoustic artifacts.</p>
+
+    <h3>🌍 Experiments 3 & 4 — cross-language generalization</h3>
+    <p>The most interesting and honest results came from testing on my custom Turkish dataset. Training was on English (ASVspoof) and testing on Turkish speech — a true domain mismatch.</p>
+    <p>Experiment 3 (LA→Turkish): EER of 6.67%. Surprisingly decent — the model trained on English TTS artifacts generalized partially to Turkish TTS artifacts. This suggests that synthetic speech from similar TTS systems leaves detectable patterns regardless of language.</p>
+    <p>Experiment 4 (PA→Turkish): EER of 18.76% — the worst result. Here the model was trained on replay attack detection but tested on TTS-generated speech. These are fundamentally different spoofing techniques, so the model's learned features simply did not transfer.</p>
+
+    <!-- Noise robustness -->
+    <h3>🔊 Noise robustness</h3>
+    <p>I tested how the model performed when noise was added to the input audio at different levels. The results were clear — performance degrades significantly as noise increases:</p>
+
+    <div class="noise-visual">
+      <div class="nv-title">EER vs noise level (LA model)</div>
+      <div class="nv-row">
+        <span class="nv-label">Clean (0.00)</span>
+        <div class="nv-bar-wrap"><div class="nv-bar" style="width:4%;background:linear-gradient(90deg,#10b981,#34d399);"></div></div>
+        <span class="nv-val" style="color:#065f46;">1.41%</span>
+      </div>
+      <div class="nv-row">
+        <span class="nv-label">Low (0.01)</span>
+        <div class="nv-bar-wrap"><div class="nv-bar" style="width:27%;background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div>
+        <span class="nv-val" style="color:#92400e;">~10%</span>
+      </div>
+      <div class="nv-row">
+        <span class="nv-label">Medium (0.02)</span>
+        <div class="nv-bar-wrap"><div class="nv-bar" style="width:60%;background:linear-gradient(90deg,#ef4444,#f87171);"></div></div>
+        <span class="nv-val" style="color:#dc2626;">~25%</span>
+      </div>
+      <div class="nv-row">
+        <span class="nv-label">High (0.05)</span>
+        <div class="nv-bar-wrap"><div class="nv-bar" style="width:90%;background:linear-gradient(90deg,#dc2626,#ef4444);"></div></div>
+        <span class="nv-val" style="color:#dc2626;">~33%</span>
+      </div>
+    </div>
+
+    <p>This noise sensitivity is a real limitation. In real-world deployment, audio quality varies enormously. Future work should incorporate noise-robust feature extraction and training with diverse noise augmentation.</p>
+
+    <!-- Key learnings -->
+    <h3>💡 Four things I learned from this project</h3>
+    <div class="learning-cards">
+      <div class="learning-card">
+        <h4>Matched vs mismatched conditions are very different</h4>
+        <p>A model that achieves 1.41% EER in a controlled setting can struggle at 18.76% in a real-world cross-language scenario. Benchmark results alone don't tell the whole story.</p>
+      </div>
+      <div class="learning-card">
+        <h4>Attack type matters more than language</h4>
+        <p>LA→Turkish worked reasonably well. PA→Turkish failed. The type of spoofing technique matters more than language for cross-dataset transfer.</p>
+      </div>
+      <div class="learning-card">
+        <h4>Data augmentation genuinely helps</h4>
+        <p>Adding noise during PA training improved EER from 12.77% to 11.01%. Small improvements in EER represent significant real-world impact in security systems.</p>
+      </div>
+      <div class="learning-card">
+        <h4>Building your own dataset teaches you the most</h4>
+        <p>Collecting 315 recordings from 26 speakers and generating synthetic counterparts taught me more about the problem than reading 20 papers.</p>
+      </div>
+    </div>
+
+    <!-- Personal reflection -->
+    <div class="personal-box">
+      <p>This project is the thing I'm proudest of from my undergraduate years. Not because the results were perfect — they weren't. But because I built something real, tested it honestly, acknowledged its limitations, and learned exactly why those limitations exist. That's what engineering is.</p>
+      <p>If I continue this research, I would focus on domain adaptation — techniques that help a model trained in one context perform better in another. The gap between benchmark performance and real-world performance is the most important unsolved problem in deepfake detection.</p>
+      <span class="pb-sig">— Rabia Buse Menteş, EEE Graduate</span>
+    </div>
+
+    <div class="takeaway">
+      <h3>💡 Series summary</h3>
+      <p>I built an LCNN-based deepfake speech detection system, trained it on ASVspoof2019, built my own Turkish dataset, and ran 4 cross-dataset experiments. The system works excellently under controlled conditions but struggles with domain mismatch — which is the core unsolved problem of the field. The findings are honest, the limitations are clear, and the next steps are specific. That's what a good graduation project looks like.</p>
+    </div>
+
+    <div class="series-nav">
+      <a class="btn-outline" href="deepfake-part3.html">← Part 3: The Model</a>
+      <a class="btn" href="blog.html">Back to Blog →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer><p>Made with 💗 by Buse | SheBuildsSTEM</p></footer>
+</body>
+</html>

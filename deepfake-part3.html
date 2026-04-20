@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deepfake Detection Part 3 — The LCNN Model | SheBuildsSTEM</title>
+  <meta name="description" content="Part 3 of my Deepfake Detection graduation project — the LCNN architecture, log-Mel features, MFM activation, and training strategy.">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
+    header { text-align: center; padding: 60px 20px 40px; }
+    header a.site-link { display: inline-block; font-size: 1.3rem; font-weight: 900; color: white; text-decoration: none; text-shadow: 0 2px 12px rgba(0,0,0,0.12); margin-bottom: 20px; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 7px 18px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+    .blog-container { max-width: 780px; margin: 0 auto 80px; padding: 0 20px; }
+    .article-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 28px; padding: 52px 56px; box-shadow: 0 20px 50px rgba(0,0,0,0.11); animation: fadeUp 0.6s ease forwards; }
+    .series-label { display: inline-block; background: linear-gradient(135deg, #3b82f6, #7c3aed); color: white; padding: 5px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 18px; }
+    .series-title { font-size: 0.9rem; font-weight: 700; color: #3b82f6; margin-bottom: 8px; }
+    .article-card h2 { font-size: 1.9rem; font-weight: 900; color: #2d2d2d; line-height: 1.25; margin-bottom: 6px; }
+    .article-meta { font-size: 0.78rem; color: #bbb; font-weight: 600; margin-bottom: 36px; padding-bottom: 28px; border-bottom: 2px solid rgba(59,130,246,0.12); }
+    .article-card p { font-size: 0.97rem; color: #444; line-height: 1.9; margin-bottom: 18px; }
+    .article-card h3 { font-size: 1.1rem; font-weight: 700; color: #2d2d2d; margin: 38px 0 14px; }
+    .definition-box { background: linear-gradient(135deg, rgba(59,130,246,0.07), rgba(124,58,237,0.05)); border-left: 4px solid #3b82f6; border-radius: 0 16px 16px 0; padding: 18px 22px; margin: 16px 0 22px; }
+    .definition-box p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.8; }
+    .highlight-box { background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(168,85,247,0.07)); border-left: 4px solid #ff4fa3; border-radius: 0 14px 14px 0; padding: 18px 22px; margin: 20px 0; }
+    .highlight-box p { margin: 0; font-size: 0.93rem; color: #555; font-style: italic; }
+
+    /* Pipeline */
+    .pipeline { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin: 16px 0 22px; background: white; border-radius: 18px; padding: 18px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); }
+    .pipe-step { background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(124,58,237,0.1)); border-radius: 12px; padding: 12px 16px; text-align: center; min-width: 90px; flex: 1; max-width: 120px; }
+    .pipe-step .ps-icon { font-size: 1.2rem; display: block; margin-bottom: 4px; }
+    .pipe-step .ps-label { font-size: 0.72rem; font-weight: 700; color: #3b82f6; }
+    .pipe-arrow { color: #ccc; font-size: 1rem; flex-shrink: 0; }
+
+    /* LCNN layers */
+    .arch-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0 22px; }
+    .arch-row { display: flex; align-items: center; gap: 14px; background: white; border-radius: 12px; padding: 12px 16px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); }
+    .arch-badge { font-size: 0.66rem; font-weight: 800; padding: 4px 8px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.04em; flex-shrink: 0; min-width: 60px; text-align: center; }
+    .badge-conv { background: #fce7f3; color: #be185d; }
+    .badge-mfm  { background: #ede9fe; color: #6d28d9; }
+    .badge-pool { background: #dbeafe; color: #1d4ed8; }
+    .badge-fc   { background: #fef3c7; color: #92400e; }
+    .arch-info h4 { font-size: 0.88rem; font-weight: 700; color: #2d2d2d; margin-bottom: 2px; }
+    .arch-info p  { font-size: 0.78rem; color: #888; margin: 0; }
+
+    /* MFM vs ReLU comparison */
+    .mfm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0 22px; }
+    .mfm-card { border-radius: 16px; padding: 18px; }
+    .mfm-card.relu { background: rgba(239,68,68,0.06);  border: 1.5px solid rgba(239,68,68,0.15); }
+    .mfm-card.mfm  { background: rgba(168,85,247,0.07); border: 1.5px solid rgba(168,85,247,0.2); }
+    .mfm-card h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; }
+    .mfm-card.relu h4 { color: #dc2626; }
+    .mfm-card.mfm  h4 { color: #6d28d9; }
+    .mfm-card p { font-size: 0.8rem; color: #666; line-height: 1.6; margin: 0; }
+
+    /* Formula box */
+    .formula-box { background: #1e1e2e; border-radius: 14px; padding: 16px 22px; margin: 12px 0 18px; text-align: center; }
+    .formula-label { font-size: 0.65rem; font-weight: 700; color: #89b4fa; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; display: block; }
+    .formula-box code { font-family: 'Courier New', monospace; font-size: 0.9rem; color: #cdd6f4; font-weight: 700; }
+    .formula-box code .blue   { color: #89b4fa; }
+    .formula-box code .purple { color: #cba6f7; }
+    .formula-box code .pink   { color: #f38ba8; }
+    .formula-box code .green  { color: #a6e3a1; }
+
+    /* Training choices */
+    .choice-list { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
+    .choice-item { display: flex; align-items: center; gap: 14px; background: white; border-radius: 12px; padding: 13px 16px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); border: 1px solid rgba(59,130,246,0.1); }
+    .choice-label { font-size: 0.72rem; font-weight: 800; color: #3b82f6; min-width: 100px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .choice-val { font-size: 0.88rem; color: #444; font-weight: 600; }
+    .choice-desc { font-size: 0.78rem; color: #888; margin-left: auto; }
+
+    /* Takeaway */
+    .takeaway { background: linear-gradient(135deg, #3b82f6, #7c3aed); border-radius: 18px; padding: 26px 28px; margin-top: 36px; color: white; }
+    .takeaway h3 { color: white; font-size: 1rem; margin: 0 0 10px; }
+    .takeaway p  { color: rgba(255,255,255,0.92); font-size: 0.93rem; margin: 0; line-height: 1.75; }
+
+    .series-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 44px; padding-top: 28px; border-top: 2px solid rgba(59,130,246,0.1); }
+    .btn { display: inline-block; background: linear-gradient(135deg, #3b82f6, #7c3aed); color: white; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; box-shadow: 0 6px 18px rgba(59,130,246,0.25); transition: transform 0.2s; }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-outline { display: inline-block; background: transparent; color: #3b82f6; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; border: 2px solid #3b82f6; transition: transform 0.2s, background 0.2s; }
+    .btn-outline:hover { transform: translateY(-3px); background: rgba(59,130,246,0.06); }
+    footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) { .article-card { padding: 30px 22px; } .article-card h2 { font-size: 1.5rem; } .mfm-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="site-link" href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
+</header>
+
+<div class="blog-container">
+  <div class="article-card">
+
+    <span class="series-label">🔍 Deepfake Detection Series</span>
+    <div class="series-title">Part 3 — My Graduation Project</div>
+    <h2>The LCNN Model — Architecture and Training</h2>
+    <div class="article-meta">Graduation Project EEE 497 · Deep Learning Architecture</div>
+
+    <p>In Part 2 we covered the datasets. Now the core of the project: the model. I used a <strong>Light Convolutional Neural Network (LCNN)</strong> — a CNN variant specifically designed for audio spoof detection. This part explains why I chose it, how it works, and how I trained it.</p>
+
+    <h3>🗺️ System overview</h3>
+    <p>The full pipeline from raw audio to binary output:</p>
+
+    <div class="pipeline">
+      <div class="pipe-step"><span class="ps-icon">🎤</span><span class="ps-label">Audio signal</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step"><span class="ps-icon">📐</span><span class="ps-label">Preprocessing</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step"><span class="ps-icon">📊</span><span class="ps-label">Log-Mel spectrogram</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step"><span class="ps-icon">🧠</span><span class="ps-label">LCNN</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step"><span class="ps-icon">✅❌</span><span class="ps-label">Real or Fake</span></div>
+    </div>
+
+    <h3>📊 Feature extraction — log-Mel spectrogram</h3>
+    <div class="definition-box">
+      <p>Instead of feeding raw audio waveforms to the model, I first convert audio to a log-Mel spectrogram — a 2D time-frequency representation that captures how energy is distributed across frequency bands over time. This is the same feature representation we covered in the Speech AI series.</p>
+    </div>
+
+    <p>The conversion pipeline:</p>
+
+    <div class="formula-box">
+      <span class="formula-label">Step 1 — Short-Time Fourier Transform</span>
+      <code><span class="blue">X(m,k)</span> = Σ <span class="green">x[n]</span> · <span class="purple">w[n−mH]</span> · e<span class="pink">^(−j2πkn/N)</span></code>
+    </div>
+
+    <div class="formula-box">
+      <span class="formula-label">Step 2 — Mel scale mapping</span>
+      <code><span class="blue">Mel(f)</span> = 2595 · log₁₀(1 + <span class="green">f</span> / 700)</code>
+    </div>
+
+    <div class="formula-box">
+      <span class="formula-label">Step 3 — Log compression</span>
+      <code><span class="blue">S_log-mel</span> = log(<span class="purple">S_mel</span> + <span class="pink">ε</span>)    <span style="color:#6c7086;font-style:italic;">ε prevents log(0)</span></code>
+    </div>
+
+    <h3>🧠 Why LCNN?</h3>
+    <p>LCNN stands for Light Convolutional Neural Network. It was originally proposed for face recognition but proved highly effective for audio spoof detection due to its efficient architecture and a special activation function called Max-Feature-Map (MFM).</p>
+
+    <div class="mfm-grid">
+      <div class="mfm-card relu">
+        <h4>Standard ReLU</h4>
+        <p>Outputs max(0, x) — simply removes negative values. Treats all features equally regardless of their discriminative value.</p>
+      </div>
+      <div class="mfm-card mfm">
+        <h4>MFM activation (LCNN)</h4>
+        <p>Takes two feature maps and outputs the element-wise maximum. This selects the most informative features and suppresses less useful ones — better for detecting subtle artifacts.</p>
+      </div>
+    </div>
+
+    <div class="formula-box">
+      <span class="formula-label">MFM activation function</span>
+      <code><span class="blue">MFM(a, b)</span> = <span class="purple">max</span>(<span class="green">a</span>, <span class="pink">b</span>)</code>
+    </div>
+
+    <div class="highlight-box">
+      <p>The key insight is that deepfake artifacts are subtle — they appear in specific frequency regions and temporal patterns. MFM helps the network focus on these discriminative patterns by competitively selecting between feature map pairs, effectively suppressing noise and irrelevant responses.</p>
+    </div>
+
+    <h3>🏗️ LCNN architecture layers</h3>
+    <div class="arch-list">
+      <div class="arch-row"><span class="arch-badge badge-conv">Conv</span><div class="arch-info"><h4>Convolutional layers</h4><p>Detect local time-frequency patterns in the spectrogram — frequency transitions, energy bursts, artifact signatures</p></div></div>
+      <div class="arch-row"><span class="arch-badge badge-mfm">MFM</span><div class="arch-info"><h4>Max-Feature-Map activation</h4><p>Competitive selection between feature map pairs — suppresses uninformative features, enhances discriminative ones</p></div></div>
+      <div class="arch-row"><span class="arch-badge badge-pool">MaxPool</span><div class="arch-info"><h4>Max pooling</h4><p>Reduces spatial dimensions progressively — retains strongest activations, improves computational efficiency</p></div></div>
+      <div class="arch-row"><span class="arch-badge badge-fc">FC</span><div class="arch-info"><h4>Fully connected layers</h4><p>Combines all extracted features into a final binary classification: genuine (0) or fake (1)</p></div></div>
+    </div>
+
+    <h3>⚙️ Training configuration</h3>
+    <p>Training details for both LA and PA experiments:</p>
+
+    <div class="choice-list">
+      <div class="choice-item"><span class="choice-label">Loss function</span><span class="choice-val">Cross-Entropy Loss</span><span class="choice-desc">Standard for binary classification</span></div>
+      <div class="choice-item"><span class="choice-label">Optimizer</span><span class="choice-val">Gradient-based (Adam)</span><span class="choice-desc">Adaptive learning rate</span></div>
+      <div class="choice-item"><span class="choice-label">Framework</span><span class="choice-val">PyTorch</span><span class="choice-desc">GPU acceleration on Google Colab</span></div>
+      <div class="choice-item"><span class="choice-label">Features</span><span class="choice-val">Log-Mel spectrogram (64 bands)</span><span class="choice-desc">Cached for speed</span></div>
+      <div class="choice-item"><span class="choice-label">Augmentation</span><span class="choice-val">Noise injection</span><span class="choice-desc">Applied to PA dataset training</span></div>
+      <div class="choice-item"><span class="choice-label">Evaluation</span><span class="choice-val">Equal Error Rate (EER)</span><span class="choice-desc">Standard metric in biometric systems</span></div>
+    </div>
+
+    <h3>📏 The evaluation metric — EER</h3>
+    <p>I evaluated the model using the <strong>Equal Error Rate (EER)</strong> — the point where False Acceptance Rate (FAR) equals False Rejection Rate (FRR).</p>
+
+    <div class="formula-box">
+      <span class="formula-label">Equal Error Rate definition</span>
+      <code><span class="blue">EER</span> = FAR(τ*) = FRR(τ*)
+<span style="color:#6c7086;font-style:italic;">where τ* is the optimal decision threshold</span></code>
+    </div>
+
+    <p>A lower EER is better — it means the system makes fewer errors of both types. An EER of 0% would be a perfect system.</p>
+
+    <div class="takeaway">
+      <h3>💡 Why LCNN works for deepfake detection</h3>
+      <p>Deepfake artifacts in audio are like tiny imperfections in a painting — subtle but present. LCNN's MFM activation is specifically designed to find and amplify these differences while ignoring natural speech variation. Combined with log-Mel spectrograms that capture the same frequency information humans use to perceive speech, the system can learn what "fake" looks like in a way that standard CNNs often miss. In Part 4, I share the actual results.</p>
+    </div>
+
+    <div class="series-nav">
+      <a class="btn-outline" href="deepfake-part2.html">← Part 2: The Dataset</a>
+      <a class="btn" href="deepfake-part4.html">Part 4: Results →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer><p>Made with 💗 by Buse | SheBuildsSTEM</p></footer>
+</body>
+</html>
