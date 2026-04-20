@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn ML Week 4 — Neural Networks From Scratch | SheBuildsSTEM</title>
+  <meta name="description" content="Week 4 of Learn ML With Me — building a neural network from scratch, understanding neurons, layers, weights, biases, and the forward pass.">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
+    header { text-align: center; padding: 60px 20px 40px; }
+    header a.site-link { display: inline-block; font-size: 1.3rem; font-weight: 900; color: white; text-decoration: none; text-shadow: 0 2px 12px rgba(0,0,0,0.12); margin-bottom: 20px; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 7px 18px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+    .blog-container { max-width: 780px; margin: 0 auto 80px; padding: 0 20px; }
+    .article-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 28px; padding: 52px 56px; box-shadow: 0 20px 50px rgba(0,0,0,0.11); animation: fadeUp 0.6s ease forwards; }
+    .series-label { display: inline-block; background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; padding: 5px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 18px; }
+    .week-label { font-size: 0.9rem; font-weight: 700; color: #a855f7; margin-bottom: 8px; }
+    .article-card h2 { font-size: 1.9rem; font-weight: 900; color: #2d2d2d; line-height: 1.25; margin-bottom: 6px; }
+    .article-meta { font-size: 0.78rem; color: #bbb; font-weight: 600; margin-bottom: 36px; padding-bottom: 28px; border-bottom: 2px solid rgba(168,85,247,0.12); }
+    .article-card p { font-size: 0.97rem; color: #444; line-height: 1.9; margin-bottom: 18px; }
+    .article-card h3 { font-size: 1.1rem; font-weight: 700; color: #2d2d2d; margin: 38px 0 14px; }
+    .definition-box { background: linear-gradient(135deg, rgba(168,85,247,0.07), rgba(255,79,163,0.05)); border-left: 4px solid #a855f7; border-radius: 0 16px 16px 0; padding: 18px 22px; margin: 16px 0 22px; }
+    .definition-box p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.8; }
+    .highlight-box { background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(168,85,247,0.07)); border-left: 4px solid #ff4fa3; border-radius: 0 14px 14px 0; padding: 18px 22px; margin: 20px 0; }
+    .highlight-box p { margin: 0; font-size: 0.93rem; color: #555; font-style: italic; }
+
+    /* ── Neuron anatomy ── */
+    .neuron-visual { background: white; border-radius: 18px; padding: 26px 24px; margin: 16px 0 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); overflow-x: auto; }
+    .nv-title { font-size: 0.75rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; text-align: center; margin-bottom: 18px; }
+
+    /* ── Network architecture diagram ── */
+    .network-diagram { background: white; border-radius: 18px; padding: 26px 16px; margin: 16px 0 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); overflow-x: auto; }
+    .nd-title { font-size: 0.75rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; text-align: center; margin-bottom: 16px; }
+
+    /* ── Layer cards ── */
+    .layer-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 14px 0 22px; }
+    .layer-card { border-radius: 16px; padding: 18px 16px; text-align: center; transition: transform 0.2s; }
+    .layer-card:hover { transform: translateY(-4px); }
+    .layer-card.input  { background: rgba(59,130,246,0.07);  border: 1.5px solid rgba(59,130,246,0.2); }
+    .layer-card.hidden { background: rgba(168,85,247,0.07);  border: 1.5px solid rgba(168,85,247,0.2); }
+    .layer-card.output { background: rgba(16,185,129,0.07);  border: 1.5px solid rgba(16,185,129,0.2); }
+    .layer-card .lc-icon { font-size: 1.6rem; display: block; margin-bottom: 8px; }
+    .layer-card h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+    .layer-card.input h4  { color: #1d4ed8; }
+    .layer-card.hidden h4 { color: #6d28d9; }
+    .layer-card.output h4 { color: #065f46; }
+    .layer-card p { font-size: 0.78rem; color: #666; line-height: 1.5; margin: 0; }
+
+    /* ── Formula box ── */
+    .formula-box { background: #1e1e2e; border-radius: 14px; padding: 16px 22px; margin: 12px 0 18px; }
+    .formula-box .formula-label { font-size: 0.65rem; font-weight: 700; color: #ff4fa3; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; display: block; }
+    .formula-box code { font-family: 'Courier New', monospace; font-size: 0.88rem; color: #cdd6f4; font-weight: 700; display: block; line-height: 1.7; }
+    .formula-box code .pink   { color: #f38ba8; }
+    .formula-box code .purple { color: #cba6f7; }
+    .formula-box code .blue   { color: #89b4fa; }
+    .formula-box code .green  { color: #a6e3a1; }
+    .formula-box code .yellow { color: #f9e2af; }
+    .formula-box code .cm     { color: #6c7086; font-style: italic; }
+
+    /* ── Forward pass walkthrough ── */
+    .forward-steps { display: flex; flex-direction: column; gap: 0; margin: 14px 0 22px; }
+    .fs-item { display: flex; gap: 14px; align-items: flex-start; }
+    .fs-left { display: flex; flex-direction: column; align-items: center; }
+    .fs-num { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(255,79,163,0.25); }
+    .fs-line { width: 2px; flex: 1; background: linear-gradient(180deg, rgba(255,79,163,0.3), rgba(168,85,247,0.3)); min-height: 16px; }
+    .fs-item:last-child .fs-line { display: none; }
+    .fs-content { padding: 4px 0 20px; flex: 1; }
+    .fs-content h4 { font-size: 0.92rem; font-weight: 700; color: #2d2d2d; margin-bottom: 4px; }
+    .fs-content p { font-size: 0.84rem; color: #666; margin: 0 0 8px; line-height: 1.65; }
+
+    /* ── Calculation example ── */
+    .calc-box { background: white; border-radius: 16px; padding: 20px 22px; margin: 14px 0 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.04); }
+    .calc-title { font-size: 0.75rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+    .calc-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 0.88rem; flex-wrap: wrap; }
+    .calc-row:last-child { margin-bottom: 0; }
+    .calc-label { font-weight: 700; color: #2d2d2d; min-width: 80px; font-size: 0.82rem; }
+    .calc-val { background: #f3f4f6; border-radius: 8px; padding: 4px 10px; font-family: 'Courier New', monospace; font-size: 0.82rem; color: #555; }
+    .calc-val.result { background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; font-weight: 700; }
+    .calc-arrow { color: #ccc; }
+
+    /* ── PyTorch code ── */
+    .code-block { background: #1e1e2e; border-radius: 14px; padding: 22px 26px; margin: 14px 0 22px; overflow-x: auto; }
+    .code-label { font-size: 0.7rem; font-weight: 700; color: #ff4fa3; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; display: block; }
+    .code-block code { font-family: 'Courier New', monospace; font-size: 0.84rem; color: #cdd6f4; line-height: 1.8; white-space: pre; display: block; }
+    .code-block code .kw  { color: #cba6f7; }
+    .code-block code .fn  { color: #89b4fa; }
+    .code-block code .st  { color: #a6e3a1; }
+    .code-block code .cm  { color: #6c7086; font-style: italic; }
+    .code-block code .nm  { color: #fab387; }
+    .code-block code .cls { color: #f9e2af; }
+
+    /* ── Why it works ── */
+    .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0 22px; }
+    .why-card { background: white; border-radius: 14px; padding: 16px 18px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); }
+    .why-card h4 { font-size: 0.88rem; font-weight: 700; color: #2d2d2d; margin-bottom: 6px; }
+    .why-card p  { font-size: 0.8rem; color: #666; line-height: 1.6; margin: 0; }
+    .why-card:nth-child(1) { border-top: 3px solid #ff4fa3; }
+    .why-card:nth-child(2) { border-top: 3px solid #a855f7; }
+    .why-card:nth-child(3) { border-top: 3px solid #3b82f6; }
+    .why-card:nth-child(4) { border-top: 3px solid #10b981; }
+
+    /* ── Takeaway ── */
+    .takeaway { background: linear-gradient(135deg, #ff4fa3, #a855f7); border-radius: 18px; padding: 26px 28px; margin-top: 36px; color: white; }
+    .takeaway h3 { color: white; font-size: 1rem; margin: 0 0 10px; }
+    .takeaway p  { color: rgba(255,255,255,0.92); font-size: 0.93rem; margin: 0; line-height: 1.75; }
+
+    .series-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 44px; padding-top: 28px; border-top: 2px solid rgba(168,85,247,0.1); }
+    .btn { display: inline-block; background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; box-shadow: 0 6px 18px rgba(255,79,163,0.25); transition: transform 0.2s; }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-outline { display: inline-block; background: transparent; color: #ff4fa3; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; border: 2px solid #ff4fa3; transition: transform 0.2s, background 0.2s; }
+    .btn-outline:hover { transform: translateY(-3px); background: rgba(255,79,163,0.06); }
+    footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) {
+      .article-card { padding: 30px 22px; }
+      .article-card h2 { font-size: 1.5rem; }
+      .layer-cards { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="site-link" href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
+</header>
+
+<div class="blog-container">
+  <div class="article-card">
+
+    <span class="series-label">🎓 Learn Machine Learning With Me</span>
+    <div class="week-label">Week 4</div>
+    <h2>Neural Networks From Scratch</h2>
+    <div class="article-meta">Spring 2026 · Beginner-friendly · The Architecture Behind Deep Learning</div>
+
+    <p>Weeks 1–3 covered what ML is, how models learn, and decision trees. Now we reach the most important topic in modern AI: <strong>neural networks</strong>. Everything from image recognition to ChatGPT is built on this foundation. This week we build one from scratch — concept by concept.</p>
+
+    <!-- Biological inspiration -->
+    <h3>🧬 Where the idea comes from</h3>
+    <div class="highlight-box">
+      <p>Neural networks were inspired by the human brain. Your brain contains around 86 billion neurons — each one receives signals, processes them, and passes a signal forward. Artificial neural networks mimic this structure with mathematics instead of biology.</p>
+    </div>
+
+    <!-- Single neuron -->
+    <h3>⚡ The single neuron — the basic building block</h3>
+    <div class="definition-box">
+      <p>A single artificial neuron takes several inputs, multiplies each by a <strong>weight</strong> (how important that input is), adds them all together with a <strong>bias</strong> (a fixed offset), then passes the result through an <strong>activation function</strong> to produce an output.</p>
+    </div>
+
+    <div class="neuron-visual">
+      <div class="nv-title">A single artificial neuron</div>
+      <svg width="100%" viewBox="0 0 620 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <!-- Input nodes -->
+        <circle cx="80" cy="60"  r="22" fill="#dbeafe" stroke="#93c5fd" stroke-width="1.5"/>
+        <text x="80" y="65" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8" font-family="Poppins,sans-serif">x₁</text>
+
+        <circle cx="80" cy="130" r="22" fill="#dbeafe" stroke="#93c5fd" stroke-width="1.5"/>
+        <text x="80" y="135" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8" font-family="Poppins,sans-serif">x₂</text>
+
+        <circle cx="80" cy="170" r="22" fill="#dbeafe" stroke="#93c5fd" stroke-width="1.5"/>
+        <text x="80" y="175" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8" font-family="Poppins,sans-serif">x₃</text>
+
+        <!-- Weight labels on lines -->
+        <line x1="102" y1="68"  x2="248" y2="98"  stroke="#c4b5fd" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="102" y1="130" x2="248" y2="115" stroke="#c4b5fd" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="102" y1="162" x2="248" y2="128" stroke="#c4b5fd" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <text x="160" y="78"  font-size="11" fill="#a855f7" font-weight="700" font-family="Poppins,sans-serif">w₁</text>
+        <text x="165" y="118" font-size="11" fill="#a855f7" font-weight="700" font-family="Poppins,sans-serif">w₂</text>
+        <text x="158" y="150" font-size="11" fill="#a855f7" font-weight="700" font-family="Poppins,sans-serif">w₃</text>
+
+        <!-- Neuron body -->
+        <circle cx="290" cy="110" r="40" fill="#ede9fe" stroke="#a855f7" stroke-width="2"/>
+        <text x="290" y="106" text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9" font-family="Poppins,sans-serif">Σ + b</text>
+        <text x="290" y="122" text-anchor="middle" font-size="10" fill="#9333ea" font-family="Poppins,sans-serif">sum &amp; bias</text>
+
+        <!-- Activation -->
+        <rect x="370" y="88" width="90" height="44" rx="10" fill="#fce7f3" stroke="#fbcfe8" stroke-width="1.5"/>
+        <text x="415" y="107" text-anchor="middle" font-size="11" font-weight="700" fill="#be185d" font-family="Poppins,sans-serif">Activation</text>
+        <text x="415" y="122" text-anchor="middle" font-size="10" fill="#db2777" font-family="Poppins,sans-serif">f(x) = ReLU</text>
+
+        <line x1="330" y1="110" x2="368" y2="110" stroke="#a855f7" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Output -->
+        <circle cx="540" cy="110" r="26" fill="#d1fae5" stroke="#6ee7b7" stroke-width="1.5"/>
+        <text x="540" y="107" text-anchor="middle" font-size="12" font-weight="700" fill="#065f46" font-family="Poppins,sans-serif">ŷ</text>
+        <text x="540" y="122" text-anchor="middle" font-size="9" fill="#059669" font-family="Poppins,sans-serif">output</text>
+
+        <line x1="460" y1="110" x2="512" y2="110" stroke="#10b981" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Bias input from top -->
+        <circle cx="290" cy="28" r="16" fill="#fef3c7" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="290" y="33" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e" font-family="Poppins,sans-serif">b</text>
+        <line x1="290" y1="44" x2="290" y2="68" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arr)"/>
+      </svg>
+    </div>
+
+    <!-- The math -->
+    <h3>🔢 The math inside one neuron</h3>
+    <p>Every neuron computes the exact same two operations — a weighted sum, then an activation:</p>
+
+    <div class="formula-box">
+      <span class="formula-label">Step 1 — weighted sum</span>
+      <code><span class="pink">z</span> = (<span class="blue">w₁</span>×<span class="green">x₁</span>) + (<span class="blue">w₂</span>×<span class="green">x₂</span>) + (<span class="blue">w₃</span>×<span class="green">x₃</span>) + <span class="yellow">b</span></code>
+    </div>
+
+    <div class="formula-box">
+      <span class="formula-label">Step 2 — activation function</span>
+      <code><span class="purple">output</span> = <span class="pink">f</span>(<span class="pink">z</span>)   <span class="cm">← e.g. ReLU, Sigmoid, Tanh</span></code>
+    </div>
+
+    <!-- Worked example -->
+    <div class="calc-box">
+      <div class="calc-title">Worked example — one neuron, three inputs</div>
+      <div class="calc-row">
+        <span class="calc-label">Inputs</span>
+        <span class="calc-val">x₁=0.5</span>
+        <span class="calc-arrow">,</span>
+        <span class="calc-val">x₂=0.8</span>
+        <span class="calc-arrow">,</span>
+        <span class="calc-val">x₃=0.2</span>
+      </div>
+      <div class="calc-row">
+        <span class="calc-label">Weights</span>
+        <span class="calc-val">w₁=0.4</span>
+        <span class="calc-arrow">,</span>
+        <span class="calc-val">w₂=0.6</span>
+        <span class="calc-arrow">,</span>
+        <span class="calc-val">w₃=0.3</span>
+      </div>
+      <div class="calc-row">
+        <span class="calc-label">Bias</span>
+        <span class="calc-val">b = 0.1</span>
+      </div>
+      <div class="calc-row">
+        <span class="calc-label">z =</span>
+        <span class="calc-val">(0.5×0.4) + (0.8×0.6) + (0.2×0.3) + 0.1</span>
+      </div>
+      <div class="calc-row">
+        <span class="calc-label">z =</span>
+        <span class="calc-val">0.2 + 0.48 + 0.06 + 0.1 = 0.84</span>
+      </div>
+      <div class="calc-row">
+        <span class="calc-label">ReLU(0.84) =</span>
+        <span class="calc-val result">0.84 ✓ (positive, passes through)</span>
+      </div>
+    </div>
+
+    <!-- Three layers -->
+    <h3>🏗️ From one neuron to a full network</h3>
+    <p>A neural network is just many neurons organised into layers. Each layer's output becomes the next layer's input — this is called a <strong>feedforward</strong> or <strong>fully connected</strong> network.</p>
+
+    <div class="layer-cards">
+      <div class="layer-card input">
+        <span class="lc-icon">📥</span>
+        <h4>Input layer</h4>
+        <p>Receives the raw data. One neuron per feature. No computation — just passes values forward.</p>
+      </div>
+      <div class="layer-card hidden">
+        <span class="lc-icon">🧠</span>
+        <h4>Hidden layer(s)</h4>
+        <p>Where learning happens. Can have many layers — each one learns more abstract features than the last.</p>
+      </div>
+      <div class="layer-card output">
+        <span class="lc-icon">📤</span>
+        <h4>Output layer</h4>
+        <p>Produces the final prediction. One neuron for regression, one per class for classification.</p>
+      </div>
+    </div>
+
+    <!-- Network SVG -->
+    <div class="network-diagram">
+      <div class="nd-title">Fully connected neural network — 3 inputs → 4 hidden → 2 outputs</div>
+      <svg width="100%" viewBox="0 0 580 220" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <!-- Connections input→hidden -->
+        <g stroke="#c4b5fd" stroke-width="0.8" opacity="0.5">
+          <line x1="80" y1="60"  x2="240" y2="44"/>  <line x1="80" y1="60"  x2="240" y2="88"/>
+          <line x1="80" y1="60"  x2="240" y2="132"/> <line x1="80" y1="60"  x2="240" y2="176"/>
+          <line x1="80" y1="110" x2="240" y2="44"/>  <line x1="80" y1="110" x2="240" y2="88"/>
+          <line x1="80" y1="110" x2="240" y2="132"/> <line x1="80" y1="110" x2="240" y2="176"/>
+          <line x1="80" y1="160" x2="240" y2="44"/>  <line x1="80" y1="160" x2="240" y2="88"/>
+          <line x1="80" y1="160" x2="240" y2="132"/> <line x1="80" y1="160" x2="240" y2="176"/>
+        </g>
+
+        <!-- Connections hidden→output -->
+        <g stroke="#fbcfe8" stroke-width="0.8" opacity="0.5">
+          <line x1="260" y1="44"  x2="420" y2="80"/>  <line x1="260" y1="44"  x2="420" y2="140"/>
+          <line x1="260" y1="88"  x2="420" y2="80"/>  <line x1="260" y1="88"  x2="420" y2="140"/>
+          <line x1="260" y1="132" x2="420" y2="80"/>  <line x1="260" y1="132" x2="420" y2="140"/>
+          <line x1="260" y1="176" x2="420" y2="80"/>  <line x1="260" y1="176" x2="420" y2="140"/>
+        </g>
+
+        <!-- Input neurons -->
+        <g fill="#dbeafe" stroke="#93c5fd" stroke-width="1.5">
+          <circle cx="80" cy="60"  r="20"/>
+          <circle cx="80" cy="110" r="20"/>
+          <circle cx="80" cy="160" r="20"/>
+        </g>
+        <text x="80" y="64"  text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8" font-family="Poppins,sans-serif">x₁</text>
+        <text x="80" y="114" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8" font-family="Poppins,sans-serif">x₂</text>
+        <text x="80" y="164" text-anchor="middle" font-size="12" font-weight="700" fill="#1d4ed8" font-family="Poppins,sans-serif">x₃</text>
+        <text x="80" y="200" text-anchor="middle" font-size="10" fill="#999" font-family="Poppins,sans-serif">Input</text>
+
+        <!-- Hidden neurons -->
+        <g fill="#ede9fe" stroke="#a855f7" stroke-width="1.5">
+          <circle cx="250" cy="44"  r="20"/>
+          <circle cx="250" cy="88"  r="20"/>
+          <circle cx="250" cy="132" r="20"/>
+          <circle cx="250" cy="176" r="20"/>
+        </g>
+        <text x="250" y="48"  text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9" font-family="Poppins,sans-serif">h₁</text>
+        <text x="250" y="92"  text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9" font-family="Poppins,sans-serif">h₂</text>
+        <text x="250" y="136" text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9" font-family="Poppins,sans-serif">h₃</text>
+        <text x="250" y="180" text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9" font-family="Poppins,sans-serif">h₄</text>
+        <text x="250" y="206" text-anchor="middle" font-size="10" fill="#999" font-family="Poppins,sans-serif">Hidden</text>
+
+        <!-- Output neurons -->
+        <g fill="#d1fae5" stroke="#6ee7b7" stroke-width="1.5">
+          <circle cx="420" cy="80"  r="20"/>
+          <circle cx="420" cy="140" r="20"/>
+        </g>
+        <text x="420" y="84"  text-anchor="middle" font-size="11" font-weight="700" fill="#065f46" font-family="Poppins,sans-serif">ŷ₁</text>
+        <text x="420" y="144" text-anchor="middle" font-size="11" font-weight="700" fill="#065f46" font-family="Poppins,sans-serif">ŷ₂</text>
+        <text x="420" y="175" text-anchor="middle" font-size="10" fill="#999" font-family="Poppins,sans-serif">Output</text>
+
+        <!-- Layer labels -->
+        <rect x="30" y="18" width="98" height="22" rx="6" fill="#dbeafe" opacity="0.7"/>
+        <text x="79" y="33" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4ed8" font-family="Poppins,sans-serif">3 neurons</text>
+
+        <rect x="200" y="18" width="98" height="22" rx="6" fill="#ede9fe" opacity="0.7"/>
+        <text x="249" y="33" text-anchor="middle" font-size="10" font-weight="700" fill="#6d28d9" font-family="Poppins,sans-serif">4 neurons</text>
+
+        <rect x="370" y="18" width="98" height="22" rx="6" fill="#d1fae5" opacity="0.7"/>
+        <text x="419" y="33" text-anchor="middle" font-size="10" font-weight="700" fill="#065f46" font-family="Poppins,sans-serif">2 neurons</text>
+
+        <!-- Weight count annotation -->
+        <text x="510" y="90" font-size="10" fill="#999" font-family="Poppins,sans-serif">3×4 = 12</text>
+        <text x="510" y="104" font-size="10" fill="#999" font-family="Poppins,sans-serif">weights</text>
+        <text x="510" y="124" font-size="10" fill="#999" font-family="Poppins,sans-serif">4×2 = 8</text>
+        <text x="510" y="138" font-size="10" fill="#999" font-family="Poppins,sans-serif">weights</text>
+        <text x="505" y="160" font-size="10" font-weight="700" fill="#ff4fa3" font-family="Poppins,sans-serif">20 total</text>
+      </svg>
+    </div>
+
+    <!-- Forward pass -->
+    <h3>➡️ The forward pass — data flowing through</h3>
+    <p>When we feed data into the network, it flows layer by layer from input to output. This is called the <strong>forward pass</strong>:</p>
+
+    <div class="forward-steps">
+      <div class="fs-item">
+        <div class="fs-left"><div class="fs-num">1</div><div class="fs-line"></div></div>
+        <div class="fs-content">
+          <h4>Input enters the network</h4>
+          <p>Raw features (pixel values, MFCC coefficients, sensor readings) are loaded into the input layer neurons.</p>
+        </div>
+      </div>
+      <div class="fs-item">
+        <div class="fs-left"><div class="fs-num">2</div><div class="fs-line"></div></div>
+        <div class="fs-content">
+          <h4>Each hidden neuron computes z = Wx + b</h4>
+          <p>Every neuron in the hidden layer takes all outputs from the previous layer, multiplies by its weights, adds its bias, and applies activation.</p>
+        </div>
+      </div>
+      <div class="fs-item">
+        <div class="fs-left"><div class="fs-num">3</div><div class="fs-line"></div></div>
+        <div class="fs-content">
+          <h4>Activations pass to the next layer</h4>
+          <p>The activated outputs become the inputs to the next layer. This repeats for every hidden layer.</p>
+        </div>
+      </div>
+      <div class="fs-item">
+        <div class="fs-left"><div class="fs-num">4</div><div class="fs-line"></div></div>
+        <div class="fs-content">
+          <h4>Output layer produces the prediction</h4>
+          <p>The final layer produces the prediction — a number for regression, or probabilities per class for classification.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PyTorch code -->
+    <h3>🐍 Building it in PyTorch</h3>
+    <p>Here is a complete neural network in PyTorch — the same architecture as the diagram above:</p>
+
+    <div class="code-block">
+      <span class="code-label">Python — neural network in PyTorch</span>
+      <code><span class="kw">import</span> torch
+<span class="kw">import</span> torch.nn <span class="kw">as</span> nn
+
+<span class="cm"># Define the network architecture</span>
+<span class="kw">class</span> <span class="cls">SimpleNN</span>(nn.Module):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        super().__init__()
+        <span class="cm"># Input(3) → Hidden(4) → Output(2)</span>
+        self.layer1 = nn.Linear(<span class="nm">3</span>, <span class="nm">4</span>)   <span class="cm"># 3 inputs → 4 hidden neurons</span>
+        self.layer2 = nn.Linear(<span class="nm">4</span>, <span class="nm">2</span>)   <span class="cm"># 4 hidden → 2 outputs</span>
+        self.relu   = nn.ReLU()
+
+    <span class="kw">def</span> <span class="fn">forward</span>(self, x):
+        x = self.relu(self.layer1(x))  <span class="cm"># hidden layer + activation</span>
+        x = self.layer2(x)             <span class="cm"># output layer (no activation)</span>
+        <span class="kw">return</span> x
+
+<span class="cm"># Create the model</span>
+model = <span class="cls">SimpleNN</span>()
+<span class="fn">print</span>(model)
+
+<span class="cm"># Run a forward pass with fake data</span>
+x = torch.tensor([[<span class="nm">0.5</span>, <span class="nm">0.8</span>, <span class="nm">0.2</span>]])  <span class="cm"># one sample, 3 features</span>
+output = model(x)
+<span class="fn">print</span>(<span class="st">"Output:"</span>, output)             <span class="cm"># 2 values — one per output neuron</span>
+
+<span class="cm"># Count parameters</span>
+total = sum(p.numel() <span class="kw">for</span> p <span class="kw">in</span> model.parameters())
+<span class="fn">print</span>(<span class="st">f"Total parameters: {total}"</span>)   <span class="cm"># should print 26 (20 weights + 6 biases)</span></code>
+    </div>
+
+    <!-- Why deep networks work -->
+    <h3>💡 Why deeper networks are more powerful</h3>
+    <div class="why-grid">
+      <div class="why-card">
+        <h4>Layer 1 learns edges</h4>
+        <p>The first hidden layer detects simple patterns — sharp transitions, low-level features in the data.</p>
+      </div>
+      <div class="why-card">
+        <h4>Layer 2 combines edges</h4>
+        <p>The second layer combines simple patterns into more complex structures — shapes, phonemes, trends.</p>
+      </div>
+      <div class="why-card">
+        <h4>Layer 3 learns concepts</h4>
+        <p>Deeper layers detect high-level abstract concepts — "face", "spoken word", "gesture pattern".</p>
+      </div>
+      <div class="why-card">
+        <h4>Output makes decision</h4>
+        <p>The final layer uses all learned representations to make a confident classification or prediction.</p>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <h3>💡 What I learned this week</h3>
+      <p>A neural network is not magic — it's just many neurons stacked together, each doing the same simple operation: multiply inputs by weights, add a bias, apply activation. What makes it powerful is depth — each layer builds on the previous one, learning increasingly abstract representations. This is the foundation of every modern AI system from image classifiers to language models.</p>
+    </div>
+
+    <div class="series-nav">
+      <a class="btn-outline" href="learn-ml-week3.html">← Week 3: Decision Trees</a>
+      <a class="btn" href="blog.html">Back to Blog →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer><p>Made with 💗 by Buse | SheBuildsSTEM</p></footer>
+</body>
+</html>
