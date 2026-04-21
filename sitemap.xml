@@ -1,36 +1,138 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+  <!-- Main pages -->
   <url>
-    <loc>https://rbmentes.github.io/shebuildsstem/index.html</loc>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/index.html</loc>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/tr.html</loc>
+    <priority>1.0</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/blog.html</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/ee-toolkit.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
   </url>
 
+  <!-- Projects -->
   <url>
-    <loc>https://rbmentes.github.io/shebuildsstem/tr.html</loc>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/project-lid.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/emg-gesture-project.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
   </url>
 
+  <!-- Learn ML With Me series -->
   <url>
-    <loc>https://rbmentes.github.io/shebuildsstem/blog.html</loc>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/learn-ml-week1.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/learn-ml-week2.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/learn-ml-week3.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/learn-ml-week4.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
   </url>
 
+  <!-- AI & Signal Processing Essentials -->
   <url>
-    <loc>https://rbmentes.github.io/shebuildsstem/blog-tr.html</loc>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/ai-essentials-part1.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/ai-essentials-part2.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/ai-essentials-part3.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/ai-essentials-part4.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/ai-essentials-part5.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
   </url>
 
+  <!-- Speech AI Starter Series -->
   <url>
-    <loc>https://rbmentes.github.io/shebuildsstem/post1.html</loc>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/speech-ai-part1.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/speech-ai-part2.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/speech-ai-part3.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/speech-ai-part4.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
   </url>
 
+  <!-- Deepfake Detection Series -->
   <url>
-    <loc>https://rbmentes.github.io/shebuildsstem/post1-tr.html</loc>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/deepfake-part1.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/deepfake-part2.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/deepfake-part3.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/deepfake-part4.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
   </url>
 
+  <!-- Engineering Reflections -->
   <url>
-    <loc>https://rbmentes.github.io/shebuildsstem/project-lid.html</loc>
-  </url>
-
-  <url>
-    <loc>https://rbmentes.github.io/shebuildsstem/project-lid-tr.html</loc>
+    <loc>https://rbmentes.github.io/shebuildsSTEM/feeling-behind.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
   </url>
 
 </urlset>
