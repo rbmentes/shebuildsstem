@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Benimle ML Öğren Hafta 3 — Karar Ağaçları & Rastgele Ormanlar | SheBuildsSTEM</title>
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
+    header { text-align: center; padding: 60px 20px 40px; }
+    header a.site-link { display: inline-block; font-size: 1.3rem; font-weight: 900; color: white; text-decoration: none; text-shadow: 0 2px 12px rgba(0,0,0,0.12); margin-bottom: 20px; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 7px 18px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+    .blog-container { max-width: 780px; margin: 0 auto 80px; padding: 0 20px; }
+    .article-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 28px; padding: 52px 56px; box-shadow: 0 20px 50px rgba(0,0,0,0.11); animation: fadeUp 0.6s ease forwards; }
+    .series-label { display: inline-block; background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; padding: 5px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 18px; }
+    .week-label { font-size: 0.9rem; font-weight: 700; color: #a855f7; margin-bottom: 8px; }
+    .article-card h2 { font-size: 1.9rem; font-weight: 900; color: #2d2d2d; line-height: 1.25; margin-bottom: 6px; }
+    .article-meta { font-size: 0.78rem; color: #bbb; font-weight: 600; margin-bottom: 36px; padding-bottom: 28px; border-bottom: 2px solid rgba(168,85,247,0.12); }
+    .article-card p { font-size: 0.97rem; color: #444; line-height: 1.9; margin-bottom: 18px; }
+    .article-card h3 { font-size: 1.1rem; font-weight: 700; color: #2d2d2d; margin: 38px 0 14px; }
+    .definition-box { background: linear-gradient(135deg, rgba(168,85,247,0.07), rgba(255,79,163,0.05)); border-left: 4px solid #a855f7; border-radius: 0 16px 16px 0; padding: 18px 22px; margin: 16px 0 22px; }
+    .definition-box p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.8; }
+    .highlight-box { background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(168,85,247,0.07)); border-left: 4px solid #ff4fa3; border-radius: 0 14px 14px 0; padding: 18px 22px; margin: 20px 0; }
+    .highlight-box p { margin: 0; font-size: 0.93rem; color: #555; font-style: italic; }
+    .tree-visual { background: white; border-radius: 18px; padding: 28px 20px; margin: 16px 0 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); overflow-x: auto; }
+    .tree-title { font-size: 0.75rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; text-align: center; margin-bottom: 20px; }
+    .tree-node { border-radius: 12px; padding: 10px 16px; font-size: 0.78rem; font-weight: 700; text-align: center; min-width: 120px; }
+    .node-root  { background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; box-shadow: 0 4px 12px rgba(255,79,163,0.3); }
+    .node-inner { background: #ede9fe; color: #6d28d9; border: 1.5px solid #c4b5fd; }
+    .node-leaf-y { background: #d1fae5; color: #065f46; border: 1.5px solid #6ee7b7; }
+    .node-leaf-n { background: #fce7f3; color: #be185d; border: 1.5px solid #fbcfe8; }
+    .impurity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0 22px; }
+    .impurity-card { border-radius: 16px; padding: 18px; }
+    .impurity-card.gini    { background: rgba(255,79,163,0.07); border: 1.5px solid rgba(255,79,163,0.2); }
+    .impurity-card.entropy { background: rgba(168,85,247,0.07); border: 1.5px solid rgba(168,85,247,0.2); }
+    .impurity-card h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+    .impurity-card.gini h4    { color: #be185d; }
+    .impurity-card.entropy h4 { color: #6d28d9; }
+    .impurity-card p { font-size: 0.8rem; color: #666; line-height: 1.6; margin: 0; }
+    .forest-visual { background: white; border-radius: 18px; padding: 24px; margin: 16px 0 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); }
+    .forest-title { font-size: 0.75rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; text-align: center; margin-bottom: 18px; }
+    .forest-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+    .mini-tree { background: linear-gradient(135deg, #f8c8dc, #cbb6ff); border-radius: 14px; padding: 14px 16px; text-align: center; font-size: 0.78rem; font-weight: 700; color: #6d28d9; min-width: 100px; flex: 1; max-width: 130px; }
+    .mini-tree .mt-icon { font-size: 1.4rem; display: block; margin-bottom: 6px; }
+    .mini-tree .mt-vote { font-size: 0.7rem; margin-top: 6px; display: block; }
+    .vote-yes { color: #065f46; }
+    .vote-no  { color: #be185d; }
+    .forest-arrow { text-align: center; font-size: 1.2rem; color: #a855f7; font-weight: 700; margin-bottom: 10px; }
+    .vote-result { background: linear-gradient(135deg, #ff4fa3, #a855f7); border-radius: 14px; padding: 14px 20px; text-align: center; color: white; font-size: 0.9rem; font-weight: 700; max-width: 300px; margin: 0 auto; }
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0 22px; }
+    .compare-card { border-radius: 16px; padding: 20px; }
+    .compare-card.dt { background: rgba(255,79,163,0.07); border: 1.5px solid rgba(255,79,163,0.2); }
+    .compare-card.rf { background: rgba(16,185,129,0.07); border: 1.5px solid rgba(16,185,129,0.2); }
+    .compare-card h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 10px; }
+    .compare-card.dt h4 { color: #be185d; }
+    .compare-card.rf h4 { color: #065f46; }
+    .compare-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .compare-list li { font-size: 0.8rem; color: #555; line-height: 1.5; display: flex; gap: 8px; }
+    .compare-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+    .compare-card.dt .compare-list li::before { background: #ff4fa3; }
+    .compare-card.rf .compare-list li::before { background: #10b981; }
+    .usecase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 14px 0; }
+    .usecase-chip { background: white; border-radius: 12px; padding: 14px 16px; text-align: center; font-size: 0.82rem; font-weight: 600; color: #555; box-shadow: 0 3px 10px rgba(0,0,0,0.05); border: 1px solid rgba(168,85,247,0.1); transition: transform 0.2s; }
+    .usecase-chip:hover { transform: translateY(-3px); }
+    .usecase-chip .uc-icon { font-size: 1.3rem; display: block; margin-bottom: 6px; }
+    .takeaway { background: linear-gradient(135deg, #ff4fa3, #a855f7); border-radius: 18px; padding: 26px 28px; margin-top: 36px; color: white; }
+    .takeaway h3 { color: white; font-size: 1rem; margin: 0 0 10px; }
+    .takeaway p { color: rgba(255,255,255,0.92); font-size: 0.93rem; margin: 0; line-height: 1.75; }
+    .series-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 44px; padding-top: 28px; border-top: 2px solid rgba(168,85,247,0.1); }
+    .btn { display: inline-block; background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; box-shadow: 0 6px 18px rgba(255,79,163,0.25); transition: transform 0.2s; }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-outline { display: inline-block; background: transparent; color: #ff4fa3; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; border: 2px solid #ff4fa3; transition: transform 0.2s, background 0.2s; }
+    .btn-outline:hover { transform: translateY(-3px); background: rgba(255,79,163,0.06); }
+    footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) { .article-card { padding: 30px 22px; } .impurity-grid, .compare-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<header>
+  <a class="site-link" href="tr.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog-tr.html">← Bloga Dön</a>
+</header>
+<div class="blog-container">
+  <div class="article-card">
+    <span class="series-label">🎓 Benimle Makine Öğrenmesi Öğren</span>
+    <div class="week-label">Hafta 3</div>
+    <h2>Karar Ağaçları & Rastgele Ormanlar</h2>
+    <div class="article-meta">İlkbahar 2026 · Başlangıç seviyesi · Mühendislik öğrencisinden</div>
+    <p>Bu hafta en sezgisel ve yaygın kullanılan iki ML algoritmasını ele alıyoruz — Karar Ağaçları ve Rastgele Ormanlar. Sinir ağlarından farklı olarak bu modeller görselleştirmesi ve açıklaması kolaydır. Makinelerin nasıl karar verdiğini anlamak için mükemmel bir başlangıç noktasıdır.</p>
+    <h3>🌳 Karar Ağacı nedir?</h3>
+    <div class="definition-box">
+      <p>Karar Ağacı, bir akış şeması gibi evet/hayır soruları sorarak tahmin yapan bir modeldir. Her adımda veriyi en iyi ayıran özelliğe göre böler.</p>
+    </div>
+    <p>Bir e-postanın spam olup olmadığına karar vermeye çalıştığınızı düşünün. Karar ağacı şunu sorabilir: "'Ücretsiz' kelimesi var mı?" → "Gönderen bilinmiyor mu?" → "3'ten fazla bağlantı var mı?" Her cevap bir sonraki soruya götürür.</p>
+    <div class="tree-visual">
+      <div class="tree-title">Örnek — bu e-posta spam mı?</div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+        <div class="tree-node node-root">"Ücretsiz" kelimesi var mı?</div>
+        <div style="display:flex;justify-content:center;gap:80px;">
+          <div style="display:flex;flex-direction:column;align-items:center;"><div style="font-size:0.65rem;font-weight:700;color:#a855f7;">EVET</div><div style="width:2px;height:22px;background:rgba(168,85,247,0.3);"></div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;"><div style="font-size:0.65rem;font-weight:700;color:#a855f7;">HAYIR</div><div style="width:2px;height:22px;background:rgba(168,85,247,0.3);"></div></div>
+        </div>
+        <div style="display:flex;gap:40px;">
+          <div class="tree-node node-inner">Bilinmeyen gönderici?</div>
+          <div class="tree-node node-leaf-y">✓ Spam değil</div>
+        </div>
+        <div style="display:flex;justify-content:flex-start;padding-left:60px;gap:80px;">
+          <div style="display:flex;flex-direction:column;align-items:center;"><div style="font-size:0.65rem;font-weight:700;color:#a855f7;">EVET</div><div style="width:2px;height:22px;background:rgba(168,85,247,0.3);"></div></div>
+          <div style="display:flex;flex-direction:column;align-items:center;"><div style="font-size:0.65rem;font-weight:700;color:#a855f7;">HAYIR</div><div style="width:2px;height:22px;background:rgba(168,85,247,0.3);"></div></div>
+        </div>
+        <div style="display:flex;justify-content:flex-start;padding-left:20px;gap:30px;">
+          <div class="tree-node node-leaf-n">✗ Spam</div>
+          <div class="tree-node node-leaf-y">✓ Spam değil</div>
+        </div>
+      </div>
+    </div>
+    <h3>✂️ Nereye bölüneceğine nasıl karar verir?</h3>
+    <div class="impurity-grid">
+      <div class="impurity-card gini">
+        <h4>Gini Safsızlığı</h4>
+        <p>Rastgele seçilen bir elemanın yanlış etiketlenme sıklığını ölçer. Gini 0 = mükemmel saf düğüm.</p>
+      </div>
+      <div class="impurity-card entropy">
+        <h4>Bilgi Entropisi</h4>
+        <p>Düğümdeki düzensizliği ölçer. Düşük entropi = daha düzenli = daha iyi bölünme.</p>
+      </div>
+    </div>
+    <h3>⚠️ Problem — aşırı öğrenme</h3>
+    <div class="highlight-box">
+      <p>Tek bir karar ağacı aşırı öğrenmeye meyillidir — çok derinleşir ve genel kurallar öğrenmek yerine eğitim verisini ezberler. Sınırı olmayan bir ağaç eğitim verisini mükemmel sınıflandırır ama yeni veride başarısız olur.</p>
+    </div>
+    <h3>🌲🌲🌲 Rastgele Orman nedir?</h3>
+    <p>Rastgele Orman, birçok karar ağacı inşa ederek oylarını birleştirerek aşırı öğrenme sorununu çözer. Her ağaç, verinin ve özelliklerin rastgele bir alt kümesi üzerinde eğitilir.</p>
+    <div class="forest-visual">
+      <div class="forest-title">Rastgele Orman — 5 ağaçtan çoğunluk oylaması</div>
+      <div class="forest-row">
+        <div class="mini-tree"><span class="mt-icon">🌳</span>Ağaç 1<span class="mt-vote vote-yes">→ Spam</span></div>
+        <div class="mini-tree"><span class="mt-icon">🌳</span>Ağaç 2<span class="mt-vote vote-yes">→ Spam</span></div>
+        <div class="mini-tree"><span class="mt-icon">🌳</span>Ağaç 3<span class="mt-vote vote-no">→ Spam değil</span></div>
+        <div class="mini-tree"><span class="mt-icon">🌳</span>Ağaç 4<span class="mt-vote vote-yes">→ Spam</span></div>
+        <div class="mini-tree"><span class="mt-icon">🌳</span>Ağaç 5<span class="mt-vote vote-no">→ Spam değil</span></div>
+      </div>
+      <div class="forest-arrow">↓ Çoğunluk oylaması</div>
+      <div class="vote-result">Son tahmin: SPAM (3'e karşı 2)</div>
+    </div>
+    <h3>⚖️ Karar Ağacı vs Rastgele Orman</h3>
+    <div class="compare-grid">
+      <div class="compare-card dt">
+        <h4>🌳 Karar Ağacı</h4>
+        <ul class="compare-list">
+          <li>Tek model — görselleştirmesi kolay</li>
+          <li>Hızlı eğitim ve yorumlama</li>
+          <li>Aşırı öğrenmeye yatkın</li>
+          <li>Küçük veri değişikliklerine duyarlı</li>
+        </ul>
+      </div>
+      <div class="compare-card rf">
+        <h4>🌲 Rastgele Orman</h4>
+        <ul class="compare-list">
+          <li>Birçok ağacın topluluğu</li>
+          <li>Çok daha doğru</li>
+          <li>Aşırı öğrenmeye dirençli</li>
+          <li>Doğrudan yorumlaması daha zor</li>
+        </ul>
+      </div>
+    </div>
+    <h3>💡 Nerede kullanılır?</h3>
+    <div class="usecase-grid">
+      <div class="usecase-chip"><span class="uc-icon">📧</span>Spam tespiti</div>
+      <div class="usecase-chip"><span class="uc-icon">🏥</span>Tıbbi teşhis</div>
+      <div class="usecase-chip"><span class="uc-icon">💳</span>Dolandırıcılık tespiti</div>
+      <div class="usecase-chip"><span class="uc-icon">🎵</span>Müzik türü sınıflandırma</div>
+      <div class="usecase-chip"><span class="uc-icon">🌍</span>Dil tanımlama</div>
+      <div class="usecase-chip"><span class="uc-icon">📈</span>Hisse tahmini</div>
+    </div>
+    <div class="takeaway">
+      <h3>💡 Bu hafta öğrendiklerim</h3>
+      <p>Karar Ağaçları ML'yi şeffaf kılar — bir tahmin neden yapıldığını tam olarak görebilirsiniz. Rastgele Ormanlar bu şeffaflığı alır ve güç karşılığında takas eder — yüzlerce kusurlu ağacı tek güvenilir bir modelde birleştirir. Bu, topluluk öğrenmesinin temel fikridir ve modern ML'de her yerde karşımıza çıkar.</p>
+    </div>
+    <div class="series-nav">
+      <a class="btn-outline" href="learn-ml-week2-tr.html">← Hafta 2</a>
+      <a class="btn" href="learn-ml-week4-tr.html">Hafta 4: Sinir Ağları →</a>
+    </div>
+  </div>
+</div>
+<footer><p>💗 Buse tarafından hazırlandı | SheBuildsSTEM</p></footer>
+</body>
+</html>
