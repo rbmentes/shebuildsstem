@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMG Series Part 3 — Processing the Signal | SheBuildsSTEM</title>
+  <meta name="description" content="Part 3 of the EMG series — bandpass filtering, windowing, and feature extraction from raw EMG signals in Python.">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
+    header { text-align: center; padding: 60px 20px 40px; }
+    header a.site-link { display: inline-block; font-size: 1.3rem; font-weight: 900; color: white; text-decoration: none; text-shadow: 0 2px 12px rgba(0,0,0,0.12); margin-bottom: 20px; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 7px 18px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+    .blog-container { max-width: 780px; margin: 0 auto 80px; padding: 0 20px; }
+    .article-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 28px; padding: 52px 56px; box-shadow: 0 20px 50px rgba(0,0,0,0.11); animation: fadeUp 0.6s ease forwards; }
+    .series-label { display: inline-block; background: linear-gradient(135deg, #10b981, #3b82f6); color: white; padding: 5px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 18px; }
+    .series-title { font-size: 0.9rem; font-weight: 700; color: #10b981; margin-bottom: 8px; }
+    .article-card h2 { font-size: 1.9rem; font-weight: 900; color: #2d2d2d; line-height: 1.25; margin-bottom: 6px; }
+    .article-meta { font-size: 0.78rem; color: #bbb; font-weight: 600; margin-bottom: 36px; padding-bottom: 28px; border-bottom: 2px solid rgba(16,185,129,0.15); }
+    .article-card p { font-size: 0.97rem; color: #444; line-height: 1.9; margin-bottom: 18px; }
+    .article-card h3 { font-size: 1.1rem; font-weight: 700; color: #2d2d2d; margin: 38px 0 14px; }
+    .definition-box { background: linear-gradient(135deg, rgba(16,185,129,0.07), rgba(59,130,246,0.05)); border-left: 4px solid #10b981; border-radius: 0 16px 16px 0; padding: 18px 22px; margin: 16px 0 22px; }
+    .definition-box p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.8; }
+    .highlight-box { background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(168,85,247,0.07)); border-left: 4px solid #ff4fa3; border-radius: 0 14px 14px 0; padding: 18px 22px; margin: 20px 0; }
+    .highlight-box p { margin: 0; font-size: 0.93rem; color: #555; font-style: italic; }
+
+    /* Pipeline */
+    .pipeline { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; background: white; border-radius: 18px; padding: 18px; margin: 16px 0 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); }
+    .pipe-step { background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(59,130,246,0.08)); border-radius: 12px; padding: 12px 14px; text-align: center; flex: 1; min-width: 80px; max-width: 120px; }
+    .pipe-step .ps-icon  { font-size: 1.2rem; display: block; margin-bottom: 5px; }
+    .pipe-step .ps-label { font-size: 0.7rem; font-weight: 700; color: #065f46; line-height: 1.4; }
+    .pipe-arrow { color: #10b981; font-size: 1rem; font-weight: 700; flex-shrink: 0; }
+
+    /* Filter visual */
+    .filter-visual { background: white; border-radius: 18px; padding: 22px 24px; margin: 14px 0 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); }
+    .fv-title { font-size: 0.75rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; text-align: center; }
+    .fv-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .fv-row:last-child { margin-bottom: 0; }
+    .fv-label { font-size: 0.78rem; font-weight: 600; color: #555; min-width: 120px; }
+    .fv-bar-wrap { flex: 1; height: 20px; background: #f0f0f0; border-radius: 6px; overflow: hidden; position: relative; }
+    .fv-bar { height: 100%; position: absolute; }
+    .fv-reject { background: rgba(239,68,68,0.2); }
+    .fv-pass   { background: linear-gradient(90deg, #10b981, #3b82f6); }
+    .fv-val { font-size: 0.72rem; font-weight: 700; min-width: 80px; text-align: right; color: #555; }
+
+    /* Window visual */
+    .window-visual { background: white; border-radius: 18px; padding: 22px 24px; margin: 14px 0 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); overflow-x: auto; }
+    .wv-title { font-size: 0.75rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; text-align: center; }
+
+    /* Feature cards */
+    .feature-cards { display: flex; flex-direction: column; gap: 14px; margin: 14px 0 22px; }
+    .feat-card { background: white; border-radius: 16px; padding: 20px 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); display: flex; gap: 16px; align-items: flex-start; transition: transform 0.2s; }
+    .feat-card:hover { transform: translateX(5px); }
+    .feat-badge { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: white; flex-shrink: 0; text-align: center; line-height: 1.2; }
+    .feat-badge.rms { background: linear-gradient(135deg, #10b981, #059669); }
+    .feat-badge.mav { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+    .feat-badge.zcr { background: linear-gradient(135deg, #a855f7, #7c3aed); }
+    .feat-badge.var { background: linear-gradient(135deg, #f59e0b, #d97706); }
+    .feat-info h4 { font-size: 0.95rem; font-weight: 700; color: #2d2d2d; margin-bottom: 4px; }
+    .feat-info .feat-formula { font-family: 'Courier New', monospace; font-size: 0.78rem; color: #888; margin-bottom: 6px; }
+    .feat-info p { font-size: 0.84rem; color: #666; line-height: 1.65; margin: 0; }
+
+    /* Code blocks */
+    .code-block { background: #1e1e2e; border-radius: 14px; padding: 22px 26px; margin: 14px 0 22px; overflow-x: auto; }
+    .code-label { font-size: 0.7rem; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; display: block; }
+    .code-block code { font-family: 'Courier New', monospace; font-size: 0.84rem; color: #cdd6f4; line-height: 1.8; white-space: pre; display: block; }
+    .code-block code .kw  { color: #cba6f7; }
+    .code-block code .fn  { color: #89b4fa; }
+    .code-block code .st  { color: #a6e3a1; }
+    .code-block code .cm  { color: #6c7086; font-style: italic; }
+    .code-block code .nm  { color: #fab387; }
+
+    /* Feature output visual */
+    .output-visual { background: white; border-radius: 16px; padding: 18px 22px; margin: 14px 0 22px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04); }
+    .ov-title { font-size: 0.75rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+    .ov-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; }
+    .ov-chip { border-radius: 10px; padding: 10px 12px; text-align: center; }
+    .ov-chip .oc-val { font-size: 0.88rem; font-weight: 800; display: block; margin-bottom: 2px; }
+    .ov-chip .oc-label { font-size: 0.65rem; font-weight: 600; color: #888; }
+    .ov-chip.rms-c { background: rgba(16,185,129,0.08);  border: 1px solid rgba(16,185,129,0.2); }
+    .ov-chip.rms-c .oc-val { color: #065f46; }
+    .ov-chip.mav-c { background: rgba(59,130,246,0.08);  border: 1px solid rgba(59,130,246,0.2); }
+    .ov-chip.mav-c .oc-val { color: #1d4ed8; }
+    .ov-chip.zcr-c { background: rgba(168,85,247,0.08);  border: 1px solid rgba(168,85,247,0.2); }
+    .ov-chip.zcr-c .oc-val { color: #6d28d9; }
+    .ov-chip.var-c { background: rgba(245,158,11,0.08);  border: 1px solid rgba(245,158,11,0.2); }
+    .ov-chip.var-c .oc-val { color: #92400e; }
+
+    /* Coming soon */
+    .coming-next { background: linear-gradient(135deg, #10b981, #3b82f6); border-radius: 18px; padding: 24px 28px; margin-top: 36px; color: white; }
+    .coming-next h3 { color: white; font-size: 0.85rem; opacity: 0.85; margin-bottom: 8px; }
+    .coming-next p { color: rgba(255,255,255,0.92); font-size: 0.95rem; font-weight: 700; margin: 0 0 14px; }
+    .coming-btn { display: inline-block; background: white; color: #10b981; padding: 10px 22px; border-radius: 20px; font-weight: 700; font-size: 0.82rem; text-decoration: none; transition: transform 0.2s; }
+    .coming-btn:hover { transform: translateY(-2px); }
+
+    /* Takeaway */
+    .takeaway { background: linear-gradient(135deg, #10b981, #3b82f6); border-radius: 18px; padding: 26px 28px; margin-top: 36px; color: white; }
+    .takeaway h3 { color: white; font-size: 1rem; margin: 0 0 10px; }
+    .takeaway p  { color: rgba(255,255,255,0.92); font-size: 0.93rem; margin: 0; line-height: 1.75; }
+
+    .series-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 44px; padding-top: 28px; border-top: 2px solid rgba(16,185,129,0.15); }
+    .btn { display: inline-block; background: linear-gradient(135deg, #10b981, #3b82f6); color: white; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; box-shadow: 0 6px 18px rgba(16,185,129,0.25); transition: transform 0.2s; }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-outline { display: inline-block; background: transparent; color: #10b981; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; border: 2px solid #10b981; transition: transform 0.2s, background 0.2s; }
+    .btn-outline:hover { transform: translateY(-3px); background: rgba(16,185,129,0.06); }
+    footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) { .article-card { padding: 30px 22px; } .article-card h2 { font-size: 1.5rem; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="site-link" href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
+</header>
+
+<div class="blog-container">
+  <div class="article-card">
+
+    <span class="series-label">💪 EMG & Bioelectrical Signals</span>
+    <div class="series-title">Part 3</div>
+    <h2>Processing EMG — Filtering, Windowing and Feature Extraction</h2>
+    <div class="article-meta">Signal Processing · Python · Feature Engineering · Machine Learning Prep</div>
+
+    <p>In Parts 1 and 2 we covered what EMG is and how it is recorded. Now the part where EE meets AI: processing the raw signal into something a machine learning model can actually learn from. This is the preprocessing pipeline — and getting it right makes the difference between a model that works and one that doesn't.</p>
+
+    <h3>🗺️ The full preprocessing pipeline</h3>
+
+    <div class="pipeline">
+      <div class="pipe-step"><span class="ps-icon">📡</span><span class="ps-label">Raw EMG signal</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step"><span class="ps-icon">🔊</span><span class="ps-label">Bandpass filter</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step"><span class="ps-icon">🪟</span><span class="ps-label">Windowing</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step"><span class="ps-icon">📐</span><span class="ps-label">Feature extraction</span></div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step"><span class="ps-icon">🧠</span><span class="ps-label">ML model input</span></div>
+    </div>
+
+    <h3>🔊 Step 1 — Bandpass filtering</h3>
+    <div class="definition-box">
+      <p>A bandpass filter passes frequencies within a specified range and blocks everything outside. For EMG, the useful muscle signal energy lives between 20 Hz and 450 Hz. Everything below 20 Hz is motion artifact and DC offset. Everything above 450 Hz is high-frequency noise and aliasing.</p>
+    </div>
+
+    <div class="filter-visual">
+      <div class="fv-title">EMG bandpass filter — what gets kept and what gets removed</div>
+      <div class="fv-row">
+        <span class="fv-label">Below 20 Hz (blocked)</span>
+        <div class="fv-bar-wrap">
+          <div class="fv-bar fv-reject" style="left:0;width:5%;"></div>
+        </div>
+        <span class="fv-val" style="color:#dc2626;">Motion artifacts</span>
+      </div>
+      <div class="fv-row">
+        <span class="fv-label">20 – 450 Hz (passed)</span>
+        <div class="fv-bar-wrap">
+          <div class="fv-bar fv-pass" style="left:5%;width:87%;"></div>
+        </div>
+        <span class="fv-val" style="color:#065f46;">Muscle signal ✓</span>
+      </div>
+      <div class="fv-row">
+        <span class="fv-label">Above 450 Hz (blocked)</span>
+        <div class="fv-bar-wrap">
+          <div class="fv-bar fv-reject" style="left:92%;width:8%;"></div>
+        </div>
+        <span class="fv-val" style="color:#dc2626;">HF noise</span>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <span class="code-label">Python — Butterworth bandpass filter</span>
+      <code><span class="kw">from</span> scipy.signal <span class="kw">import</span> butter, filtfilt
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+
+<span class="kw">def</span> <span class="fn">bandpass_filter</span>(signal, lowcut=<span class="nm">20</span>, highcut=<span class="nm">450</span>, fs=<span class="nm">1000</span>, order=<span class="nm">4</span>):
+    <span class="cm">"""
+    Apply a zero-phase Butterworth bandpass filter to EMG signal.
+    fs      = sampling rate (Hz)
+    lowcut  = lower cutoff frequency (Hz)
+    highcut = upper cutoff frequency (Hz)
+    order   = filter order (4 is standard for EMG)
+    """</span>
+    nyq  = fs / <span class="nm">2</span>                       <span class="cm"># Nyquist frequency</span>
+    low  = lowcut  / nyq               <span class="cm"># normalise to [0, 1]</span>
+    high = highcut / nyq
+
+    b, a = <span class="fn">butter</span>(order, [low, high], btype=<span class="st">'band'</span>)
+
+    <span class="cm"># filtfilt applies filter forwards AND backwards — zero phase distortion</span>
+    <span class="kw">return</span> <span class="fn">filtfilt</span>(b, a, signal, axis=<span class="nm">0</span>)
+
+<span class="cm"># Example usage</span>
+raw_emg      = np.random.randn(<span class="nm">5000</span>, <span class="nm">8</span>)   <span class="cm"># 5 seconds, 8 channels, 1000 Hz</span>
+filtered_emg = <span class="fn">bandpass_filter</span>(raw_emg, fs=<span class="nm">1000</span>)
+<span class="fn">print</span>(<span class="st">f"Filtered shape: {filtered_emg.shape}"</span>)  <span class="cm"># (5000, 8)</span></code>
+    </div>
+
+    <h3>🪟 Step 2 — Windowing (segmentation)</h3>
+    <p>We can't feed the entire signal to a model at once. Instead we slice it into short overlapping windows. Each window becomes one training sample. The key parameters are <strong>window size</strong> (how long each segment is) and <strong>stride</strong> (how much we move between windows):</p>
+
+    <div class="window-visual">
+      <div class="wv-title">Sliding window segmentation — 200ms windows, 100ms stride (50% overlap)</div>
+      <svg width="100%" viewBox="0 0 640 130" xmlns="http://www.w3.org/2000/svg">
+        <!-- Signal line -->
+        <rect x="0" y="55" width="640" height="20" rx="4" fill="#f3f4f6"/>
+        <polyline points="0,65 30,58 60,72 90,55 120,75 150,60 180,68 210,53 240,76 270,62 300,70 330,55 360,74 390,60 420,67 450,54 480,75 510,61 540,69 570,56 600,73 630,64 640,65" fill="none" stroke="#10b981" stroke-width="1.5"/>
+        <!-- Window 1 -->
+        <rect x="0" y="48" width="200" height="34" rx="6" fill="rgba(16,185,129,0.15)" stroke="#10b981" stroke-width="1.5"/>
+        <text x="100" y="43" text-anchor="middle" font-size="10" fill="#065f46" font-weight="700" font-family="Poppins,sans-serif">Window 1 (200ms)</text>
+        <!-- Window 2 -->
+        <rect x="100" y="48" width="200" height="34" rx="6" fill="rgba(59,130,246,0.12)" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4 2"/>
+        <text x="200" y="100" text-anchor="middle" font-size="10" fill="#1d4ed8" font-weight="700" font-family="Poppins,sans-serif">Window 2 (100ms stride)</text>
+        <!-- Window 3 -->
+        <rect x="200" y="48" width="200" height="34" rx="6" fill="rgba(168,85,247,0.1)" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="4 2"/>
+        <text x="300" y="43" text-anchor="middle" font-size="10" fill="#6d28d9" font-weight="700" font-family="Poppins,sans-serif">Window 3</text>
+        <!-- Overlap indicator -->
+        <line x1="100" y1="108" x2="200" y2="108" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="150" y="122" text-anchor="middle" font-size="9" fill="#92400e" font-family="Poppins,sans-serif">50% overlap</text>
+        <!-- Time axis -->
+        <text x="0"   y="128" font-size="9" fill="#999" font-family="Poppins,sans-serif">0s</text>
+        <text x="195" y="128" font-size="9" fill="#999" font-family="Poppins,sans-serif">0.2s</text>
+        <text x="395" y="128" font-size="9" fill="#999" font-family="Poppins,sans-serif">0.4s</text>
+        <text x="595" y="128" font-size="9" fill="#999" font-family="Poppins,sans-serif">0.6s</text>
+      </svg>
+    </div>
+
+    <div class="code-block">
+      <span class="code-label">Python — sliding window segmentation</span>
+      <code><span class="kw">def</span> <span class="fn">create_windows</span>(signal, label, window_size=<span class="nm">200</span>, stride=<span class="nm">100</span>):
+    <span class="cm">"""
+    Slice a filtered EMG signal into overlapping windows.
+    window_size = number of samples per window (200ms @ 1000Hz = 200 samples)
+    stride      = step between windows (100 samples = 100ms)
+    Returns list of windows and corresponding labels.
+    """</span>
+    X, y = [], []
+    <span class="kw">for</span> start <span class="kw">in</span> range(<span class="nm">0</span>, len(signal) - window_size, stride):
+        end    = start + window_size
+        window = signal[start:end, :]   <span class="cm"># shape: (200, 8)</span>
+        X.append(window)
+        y.append(label)
+    <span class="kw">return</span> X, y
+
+<span class="cm"># Example: 5 gestures × 5 seconds × 1000 Hz → windowed samples</span>
+windows, labels = <span class="fn">create_windows</span>(filtered_emg, label=<span class="nm">0</span>)
+<span class="fn">print</span>(<span class="st">f"Windows: {len(windows)}, each shape: {windows[0].shape}"</span>)
+<span class="cm"># Windows: 48, each shape: (200, 8)</span></code>
+    </div>
+
+    <h3>📐 Step 3 — Feature extraction</h3>
+    <p>We could feed raw windowed samples directly to a deep learning model — and for a TCN or CNN that works well. But for classical ML models, and to reduce dimensionality, we extract <strong>handcrafted features</strong> from each window. These are compact numerical summaries that capture the most important characteristics of the EMG signal:</p>
+
+    <div class="feature-cards">
+      <div class="feat-card">
+        <div class="feat-badge rms">RMS</div>
+        <div class="feat-info">
+          <h4>Root Mean Square — overall signal power</h4>
+          <div class="feat-formula">RMS = √( (1/N) × Σ x²[n] )</div>
+          <p>The most widely used EMG feature. RMS reflects the power of the signal and correlates strongly with muscle force level. A high RMS means the muscle is contracting strongly. Used in almost every EMG gesture recognition system.</p>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-badge mav">MAV</div>
+        <div class="feat-info">
+          <h4>Mean Absolute Value — average activation level</h4>
+          <div class="feat-formula">MAV = (1/N) × Σ |x[n]|</div>
+          <p>Similar to RMS but computationally cheaper. Measures the average rectified amplitude of the signal. Good indicator of muscle activation intensity and is robust to short-duration spikes.</p>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-badge zcr">ZCR</div>
+        <div class="feat-info">
+          <h4>Zero Crossing Rate — frequency information</h4>
+          <div class="feat-formula">ZCR = Σ |sign(x[n]) - sign(x[n-1])| / 2</div>
+          <p>Counts how many times the signal crosses zero per window. Higher ZCR means higher frequency content. Different gestures produce different frequency patterns in the EMG signal — ZCR captures this without a full FFT.</p>
+        </div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-badge var">VAR</div>
+        <div class="feat-info">
+          <h4>Variance — signal spread and variability</h4>
+          <div class="feat-formula">VAR = (1/N-1) × Σ (x[n] - μ)²</div>
+          <p>Measures how much the signal varies around its mean. High variance indicates strong muscle activity with variable intensity — characteristic of dynamic movements like finger flexion or wrist rotation.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <span class="code-label">Python — extract all 4 features per channel per window</span>
+      <code><span class="kw">def</span> <span class="fn">extract_features</span>(window):
+    <span class="cm">"""
+    Extract RMS, MAV, ZCR and Variance from each channel of a window.
+    window shape: (200, 8) → output: 32 features (4 per channel × 8 channels)
+    """</span>
+    features = []
+
+    <span class="kw">for</span> ch <span class="kw">in</span> range(window.shape[<span class="nm">1</span>]):        <span class="cm"># loop over each electrode channel</span>
+        sig = window[:, ch]
+
+        <span class="cm"># RMS — root mean square</span>
+        rms = np.<span class="fn">sqrt</span>(np.<span class="fn">mean</span>(sig ** <span class="nm">2</span>))
+
+        <span class="cm"># MAV — mean absolute value</span>
+        mav = np.<span class="fn">mean</span>(np.<span class="fn">abs</span>(sig))
+
+        <span class="cm"># ZCR — zero crossing rate</span>
+        zcr = np.<span class="fn">sum</span>(np.<span class="fn">diff</span>(np.<span class="fn">sign</span>(sig)) != <span class="nm">0</span>)
+
+        <span class="cm"># VAR — variance</span>
+        var = np.<span class="fn">var</span>(sig)
+
+        features.<span class="fn">extend</span>([rms, mav, zcr, var])
+
+    <span class="kw">return</span> np.<span class="fn">array</span>(features)   <span class="cm"># shape: (32,)</span>
+
+
+<span class="cm"># Apply to all windows</span>
+all_features = [<span class="fn">extract_features</span>(w) <span class="kw">for</span> w <span class="kw">in</span> windows]
+X_features   = np.<span class="fn">array</span>(all_features)
+<span class="fn">print</span>(<span class="st">f"Feature matrix shape: {X_features.shape}"</span>)
+<span class="cm"># (48, 32) → 48 windows × 32 features each</span></code>
+    </div>
+
+    <h3>📊 What the feature vector looks like</h3>
+    <p>For one 200ms window with 8 EMG channels, the feature extraction gives us a 32-dimensional vector — 4 features × 8 channels. This is what gets passed to the classifier:</p>
+
+    <div class="output-visual">
+      <div class="ov-title">Example feature vector — one window, channel 1 (fist gesture)</div>
+      <div class="ov-grid">
+        <div class="ov-chip rms-c"><span class="oc-val">0.621</span><span class="oc-label">RMS ch1</span></div>
+        <div class="ov-chip mav-c"><span class="oc-val">0.508</span><span class="oc-label">MAV ch1</span></div>
+        <div class="ov-chip zcr-c"><span class="oc-val">87</span><span class="oc-label">ZCR ch1</span></div>
+        <div class="ov-chip var-c"><span class="oc-val">0.385</span><span class="oc-label">VAR ch1</span></div>
+        <div class="ov-chip rms-c"><span class="oc-val">0.043</span><span class="oc-label">RMS ch2</span></div>
+        <div class="ov-chip mav-c"><span class="oc-val">0.031</span><span class="oc-label">MAV ch2</span></div>
+        <div class="ov-chip zcr-c"><span class="oc-val">12</span><span class="oc-label">ZCR ch2</span></div>
+        <div class="ov-chip var-c"><span class="oc-val">0.002</span><span class="oc-label">VAR ch2</span></div>
+      </div>
+      <p style="font-size:0.78rem;color:#888;margin-top:10px;text-align:center;">Channel 1 (flexor) shows high activity — fist gesture. Channel 2 (extensor) is quiet. This pattern is exactly what the model learns to recognise.</p>
+    </div>
+
+    <div class="coming-next">
+      <h3>Coming next in this series</h3>
+      <p>Part 4: Building the gesture classifier — TCN model, training, and real-time inference 💪⚡</p>
+      <a class="coming-btn" href="blog.html">Back to Blog →</a>
+    </div>
+
+    <div class="takeaway">
+      <h3>💡 Key takeaways from Part 3</h3>
+      <p>Raw EMG is useless until it's processed. The preprocessing pipeline — bandpass filter to remove noise, sliding windows to segment in time, feature extraction to summarise each window — transforms a messy biological signal into a clean structured dataset that a machine learning model can actually learn from. These three steps are the foundation of every EMG-based AI system, including the gesture classifier we built earlier in this series.</p>
+    </div>
+
+    <div class="series-nav">
+      <a class="btn-outline" href="emg-part2.html">← Part 2: Hardware & Electrodes</a>
+      <a class="btn" href="blog.html">Back to Blog →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer><p>Made with 💗 by Buse | SheBuildsSTEM</p></footer>
+</body>
+</html>

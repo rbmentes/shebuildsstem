@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMG Series Part 2 — Reading the Signal | SheBuildsSTEM</title>
+  <meta name="description" content="Part 2 of the EMG series — electrodes, hardware, sampling rates, and why raw EMG is so noisy.">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
+    header { text-align: center; padding: 60px 20px 40px; }
+    header a.site-link { display: inline-block; font-size: 1.3rem; font-weight: 900; color: white; text-decoration: none; text-shadow: 0 2px 12px rgba(0,0,0,0.12); margin-bottom: 20px; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 7px 18px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
+    .back-btn:hover { background: rgba(255,255,255,0.35); }
+    .blog-container { max-width: 780px; margin: 0 auto 80px; padding: 0 20px; }
+    .article-card { background: rgba(255,255,255,0.88); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 28px; padding: 52px 56px; box-shadow: 0 20px 50px rgba(0,0,0,0.11); animation: fadeUp 0.6s ease forwards; }
+    .series-label { display: inline-block; background: linear-gradient(135deg, #10b981, #3b82f6); color: white; padding: 5px 14px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 18px; }
+    .series-title { font-size: 0.9rem; font-weight: 700; color: #10b981; margin-bottom: 8px; }
+    .article-card h2 { font-size: 1.9rem; font-weight: 900; color: #2d2d2d; line-height: 1.25; margin-bottom: 6px; }
+    .article-meta { font-size: 0.78rem; color: #bbb; font-weight: 600; margin-bottom: 36px; padding-bottom: 28px; border-bottom: 2px solid rgba(16,185,129,0.15); }
+    .article-card p { font-size: 0.97rem; color: #444; line-height: 1.9; margin-bottom: 18px; }
+    .article-card h3 { font-size: 1.1rem; font-weight: 700; color: #2d2d2d; margin: 38px 0 14px; }
+    .definition-box { background: linear-gradient(135deg, rgba(16,185,129,0.07), rgba(59,130,246,0.05)); border-left: 4px solid #10b981; border-radius: 0 16px 16px 0; padding: 18px 22px; margin: 16px 0 22px; }
+    .definition-box p { margin: 0; font-size: 0.95rem; color: #555; line-height: 1.8; }
+    .highlight-box { background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(168,85,247,0.07)); border-left: 4px solid #ff4fa3; border-radius: 0 14px 14px 0; padding: 18px 22px; margin: 20px 0; }
+    .highlight-box p { margin: 0; font-size: 0.93rem; color: #555; font-style: italic; }
+
+    /* Electrode type cards */
+    .electrode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0 22px; }
+    .elec-card { border-radius: 18px; padding: 22px 20px; }
+    .elec-card.surface { background: rgba(16,185,129,0.07); border: 1.5px solid rgba(16,185,129,0.2); }
+    .elec-card.needle  { background: rgba(239,68,68,0.07);  border: 1.5px solid rgba(239,68,68,0.2); }
+    .elec-card .ec-icon { font-size: 1.8rem; display: block; margin-bottom: 10px; }
+    .elec-card h4 { font-size: 0.92rem; font-weight: 700; margin-bottom: 8px; }
+    .elec-card.surface h4 { color: #065f46; }
+    .elec-card.needle  h4 { color: #dc2626; }
+    .elec-card p { font-size: 0.82rem; color: #666; line-height: 1.6; margin: 0 0 10px; }
+    .elec-tag { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 3px 9px; border-radius: 10px; }
+    .tag-s { background: #d1fae5; color: #065f46; }
+    .tag-n { background: #fee2e2; color: #dc2626; }
+
+    /* Hardware chain */
+    .hw-chain { display: flex; flex-direction: column; gap: 0; margin: 14px 0 22px; }
+    .hw-item { display: flex; gap: 14px; align-items: flex-start; }
+    .hw-left { display: flex; flex-direction: column; align-items: center; }
+    .hw-num { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #3b82f6); color: white; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .hw-line { width: 2px; flex: 1; background: linear-gradient(180deg, rgba(16,185,129,0.3), rgba(59,130,246,0.3)); min-height: 16px; }
+    .hw-item:last-child .hw-line { display: none; }
+    .hw-content { padding: 4px 0 20px; flex: 1; }
+    .hw-content h4 { font-size: 0.92rem; font-weight: 700; color: #2d2d2d; margin-bottom: 4px; }
+    .hw-content p { font-size: 0.84rem; color: #666; margin: 0; line-height: 1.65; }
+    .hw-spec { font-size: 0.72rem; font-weight: 700; background: #d1fae5; color: #065f46; padding: 2px 8px; border-radius: 8px; display: inline-block; margin-top: 5px; }
+
+    /* Noise types */
+    .noise-list { display: flex; flex-direction: column; gap: 10px; margin: 14px 0 22px; }
+    .noise-item { display: flex; gap: 14px; align-items: flex-start; background: white; border-radius: 14px; padding: 14px 18px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); border: 1px solid rgba(239,68,68,0.1); }
+    .noise-badge { font-size: 0.68rem; font-weight: 800; padding: 4px 10px; border-radius: 10px; background: #fee2e2; color: #dc2626; flex-shrink: 0; min-width: 80px; text-align: center; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; }
+    .noise-info h4 { font-size: 0.88rem; font-weight: 700; color: #2d2d2d; margin-bottom: 3px; }
+    .noise-info p  { font-size: 0.8rem; color: #666; margin: 0; line-height: 1.6; }
+
+    /* Sampling visual */
+    .sampling-box { background: white; border-radius: 18px; padding: 20px 22px; margin: 14px 0 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); }
+    .sb-title { font-size: 0.75rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 14px; }
+    .sb-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .sb-row:last-child { margin-bottom: 0; }
+    .sb-label { font-size: 0.8rem; font-weight: 600; color: #555; min-width: 130px; }
+    .sb-bar-wrap { flex: 1; height: 10px; background: #f0f0f0; border-radius: 6px; overflow: hidden; }
+    .sb-bar { height: 100%; border-radius: 6px; }
+    .sb-val { font-size: 0.76rem; font-weight: 700; min-width: 60px; text-align: right; }
+
+    /* Electrode placement */
+    .placement-visual { background: white; border-radius: 18px; padding: 22px; margin: 16px 0 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.05); }
+    .pv-title { font-size: 0.75rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; text-align: center; }
+    .pv-rules { display: flex; flex-direction: column; gap: 8px; }
+    .pv-rule { display: flex; gap: 10px; align-items: flex-start; font-size: 0.88rem; color: #444; }
+    .pv-rule::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #3b82f6); flex-shrink: 0; margin-top: 7px; }
+
+    /* Takeaway */
+    .takeaway { background: linear-gradient(135deg, #10b981, #3b82f6); border-radius: 18px; padding: 26px 28px; margin-top: 36px; color: white; }
+    .takeaway h3 { color: white; font-size: 1rem; margin: 0 0 10px; }
+    .takeaway p  { color: rgba(255,255,255,0.92); font-size: 0.93rem; margin: 0; line-height: 1.75; }
+
+    .series-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 44px; padding-top: 28px; border-top: 2px solid rgba(16,185,129,0.15); }
+    .btn { display: inline-block; background: linear-gradient(135deg, #10b981, #3b82f6); color: white; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; box-shadow: 0 6px 18px rgba(16,185,129,0.25); transition: transform 0.2s; }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-outline { display: inline-block; background: transparent; color: #10b981; padding: 11px 26px; border-radius: 30px; font-weight: 700; font-size: 0.85rem; text-decoration: none; border: 2px solid #10b981; transition: transform 0.2s, background 0.2s; }
+    .btn-outline:hover { transform: translateY(-3px); background: rgba(16,185,129,0.06); }
+    footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) { .article-card { padding: 30px 22px; } .article-card h2 { font-size: 1.5rem; } .electrode-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="site-link" href="index.html">SheBuildsSTEM 💗⚡</a><br>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
+</header>
+
+<div class="blog-container">
+  <div class="article-card">
+
+    <span class="series-label">💪 EMG & Bioelectrical Signals</span>
+    <div class="series-title">Part 2</div>
+    <h2>Reading the Signal — Hardware, Electrodes and Noise</h2>
+    <div class="article-meta">Biomedical Signal Processing · Electrode Systems · Signal Acquisition</div>
+
+    <p>In Part 1 we learned what EMG is and how muscles generate electrical signals. Now the engineering question: how do we actually capture those signals? EMG recording is a hardware problem before it becomes a software problem — and the choices you make at the acquisition stage determine everything that comes after.</p>
+
+    <h3>📡 Types of EMG electrodes</h3>
+    <p>There are two main ways to record EMG, and they serve completely different purposes:</p>
+
+    <div class="electrode-grid">
+      <div class="elec-card surface">
+        <span class="ec-icon">🔵</span>
+        <h4>Surface EMG (sEMG)</h4>
+        <p>Electrodes placed on the skin above the muscle. Non-invasive, easy to apply, and perfect for gesture recognition and prosthetics research. Records the combined activity of multiple motor units.</p>
+        <span class="elec-tag tag-s">Non-invasive · Research & clinical</span>
+      </div>
+      <div class="elec-card needle">
+        <span class="ec-icon">📍</span>
+        <h4>Needle EMG (iEMG)</h4>
+        <p>A fine needle electrode inserted directly into the muscle tissue. Highly specific — can isolate single motor unit activity. Used in clinical diagnosis of neuromuscular diseases.</p>
+        <span class="elec-tag tag-n">Invasive · Clinical diagnosis only</span>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <p>For AI and gesture recognition applications — including the project we built in this series — surface EMG is always used. It's non-invasive, wearable, and can be recorded continuously without discomfort.</p>
+    </div>
+
+    <h3>🔧 The EMG acquisition hardware chain</h3>
+    <p>From skin to digital data, every EMG system goes through the same chain of hardware components. Understanding each stage is fundamental EE knowledge:</p>
+
+    <div class="hw-chain">
+      <div class="hw-item">
+        <div class="hw-left"><div class="hw-num">1</div><div class="hw-line"></div></div>
+        <div class="hw-content">
+          <h4>Differential electrodes</h4>
+          <p>Two electrodes placed over the muscle belly plus one reference electrode (usually over a bony landmark). The differential configuration records the voltage difference between the two active electrodes — this is crucial for rejecting common-mode noise like power line interference.</p>
+          <span class="hw-spec">AgCl electrodes most common</span>
+        </div>
+      </div>
+      <div class="hw-item">
+        <div class="hw-left"><div class="hw-num">2</div><div class="hw-line"></div></div>
+        <div class="hw-content">
+          <h4>Instrumentation amplifier</h4>
+          <p>The raw EMG signal is only 0.1–5 mV — far too small for an ADC to measure accurately. An instrumentation amplifier with high CMRR (Common Mode Rejection Ratio) amplifies the differential signal typically by 1000x while rejecting common-mode interference.</p>
+          <span class="hw-spec">Gain: ×1000 · CMRR &gt; 80 dB</span>
+        </div>
+      </div>
+      <div class="hw-item">
+        <div class="hw-left"><div class="hw-num">3</div><div class="hw-line"></div></div>
+        <div class="hw-content">
+          <h4>Bandpass filter (analog)</h4>
+          <p>A hardware bandpass filter (20–500 Hz) removes DC offset, motion artifacts below 20 Hz, and high-frequency interference above 500 Hz. This is done in analog before digitization to prevent aliasing.</p>
+          <span class="hw-spec">20 – 500 Hz passband</span>
+        </div>
+      </div>
+      <div class="hw-item">
+        <div class="hw-left"><div class="hw-num">4</div><div class="hw-line"></div></div>
+        <div class="hw-content">
+          <h4>Analog-to-Digital Converter (ADC)</h4>
+          <p>Converts the continuous analog signal into discrete digital samples. The sampling rate must satisfy Nyquist's theorem — at least 2× the highest frequency of interest.</p>
+          <span class="hw-spec">1000 – 2000 Hz sampling rate · 12-16 bit resolution</span>
+        </div>
+      </div>
+      <div class="hw-item">
+        <div class="hw-left"><div class="hw-num">5</div><div class="hw-line"></div></div>
+        <div class="hw-content">
+          <h4>Digital processing</h4>
+          <p>The digitized samples are now ready for software processing — additional filtering, feature extraction, and machine learning classification. This is where Python takes over.</p>
+          <span class="hw-spec">Microcontroller or PC · Python / MATLAB</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>📐 Sampling rate — why it matters</h3>
+    <p>By the Nyquist theorem, your sampling rate must be at least twice the highest frequency in the signal. EMG contains frequencies up to 500 Hz, so you need at least 1000 Hz. In practice most systems use 1000–2000 Hz:</p>
+
+    <div class="sampling-box">
+      <div class="sb-title">Sampling rate comparison for EMG</div>
+      <div class="sb-row">
+        <span class="sb-label">Too low (500 Hz)</span>
+        <div class="sb-bar-wrap"><div class="sb-bar" style="width:25%;background:#ef4444;"></div></div>
+        <span class="sb-val" style="color:#dc2626;">❌ Aliasing</span>
+      </div>
+      <div class="sb-row">
+        <span class="sb-label">Minimum (1000 Hz)</span>
+        <div class="sb-bar-wrap"><div class="sb-bar" style="width:50%;background:#f59e0b;"></div></div>
+        <span class="sb-val" style="color:#92400e;">⚠️ Adequate</span>
+      </div>
+      <div class="sb-row">
+        <span class="sb-label">Standard (2000 Hz)</span>
+        <div class="sb-bar-wrap"><div class="sb-bar" style="width:75%;background:#10b981;"></div></div>
+        <span class="sb-val" style="color:#065f46;">✓ Good</span>
+      </div>
+      <div class="sb-row">
+        <span class="sb-label">High res (4000 Hz)</span>
+        <div class="sb-bar-wrap"><div class="sb-bar" style="width:100%;background:#3b82f6;"></div></div>
+        <span class="sb-val" style="color:#1d4ed8;">✓✓ Best</span>
+      </div>
+    </div>
+
+    <h3>📍 Electrode placement rules</h3>
+    <p>Where you place the electrodes directly affects signal quality. Poor placement is one of the most common sources of bad EMG data:</p>
+
+    <div class="placement-visual">
+      <div class="pv-title">Surface EMG electrode placement guidelines</div>
+      <div class="pv-rules">
+        <div class="pv-rule">Place electrodes over the muscle belly — the thickest part of the muscle, midway between origin and insertion</div>
+        <div class="pv-rule">Align electrodes parallel to the muscle fiber direction — this maximises signal amplitude</div>
+        <div class="pv-rule">Keep inter-electrode distance 20mm — standard for most surface EMG applications</div>
+        <div class="pv-rule">Place the reference electrode over a bony prominence (e.g. elbow epicondyle) with no underlying muscle</div>
+        <div class="pv-rule">Clean and lightly abrade the skin before application — reduces skin-electrode impedance dramatically</div>
+        <div class="pv-rule">Avoid electrode placement over motor point — can cause signal saturation during strong contractions</div>
+      </div>
+    </div>
+
+    <h3>⚠️ Sources of noise in EMG</h3>
+    <p>Raw EMG is notoriously noisy. Before any processing, you need to understand what the noise sources are so you can remove them appropriately:</p>
+
+    <div class="noise-list">
+      <div class="noise-item">
+        <span class="noise-badge">50/60 Hz</span>
+        <div class="noise-info">
+          <h4>Power line interference</h4>
+          <p>Electromagnetic interference from AC power lines. Appears as a sharp 50 Hz (Europe) or 60 Hz (USA) spike in the frequency spectrum. Removed with a notch filter.</p>
+        </div>
+      </div>
+      <div class="noise-item">
+        <span class="noise-badge">Motion</span>
+        <div class="noise-info">
+          <h4>Motion artifacts</h4>
+          <p>Low-frequency noise (below 20 Hz) caused by electrode movement relative to the skin. Removed by the high-pass cutoff of the bandpass filter.</p>
+        </div>
+      </div>
+      <div class="noise-item">
+        <span class="noise-badge">Crosstalk</span>
+        <div class="noise-info">
+          <h4>Muscle crosstalk</h4>
+          <p>Signal from adjacent muscles bleeding into your recording. Especially problematic in forearm recordings where muscles are densely packed. Reduced by careful electrode placement.</p>
+        </div>
+      </div>
+      <div class="noise-item">
+        <span class="noise-badge">Electrode</span>
+        <div class="noise-info">
+          <h4>Electrode-skin impedance noise</h4>
+          <p>Poor electrode-skin contact creates high impedance which amplifies thermal noise. Reduced by proper skin preparation — cleaning, light abrasion, and conductive gel.</p>
+        </div>
+      </div>
+      <div class="noise-item">
+        <span class="noise-badge">Amplifier</span>
+        <div class="noise-info">
+          <h4>Amplifier thermal noise</h4>
+          <p>Inherent electronic noise from the amplifier circuit. Unavoidable but minimised by using low-noise instrumentation amplifiers with high CMRR.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <h3>💡 Key takeaways from Part 2</h3>
+      <p>Recording EMG well is an engineering challenge before it's a data science challenge. The electrode type, placement, amplifier quality, and sampling rate all determine the quality of data that reaches your algorithm. Surface EMG is the standard for AI applications — non-invasive, wearable, and capable of capturing rich gesture information across 8 channels simultaneously. In Part 3, we move into Python and learn how to clean and process this signal so a neural network can actually learn from it.</p>
+    </div>
+
+    <div class="series-nav">
+      <a class="btn-outline" href="emg-part1.html">← Part 1: What Is EMG?</a>
+      <a class="btn" href="emg-part3.html">Part 3: Processing the Signal →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer><p>Made with 💗 by Buse | SheBuildsSTEM</p></footer>
+</body>
+</html>
