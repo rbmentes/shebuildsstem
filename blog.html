@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Blog | SheBuildsSTEM</title>
-  <meta name="description" content="Technical beginner-friendly posts on Speech AI, Machine Learning fundamentals, deepfake detection, and engineering reflections.">
+  <meta name="description" content="Technical posts on ML, Speech AI, EMG signals, deepfake detection and engineering reflections.">
   <link rel="icon" href="favicon.jpg">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -17,48 +17,44 @@
     .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 8px 20px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
     .back-btn:hover { background: rgba(255,255,255,0.35); }
     .hub-container { max-width: 960px; margin: 0 auto; padding: 0 20px 80px; }
-
-    /* Category cards */
-    .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 60px; }
-    .hub-card { background: rgba(255,255,255,0.82); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 24px; padding: 26px 22px; box-shadow: 0 12px 32px rgba(0,0,0,0.1); transition: transform 0.25s, box-shadow 0.25s; text-align: center; }
+    .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 60px; }
+    .hub-card { background: rgba(255,255,255,0.82); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 24px; padding: 24px 20px; box-shadow: 0 12px 32px rgba(0,0,0,0.1); transition: transform 0.25s, box-shadow 0.25s; text-align: center; }
     .hub-card:hover { transform: translateY(-8px); box-shadow: 0 22px 44px rgba(0,0,0,0.13); }
-    .hub-card h3 { font-size: 0.95rem; font-weight: 700; color: #2d2d2d; margin-bottom: 8px; line-height: 1.4; }
-    .hub-card p { font-size: 0.82rem; color: #666; line-height: 1.6; margin-bottom: 16px; }
-
-    /* Section headers */
+    .hub-card h3 { font-size: 0.9rem; font-weight: 700; color: #2d2d2d; margin-bottom: 8px; line-height: 1.4; }
+    .hub-card p { font-size: 0.8rem; color: #666; line-height: 1.6; margin-bottom: 14px; }
     .series-header { display: flex; align-items: center; gap: 14px; margin: 50px 0 20px; }
-    .series-header h2 { font-size: 1.3rem; font-weight: 800; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.1); white-space: nowrap; }
+    .series-header h2 { font-size: 1.25rem; font-weight: 800; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.1); white-space: nowrap; }
     .series-header .series-line { flex: 1; height: 2px; background: rgba(255,255,255,0.35); border-radius: 2px; }
-
-    /* Post grid */
-    .post-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
-    .post-card { background: rgba(255,255,255,0.82); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 20px; padding: 24px 22px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); transition: transform 0.22s, box-shadow 0.22s; display: flex; flex-direction: column; gap: 8px; }
+    .post-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+    .post-card { background: rgba(255,255,255,0.82); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 20px; padding: 22px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); transition: transform 0.22s, box-shadow 0.22s; display: flex; flex-direction: column; gap: 8px; }
     .post-card:hover { transform: translateY(-6px); box-shadow: 0 18px 36px rgba(0,0,0,0.12); }
     .post-tag { display: inline-block; font-size: 0.66rem; font-weight: 700; padding: 3px 9px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.05em; width: fit-content; }
-    .tag-ml      { background: #fce7f3; color: #be185d; }
-    .tag-ai      { background: #ede9fe; color: #6d28d9; }
-    .tag-speech  { background: #dbeafe; color: #1d4ed8; }
+    .tag-ml       { background: #fce7f3; color: #be185d; }
+    .tag-ai       { background: #ede9fe; color: #6d28d9; }
+    .tag-speech   { background: #dbeafe; color: #1d4ed8; }
     .tag-deepfake { background: #1e1e2e; color: #89b4fa; }
-    .tag-reflect { background: #fdf2f8; color: #9d174d; }
-    .tag-new     { background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; }
-    .post-card h3 { font-size: 0.92rem; font-weight: 700; color: #2d2d2d; line-height: 1.45; flex: 1; }
-    .post-card p  { font-size: 0.8rem; color: #666; line-height: 1.6; }
-
-    /* Buttons */
-    .btn { display: inline-block; background: white; color: #ff4fa3; padding: 9px 20px; border-radius: 30px; font-weight: 700; font-size: 0.8rem; text-decoration: none; box-shadow: 0 4px 14px rgba(255,79,163,0.18); transition: transform 0.2s; width: fit-content; }
+    .tag-emg      { background: #d1fae5; color: #065f46; }
+    .tag-reflect  { background: #fdf2f8; color: #9d174d; }
+    .tag-new      { background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; }
+    .post-card h3 { font-size: 0.9rem; font-weight: 700; color: #2d2d2d; line-height: 1.45; flex: 1; }
+    .post-card p  { font-size: 0.78rem; color: #666; line-height: 1.6; }
+    .btn       { display: inline-block; background: white; color: #ff4fa3; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.78rem; text-decoration: none; box-shadow: 0 4px 14px rgba(255,79,163,0.18); transition: transform 0.2s; width: fit-content; }
     .btn:hover { transform: translateY(-2px); }
-    .btn-blue { display: inline-block; background: white; color: #3b82f6; padding: 9px 20px; border-radius: 30px; font-weight: 700; font-size: 0.8rem; text-decoration: none; box-shadow: 0 4px 14px rgba(59,130,246,0.18); transition: transform 0.2s; width: fit-content; }
+    .btn-blue  { display: inline-block; background: white; color: #3b82f6; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.78rem; text-decoration: none; box-shadow: 0 4px 14px rgba(59,130,246,0.18); transition: transform 0.2s; width: fit-content; }
     .btn-blue:hover { transform: translateY(-2px); }
-    .btn-outline { display: inline-block; background: transparent; color: white; padding: 9px 20px; border-radius: 30px; font-weight: 700; font-size: 0.8rem; text-decoration: none; border: 2px solid rgba(255,255,255,0.7); backdrop-filter: blur(8px); transition: transform 0.2s; width: fit-content; }
+    .btn-green { display: inline-block; background: white; color: #10b981; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.78rem; text-decoration: none; box-shadow: 0 4px 14px rgba(16,185,129,0.18); transition: transform 0.2s; width: fit-content; }
+    .btn-green:hover { transform: translateY(-2px); }
+    .btn-outline { display: inline-block; background: transparent; color: white; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.78rem; text-decoration: none; border: 2px solid rgba(255,255,255,0.7); backdrop-filter: blur(8px); transition: transform 0.2s; width: fit-content; }
     .btn-outline:hover { transform: translateY(-2px); background: rgba(255,255,255,0.1); }
     .bottom-nav { margin-top: 50px; text-align: center; }
     footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     .fade-up { animation: fadeUp 0.55s ease forwards; opacity: 0; }
     .fade-up:nth-child(1) { animation-delay: 0.1s; }
-    .fade-up:nth-child(2) { animation-delay: 0.18s; }
-    .fade-up:nth-child(3) { animation-delay: 0.26s; }
-    .fade-up:nth-child(4) { animation-delay: 0.34s; }
+    .fade-up:nth-child(2) { animation-delay: 0.17s; }
+    .fade-up:nth-child(3) { animation-delay: 0.24s; }
+    .fade-up:nth-child(4) { animation-delay: 0.31s; }
+    .fade-up:nth-child(5) { animation-delay: 0.38s; }
     @media (max-width: 600px) { header h1 { font-size: 2rem; } .series-header h2 { font-size: 1rem; } }
   </style>
 </head>
@@ -76,24 +72,34 @@
   <!-- Category cards -->
   <div class="hub-grid">
     <div class="hub-card fade-up">
-      <h3>🎓 Learn Machine Learning With Me</h3>
-      <p>A semester-long journey into ML fundamentals as an engineering student.</p>
+      <h3>🎓 Learn ML With Me</h3>
+      <p>ML fundamentals step by step.</p>
       <a class="btn" href="#learn-ml">Explore →</a>
     </div>
     <div class="hub-card fade-up">
-      <h3>⚡ AI & Signal Processing Essentials</h3>
-      <p>Mini technical explanations of core AI and engineering concepts.</p>
+      <h3>⚡ AI & Signal Processing</h3>
+      <p>Core AI concepts explained visually.</p>
       <a class="btn" href="#ai-essentials">Explore →</a>
     </div>
     <div class="hub-card fade-up">
-      <h3>🎧 Speech AI Starter Series</h3>
-      <p>From raw audio to CNNs — how speech AI actually works.</p>
+      <h3>🎧 Speech AI Starter</h3>
+      <p>From raw audio to CNNs.</p>
       <a class="btn" href="#speech-ai">Explore →</a>
     </div>
     <div class="hub-card fade-up">
+      <h3>💪 EMG & Bioelectrical Signals</h3>
+      <p>Muscle signals, hardware and AI.</p>
+      <a class="btn-green" href="#emg">Explore →</a>
+    </div>
+    <div class="hub-card fade-up">
       <h3>🔍 Deepfake Detection Project</h3>
-      <p>My graduation project — building an LCNN system to detect fake audio.</p>
+      <p>My graduation project — LCNN for fake audio.</p>
       <a class="btn-blue" href="#deepfake">Explore →</a>
+    </div>
+    <div class="hub-card fade-up">
+      <h3>💗 Engineering Reflections</h3>
+      <p>Personal thoughts on engineering life.</p>
+      <a class="btn" href="#reflections">Explore →</a>
     </div>
   </div>
 
@@ -106,25 +112,25 @@
     <div class="post-card">
       <span class="post-tag tag-ml">Week 1</span>
       <h3>What Is Machine Learning?</h3>
-      <p>Supervised vs unsupervised, datasets, features, and generalization.</p>
+      <p>Supervised vs unsupervised, datasets, features, generalization.</p>
       <a class="btn" href="learn-ml-week1.html">Read →</a>
     </div>
     <div class="post-card">
       <span class="post-tag tag-ml">Week 2</span>
       <h3>How Do Models Actually Learn?</h3>
-      <p>Loss functions, gradient descent, learning rate, and the training loop.</p>
+      <p>Loss functions, gradient descent, learning rate and the training loop.</p>
       <a class="btn" href="learn-ml-week2.html">Read →</a>
     </div>
     <div class="post-card">
       <span class="post-tag tag-ml">Week 3</span>
       <h3>Decision Trees & Random Forests</h3>
-      <p>How machines make decisions — and why combining trees makes them powerful.</p>
+      <p>How machines make decisions — and why combining trees helps.</p>
       <a class="btn" href="learn-ml-week3.html">Read →</a>
     </div>
     <div class="post-card">
-      <span class="post-tag tag-new">Week 4 — New</span>
+      <span class="post-tag tag-ml">Week 4</span>
       <h3>Neural Networks From Scratch</h3>
-      <p>Neurons, weights, biases, layers, forward pass — the foundation of modern AI.</p>
+      <p>Neurons, weights, layers, forward pass — the foundation of modern AI.</p>
       <a class="btn" href="learn-ml-week4.html">Read →</a>
     </div>
   </div>
@@ -148,19 +154,19 @@
     <div class="post-card">
       <span class="post-tag tag-ai">Part 3</span>
       <h3>Activation Functions</h3>
-      <p>ReLU, Sigmoid, Tanh — why they exist and when to use each one.</p>
+      <p>ReLU, Sigmoid, Tanh — why they exist and when to use each.</p>
       <a class="btn" href="ai-essentials-part3.html">Read →</a>
     </div>
     <div class="post-card">
       <span class="post-tag tag-ai">Part 4</span>
       <h3>How Backpropagation Works</h3>
-      <p>Forward pass, loss, gradients, and weight updates — the training engine.</p>
+      <p>Forward pass, loss, gradients, weight updates.</p>
       <a class="btn" href="ai-essentials-part4.html">Read →</a>
     </div>
     <div class="post-card">
       <span class="post-tag tag-ai">Part 5</span>
       <h3>Regularization Techniques</h3>
-      <p>Dropout, L1, and L2 — stopping your model from overfitting.</p>
+      <p>Dropout, L1 and L2 — stopping your model from overfitting.</p>
       <a class="btn" href="ai-essentials-part5.html">Read →</a>
     </div>
   </div>
@@ -187,14 +193,40 @@
       <a class="btn" href="speech-ai-part3.html">Read →</a>
     </div>
     <div class="post-card">
-      <span class="post-tag tag-new">Part 4 — New</span>
+      <span class="post-tag tag-speech">Part 4</span>
       <h3>Building a CNN for Speech Classification</h3>
-      <p>Hands-on Python + PyTorch — full pipeline from audio file to prediction.</p>
+      <p>Hands-on Python + PyTorch — full pipeline from audio to prediction.</p>
       <a class="btn" href="speech-ai-part4.html">Read →</a>
     </div>
   </div>
 
-  <!-- Deepfake Detection -->
+  <!-- EMG Series -->
+  <div class="series-header" id="emg">
+    <h2>💪 EMG & Bioelectrical Signals</h2>
+    <div class="series-line"></div>
+  </div>
+  <div class="post-grid">
+    <div class="post-card">
+      <span class="post-tag tag-new">Part 1 — New</span>
+      <h3>What Is EMG? The Electrical Language of Muscles</h3>
+      <p>Motor units, action potentials, and why EMG matters for AI and prosthetics.</p>
+      <a class="btn-green" href="emg-part1.html">Read →</a>
+    </div>
+    <div class="post-card">
+      <span class="post-tag tag-new">Part 2 — New</span>
+      <h3>Reading the Signal — Hardware, Electrodes and Noise</h3>
+      <p>The full acquisition chain from skin to digital — amplifiers, ADC, and noise sources.</p>
+      <a class="btn-green" href="emg-part2.html">Read →</a>
+    </div>
+    <div class="post-card">
+      <span class="post-tag tag-new">Part 3 — New</span>
+      <h3>Processing EMG — Filtering, Windowing and Feature Extraction</h3>
+      <p>Bandpass filtering, sliding windows, RMS/MAV/ZCR/VAR features in Python.</p>
+      <a class="btn-green" href="emg-part3.html">Read →</a>
+    </div>
+  </div>
+
+  <!-- Deepfake -->
   <div class="series-header" id="deepfake">
     <h2>🔍 Deepfake Detection — Graduation Project</h2>
     <div class="series-line"></div>
@@ -208,20 +240,20 @@
     </div>
     <div class="post-card">
       <span class="post-tag tag-deepfake">Part 2</span>
-      <h3>The Dataset — ASVspoof2019 & My Custom Turkish Dataset</h3>
-      <p>315 recordings, 26 speakers, and how I built my own deepfake dataset.</p>
+      <h3>The Dataset — ASVspoof2019 & My Turkish Dataset</h3>
+      <p>315 recordings, 26 speakers, and building my own deepfake dataset.</p>
       <a class="btn-blue" href="deepfake-part2.html">Read →</a>
     </div>
     <div class="post-card">
       <span class="post-tag tag-deepfake">Part 3</span>
       <h3>The LCNN Model — Architecture and Training</h3>
-      <p>Light Convolutional Neural Network, MFM activation, and log-Mel features.</p>
+      <p>LCNN, MFM activation, log-Mel features, and training strategy.</p>
       <a class="btn-blue" href="deepfake-part3.html">Read →</a>
     </div>
     <div class="post-card">
       <span class="post-tag tag-deepfake">Part 4</span>
       <h3>Results, Cross-Dataset Challenges & What I Learned</h3>
-      <p>99.27% accuracy on LA, cross-language experiments, noise robustness, honest conclusions.</p>
+      <p>99.27% accuracy on LA, cross-language experiments, honest conclusions.</p>
       <a class="btn-blue" href="deepfake-part4.html">Read →</a>
     </div>
   </div>
