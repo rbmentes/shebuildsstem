@@ -36,6 +36,7 @@
     .tag-emg      { background: #d1fae5; color: #065f46; }
     .tag-reflect  { background: #fdf2f8; color: #9d174d; }
     .tag-new      { background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; }
+    .tag-toolkit  { background: #fff7ed; color: #c2410c; }
     .post-card h3 { font-size: 0.9rem; font-weight: 700; color: #2d2d2d; line-height: 1.45; flex: 1; }
     .post-card p  { font-size: 0.78rem; color: #666; line-height: 1.6; }
     .btn       { display: inline-block; background: white; color: #ff4fa3; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.78rem; text-decoration: none; box-shadow: 0 4px 14px rgba(255,79,163,0.18); transition: transform 0.2s; width: fit-content; }
@@ -44,6 +45,8 @@
     .btn-blue:hover { transform: translateY(-2px); }
     .btn-green { display: inline-block; background: white; color: #10b981; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.78rem; text-decoration: none; box-shadow: 0 4px 14px rgba(16,185,129,0.18); transition: transform 0.2s; width: fit-content; }
     .btn-green:hover { transform: translateY(-2px); }
+    .btn-orange { display: inline-block; background: white; color: #f97316; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.78rem; text-decoration: none; box-shadow: 0 4px 14px rgba(249,115,22,0.18); transition: transform 0.2s; width: fit-content; }
+    .btn-orange:hover { transform: translateY(-2px); }
     .btn-outline { display: inline-block; background: transparent; color: white; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.78rem; text-decoration: none; border: 2px solid rgba(255,255,255,0.7); backdrop-filter: blur(8px); transition: transform 0.2s; width: fit-content; }
     .btn-outline:hover { transform: translateY(-2px); background: rgba(255,255,255,0.1); }
     .bottom-nav { margin-top: 50px; text-align: center; }
@@ -55,6 +58,8 @@
     .fade-up:nth-child(3) { animation-delay: 0.24s; }
     .fade-up:nth-child(4) { animation-delay: 0.31s; }
     .fade-up:nth-child(5) { animation-delay: 0.38s; }
+    .fade-up:nth-child(6) { animation-delay: 0.45s; }
+    .fade-up:nth-child(7) { animation-delay: 0.52s; }
     @media (max-width: 600px) { header h1 { font-size: 2rem; } .series-header h2 { font-size: 1rem; } }
   </style>
 </head>
@@ -100,6 +105,11 @@
       <h3>💗 Engineering Reflections</h3>
       <p>Personal thoughts on engineering life.</p>
       <a class="btn" href="#reflections">Explore →</a>
+    </div>
+    <div class="hub-card fade-up">
+      <h3>📚 Free Courses & Certs</h3>
+      <p>MathWorks Onramps, Coursera, fast.ai and more.</p>
+      <a class="btn-orange" href="#free-courses">Explore →</a>
     </div>
   </div>
 
@@ -268,6 +278,38 @@
       <span class="post-tag tag-reflect">Reflection</span>
       <h3>When You Feel Behind in Engineering...</h3>
       <a class="btn" href="feeling-behind.html">Read →</a>
+    </div>
+  </div>
+
+  <!-- Free Courses -->
+  <div class="series-header" id="free-courses">
+    <h2>📚 Free Courses & Certifications</h2>
+    <div class="series-line"></div>
+  </div>
+  <div class="post-grid">
+    <div class="post-card">
+      <span class="post-tag tag-toolkit">MathWorks</span>
+      <h3>MATLAB Onramp</h3>
+      <p>Get started with MATLAB — variables, arrays, plotting and scripting. Free + certificate.</p>
+      <a class="btn-orange" href="free-courses.html#matlab">View →</a>
+    </div>
+    <div class="post-card">
+      <span class="post-tag tag-toolkit">MathWorks</span>
+      <h3>Machine Learning Onramp</h3>
+      <p>Interactive ML course covering classification, regression and model evaluation. Free + certificate.</p>
+      <a class="btn-orange" href="free-courses.html#ml">View →</a>
+    </div>
+    <div class="post-card">
+      <span class="post-tag tag-toolkit">MathWorks</span>
+      <h3>Deep Learning Onramp</h3>
+      <p>Build and train neural networks, CNNs and transfer learning — hands-on in MATLAB. Free + certificate.</p>
+      <a class="btn-orange" href="free-courses.html#dl">View →</a>
+    </div>
+    <div class="post-card">
+      <span class="post-tag tag-toolkit">MathWorks + More</span>
+      <h3>See All Courses →</h3>
+      <p>Signal Processing, Computer Vision, Simulink, Reinforcement Learning, Hugging Face, fast.ai and more.</p>
+      <a class="btn-orange" href="free-courses.html">Browse All →</a>
     </div>
   </div>
 

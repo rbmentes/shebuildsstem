@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ücretsiz Kurslar & Sertifikalar | SheBuildsSTEM</title>
+  <meta name="description" content="Mühendislik becerilerinizi geliştirmek için en iyi ücretsiz kurslar ve sertifikalar — MathWorks, Coursera ve daha fazlası.">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
+
+    header { text-align: center; padding: 80px 20px 50px; }
+    .hero-eyebrow { display: inline-block; background: rgba(255,255,255,0.3); color: white; padding: 6px 20px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 18px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); }
+    header h1 { font-size: 2.8rem; font-weight: 900; color: white; text-shadow: 0 4px 24px rgba(0,0,0,0.12); margin-bottom: 14px; }
+    header p { color: rgba(255,255,255,0.9); font-size: 1rem; max-width: 560px; margin: 0 auto 30px; line-height: 1.7; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 8px 20px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
+    .back-btn:hover { background: rgba(255,255,255,0.38); }
+
+    .page-container { max-width: 980px; margin: 0 auto; padding: 0 20px 80px; }
+
+    .section-header { display: flex; align-items: center; gap: 14px; margin: 50px 0 22px; }
+    .section-header h2 { font-size: 1.25rem; font-weight: 800; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.1); white-space: nowrap; }
+    .section-line { flex: 1; height: 2px; background: rgba(255,255,255,0.35); border-radius: 2px; }
+
+    .provider-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.22); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.4); border-radius: 14px; padding: 10px 18px; color: white; font-size: 0.82rem; font-weight: 700; margin-bottom: 18px; }
+
+    .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; }
+
+    .course-card { background: rgba(255,255,255,0.84); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 22px; padding: 24px 22px; box-shadow: 0 10px 28px rgba(0,0,0,0.09); transition: transform 0.22s, box-shadow 0.22s; display: flex; flex-direction: column; gap: 10px; }
+    .course-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.13); }
+
+    .course-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .course-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .cert-badge { font-size: 0.62rem; font-weight: 700; padding: 3px 9px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+    .cert-free { background: #d1fae5; color: #065f46; }
+    .cert-free-cert { background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; }
+
+    .course-card h3 { font-size: 0.92rem; font-weight: 700; color: #2d2d2d; line-height: 1.45; }
+    .course-card p { font-size: 0.78rem; color: #666; line-height: 1.6; flex: 1; }
+
+    .course-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+    .meta-pill { font-size: 0.65rem; font-weight: 600; padding: 3px 8px; border-radius: 8px; background: rgba(203,182,255,0.25); color: #6d28d9; }
+    .meta-pill.duration { background: rgba(174,239,255,0.35); color: #0369a1; }
+    .meta-pill.level { background: rgba(248,200,220,0.4); color: #be185d; }
+
+    .course-link { display: inline-block; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.76rem; text-decoration: none; transition: transform 0.2s; width: fit-content; }
+    .link-mathworks { background: white; color: #e2231a; box-shadow: 0 4px 14px rgba(226,35,26,0.18); }
+    .link-mathworks:hover { transform: translateY(-2px); }
+    .link-pink { background: white; color: #ff4fa3; box-shadow: 0 4px 14px rgba(255,79,163,0.18); }
+    .link-pink:hover { transform: translateY(-2px); }
+    .link-blue { background: white; color: #3b82f6; box-shadow: 0 4px 14px rgba(59,130,246,0.18); }
+    .link-blue:hover { transform: translateY(-2px); }
+    .link-green { background: white; color: #10b981; box-shadow: 0 4px 14px rgba(16,185,129,0.18); }
+    .link-green:hover { transform: translateY(-2px); }
+
+    .info-note { background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.55); border-radius: 16px; padding: 16px 20px; font-size: 0.8rem; color: #555; margin-bottom: 30px; display: flex; gap: 10px; align-items: flex-start; }
+    .info-note span { font-size: 1.1rem; }
+
+    .bottom-nav { margin-top: 50px; text-align: center; }
+    .btn-outline { display: inline-block; background: transparent; color: white; padding: 10px 22px; border-radius: 30px; font-weight: 700; font-size: 0.82rem; text-decoration: none; border: 2px solid rgba(255,255,255,0.7); backdrop-filter: blur(8px); transition: transform 0.2s, background 0.2s; }
+    .btn-outline:hover { transform: translateY(-2px); background: rgba(255,255,255,0.1); }
+
+    footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-up { animation: fadeUp 0.55s ease forwards; opacity: 0; }
+    .fade-up:nth-child(1) { animation-delay: 0.07s; }
+    .fade-up:nth-child(2) { animation-delay: 0.14s; }
+    .fade-up:nth-child(3) { animation-delay: 0.21s; }
+    .fade-up:nth-child(4) { animation-delay: 0.28s; }
+    .fade-up:nth-child(5) { animation-delay: 0.35s; }
+    .fade-up:nth-child(6) { animation-delay: 0.42s; }
+
+    @media (max-width: 600px) { header h1 { font-size: 2rem; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="hero-eyebrow">STEM Kız Araç Kutusu</div>
+  <h1>Ücretsiz Kurslar 📚✨</h1>
+  <p>Mühendislik becerilerinizi geliştirmek için özenle seçilmiş ücretsiz kurs ve sertifikalar — hepsi başlangıç düzeyine uygun.</p>
+  <a class="back-btn" href="tr.html">← Ana Sayfaya Dön</a>
+</header>
+
+<div class="page-container">
+
+  <div class="info-note">
+    <span>💡</span>
+    <div>Tüm MathWorks Onramp kursları <strong>tamamen ücretsiz</strong> ve kendi hızınızda ilerleyebileceğiniz şekilde tasarlanmıştır. Tarayıcınızda çalışır — kurulum gerekmez. Tamamladığınızda LinkedIn profilinize ekleyebileceğiniz <strong>paylaşılabilir bir sertifika</strong> kazanırsınız!</div>
+  </div>
+
+  <!-- MathWorks Section -->
+  <div class="section-header">
+    <h2>🔴 MathWorks Onramp Sertifikaları</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="provider-badge">
+    🎓 MathWorks Academy &nbsp;·&nbsp; Ücretsiz &nbsp;·&nbsp; Sertifika Dahil
+  </div>
+
+  <div class="course-grid">
+
+    <div class="course-card fade-up">
+      <div class="course-card-top">
+        <span class="course-icon">📊</span>
+        <span class="cert-badge cert-free-cert">Ücretsiz + Sertifika</span>
+      </div>
+      <h3>MATLAB Onramp</h3>
+      <p>MATLAB'a giriş — mühendislik ve bilim iş akışlarının temeli. Değişkenler, diziler, grafik çizimi ve betik yazmayı öğrenin.</p>
+      <div class="course-meta">
+        <span class="meta-pill duration">~2 saat</span>
+        <span class="meta-pill level">Başlangıç</span>
+      </div>
+      <a class="course-link link-mathworks" href="https://matlabacademy.mathworks.com/details/matlab-onramp/gettingstarted" target="_blank">Kursa Başla →</a>
+    </div>
+
+    <div class="course-card fade-up">
+      <div class="course-card-top">
+        <span class="course-icon">🤖</span>
+        <span class="cert-badge cert-free-cert">Ücretsiz + Sertifika</span>
+      </div>
+      <h3>Machine Learning Onramp</h3>
+      <p>Denetimli öğrenme, sınıflandırma, regresyon ve model değerlendirmeyi MATLAB ile interaktif olarak keşfedin. Mutlak yeni başlayanlar için idealdir.</p>
+      <div class="course-meta">
+        <span class="meta-pill duration">~2 saat</span>
+        <span class="meta-pill level">Başlangıç</span>
+      </div>
+      <a class="course-link link-mathworks" href="https://matlabacademy.mathworks.com/details/machine-learning-onramp/machinelearning" target="_blank">Kursa Başla →</a>
+    </div>
+
+    <div class="course-card fade-up">
+      <div class="course-card-top">
+        <span class="course-icon">🧠</span>
+        <span class="cert-badge cert-free-cert">Ücretsiz + Sertifika</span>
+      </div>
+      <h3>Deep Learning Onramp</h3>
+      <p>MATLAB ile sinir ağları oluşturmayı ve eğitmeyi öğrenin. CNN'leri, transfer öğrenmeyi ve görüntü sınıflandırmayı uygulamalı olarak kapsar.</p>
+      <div class="course-meta">
+        <span class="meta-pill duration">~2 saat</span>
+        <span class="meta-pill level">Başlangıç–Orta</span>
+      </div>
+      <a class="course-link link-mathworks" href="https://matlabacademy.mathworks.com/details/deep-learning-onramp/deeplearning" target="_blank">Kursa Başla →</a>
+    </div>
+
+    <div class="course-card fade-up">
+      <div class="course-card-top">
+        <span class="course-icon">🌐</span>
+        <span class="cert-badge cert-free-cert">Ücretsiz + Sertifika</span>
+      </div>
+      <h3>Computer Vision Onramp</h3>
+      <p>Görüntü işleme, özellik tespiti ve MATLAB ile bilgisayarlı görü uygulamaları geliştirmeye uygulamalı giriş.</p>
+      <div class="course-meta">
+        <span class="meta-pill duration">~2 saat</span>
+        <span class="meta-pill level">Başlangıç–Orta</span>
+      </div>
+      <a class="course-link link-mathworks" href="https://matlabacademy.mathworks.com/details/computer-vision-onramp/computervision" target="_blank">Kursa Başla →</a>
+    </div>
+
+    <div class="course-card fade-up">
+      <div class="course-card-top">
+        <span class="course-icon">📡</span>
+        <span class="cert-badge cert-free-cert">Ücretsiz + Sertifika</span>
+      </div>
+      <h3>Signal Processing Onramp</h3>
+      <p>Sinyaller, filtreleme, spektral analiz ve Fourier dönüşümünü keşfedin — her EE öğrencisi için vazgeçilmez.</p>
+      <div class="course-meta">
+        <span class="meta-pill duration">~2 saat</span>
+        <span class="meta-pill level">Başlangıç</span>
+      </div>
+      <a class="course-link link-mathworks" href="https://matlabacademy.mathworks.com/details/signal-processing-onramp/signalprocessing" target="_blank">Kursa Başla →</a>
+    </div>
+
+    <div class="course-card fade-up">
+      <div class="course-card-top">
+        <span class="course-icon">⚙️</span>
+        <span class="cert-badge cert-free-cert">Ücretsiz + Sertifika</span>
+      </div>
+      <h3>Simulink Onramp</h3>
+      <p>Simulink kullanarak dinamik sistemleri modellemeyi, simüle etmeyi ve test etmeyi öğrenin — sistem ve kontrol mühendisliğinin vazgeçilmez aracı.</p>
+      <div class="course-meta">
+        <span class="meta-pill duration">~2 saat</span>
+        <span class="meta-pill level">Başlangıç</span>
+      </div>
+      <a class="course-link link-mathworks" href="https://matlabacademy.mathworks.com/details/simulink-onramp/simulink" target="_blank">Kursa Başla →</a>
+    </div>
+
+    <div class="course-card fade-up">
+      <div class="course-card-top">
+        <span class="course-icon">🔗</span>
+        <span class="cert-badge cert-free-cert">Ücretsiz + Sertifika</span>
+      </div>
+      <h3>Reinforcement Learning Onramp</h3>
+      <p>Ajan, ortam, ödül ve politika kavramlarını anlayın — ardından MATLAB ile kendi RL ajanınızı eğitin.</p>
+      <div class="course-meta">
+        <span class="meta-pill duration">~2 saat</span>
+        <span class="meta-pill level">Orta</span>
+      </div>
+      <a class="course-link link-mathworks" href="https://matlabacademy.mathworks.com/details/reinforcement-learning-onramp/reinforcementlearning" target="_blank">Kursa Başla →</a>
+    </div>
+
+    <div class="course-card fade-up">
+      <div class="course-card-top">
+        <span class="course-icon">🔬</span>
+        <span class="cert-badge cert-free-cert">Ücretsiz + Sertifika</span>
+      </div>
+      <h3>Statistics Onramp</h3>
+      <p>MATLAB ile tanımlayıcı istatistik, olasılık dağılımları, hipotez testi ve regresyonu öğrenin — veri odaklı mühendislik için temel.</p>
+      <div class="course-meta">
+        <span class="meta-pill duration">~2 saat</span>
+        <span class="meta-pill level">Başlangıç</span>
+      </div>
+      <a class="course-link link-mathworks" href="https://matlabacademy.mathworks.com/details/statistics-onramp/statistics" target="_blank">Kursa Başla →</a>
+    </div>
+
+  </div>
+
+  <!-- More Platforms -->
+  <div class="section-header">
+    <h2>🚀 Daha Fazla Platform — Yakında</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="course-grid">
+    <div class="course-card fade-up" style="opacity:0.65;">
+      <div class="course-card-top">
+        <span class="course-icon">🐍</span>
+        <span class="cert-badge cert-free">Ücretsiz</span>
+      </div>
+      <h3>Python for Everybody — Coursera</h3>
+      <p>Python temellerini sıfırdan öğrenin. Coursera'da ücretsiz izleyin — ML'e geçmeden önce harika bir başlangıç noktası.</p>
+      <div class="course-meta">
+        <span class="meta-pill level">Başlangıç</span>
+      </div>
+      <a class="course-link link-blue" href="https://www.coursera.org/specializations/python" target="_blank">Kursa Git →</a>
+    </div>
+
+    <div class="course-card fade-up" style="opacity:0.65;">
+      <div class="course-card-top">
+        <span class="course-icon">🤗</span>
+        <span class="cert-badge cert-free">Ücretsiz</span>
+      </div>
+      <h3>Hugging Face NLP Kursu</h3>
+      <p>Transformer'lar, tokenizer'lar ve NLP modelleri oluşturma üzerine ücretsiz, pratik bir kurs — 🤗 kütüphanesinin ekibinden.</p>
+      <div class="course-meta">
+        <span class="meta-pill level">Orta</span>
+      </div>
+      <a class="course-link link-pink" href="https://huggingface.co/learn/nlp-course" target="_blank">Kursa Git →</a>
+    </div>
+
+    <div class="course-card fade-up" style="opacity:0.65;">
+      <div class="course-card-top">
+        <span class="course-icon">🧮</span>
+        <span class="cert-badge cert-free">Ücretsiz</span>
+      </div>
+      <h3>fast.ai — Pratik Derin Öğrenme</h3>
+      <p>Dünya genelinde binlerce mühendis tarafından kullanılan, yukarıdan aşağıya derin öğrenme kursu. Ücretsiz ve proje tabanlı.</p>
+      <div class="course-meta">
+        <span class="meta-pill level">Başlangıç–Orta</span>
+      </div>
+      <a class="course-link link-green" href="https://course.fast.ai" target="_blank">Kursa Git →</a>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a class="btn-outline" href="tr.html">← Ana Sayfaya Dön</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>💗 Buse tarafından hazırlandı | SheBuildsSTEM</p>
+</footer>
+
+</body>
+</html>
