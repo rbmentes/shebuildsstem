@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Blog | SheBuildsSTEM</title>
-  <meta name="description" content="Technical posts on ML, Speech AI, EMG signals, deepfake detection and engineering reflections.">
+  <meta name="description" content="ML, Speech AI, EMG sinyalleri, deepfake tespiti ve mühendislik üzerine teknik yazılar.">
   <link rel="icon" href="favicon.jpg">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -18,14 +18,11 @@
     .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 7px 18px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
     .back-btn:hover { background: rgba(255,255,255,0.38); }
 
-    /* Mobile dropdown */
     .mobile-select-wrap { display: none; padding: 0 16px 20px; }
     .mobile-select-wrap select { width: 100%; padding: 12px 16px; border-radius: 16px; border: none; background: rgba(255,255,255,0.9); font-family: "Poppins", sans-serif; font-size: 0.88rem; font-weight: 700; color: #2d2d2d; box-shadow: 0 6px 20px rgba(0,0,0,0.1); appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ff4fa3' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
 
-    /* Layout */
     .blog-layout { display: flex; gap: 0; max-width: 1100px; margin: 0 auto 60px; padding: 0 20px; align-items: flex-start; }
 
-    /* Sidebar */
     .sidebar { width: 224px; flex-shrink: 0; position: sticky; top: 24px; background: rgba(255,255,255,0.76); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.6); border-radius: 24px; padding: 20px 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.1); margin-right: 22px; }
     .sidebar-title { font-size: 0.66rem; font-weight: 800; color: #bbb; letter-spacing: 0.1em; text-transform: uppercase; padding: 0 8px; margin-bottom: 12px; }
     .sidebar-btn { display: flex; align-items: center; gap: 9px; width: 100%; padding: 10px 11px; border-radius: 13px; border: none; background: transparent; font-family: "Poppins", sans-serif; font-size: 0.8rem; font-weight: 600; color: #666; cursor: pointer; text-align: left; transition: background 0.18s, color 0.18s, transform 0.15s; margin-bottom: 2px; }
@@ -35,13 +32,11 @@
     .sidebar-count { margin-left: auto; font-size: 0.63rem; font-weight: 700; background: rgba(255,79,163,0.1); color: #ff4fa3; padding: 2px 7px; border-radius: 8px; }
     .sidebar-divider { height: 1px; background: rgba(0,0,0,0.06); margin: 9px 0; }
 
-    /* Content panel */
     .content-panel { flex: 1; min-width: 0; }
     .panel-section { display: none; }
     .panel-section.active { display: block; animation: fadeIn 0.3s ease forwards; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Welcome */
     .welcome-banner { background: rgba(255,255,255,0.82); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.6); border-radius: 24px; padding: 32px 30px; margin-bottom: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
     .welcome-banner h2 { font-size: 1.45rem; font-weight: 900; color: #2d2d2d; margin-bottom: 10px; }
     .welcome-banner p { font-size: 0.87rem; color: #666; line-height: 1.75; max-width: 560px; }
@@ -62,12 +57,10 @@
     .ov-ref  { border-left-color: #f9a8d4; } .ov-ref .oc-count  { color: #9d174d; }
     .ov-free { border-left-color: #fb923c; } .ov-free .oc-count { color: #c2410c; }
 
-    /* Panel header */
     .panel-header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
     .panel-header h2 { font-size: 1.15rem; font-weight: 800; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.12); white-space: nowrap; }
     .panel-header-line { flex: 1; height: 2px; background: rgba(255,255,255,0.35); border-radius: 2px; }
 
-    /* Post grid & cards */
     .post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(235px, 1fr)); gap: 12px; }
     .post-card { background: rgba(255,255,255,0.84); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 20px; padding: 22px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); transition: transform 0.22s, box-shadow 0.22s; display: flex; flex-direction: column; gap: 8px; }
     .post-card:hover { transform: translateY(-5px); box-shadow: 0 18px 36px rgba(0,0,0,0.12); }
@@ -108,210 +101,210 @@
 <body>
 
 <header>
-  <div class="hero-eyebrow">Inspire Blog</div>
+  <div class="hero-eyebrow">İlham Blogu</div>
   <h1>SheBuildsSTEM Blog 💗</h1>
-  <p>Technical beginner-friendly posts + personal engineering reflections.</p>
-  <a class="back-btn" href="index.html">← Back to Home</a>
+  <p>Yeni başlayanlar için teknik yazılar + kişisel mühendislik yansımaları.</p>
+  <a class="back-btn" href="tr.html">← Ana Sayfaya Dön</a>
 </header>
 
 <div class="mobile-select-wrap">
   <select id="mobileSelect" onchange="switchPanel(this.value)">
-    <option value="welcome">🏠 Welcome — Overview</option>
-    <option value="ml">🎓 Learn ML With Me</option>
-    <option value="ai">⚡ AI & Signal Processing</option>
-    <option value="speech">🎧 Speech AI Starter</option>
-    <option value="emg">💪 EMG & Bioelectrical Signals</option>
-    <option value="deepfake">🔍 Deepfake Detection Project</option>
-    <option value="reflections">💗 Engineering Reflections</option>
-    <option value="courses">📚 Free Courses & Certs</option>
+    <option value="welcome">🏠 Hoş Geldin — Genel Bakış</option>
+    <option value="ml">🎓 Benimle ML Öğren</option>
+    <option value="ai">⚡ AI & Sinyal İşleme</option>
+    <option value="speech">🎧 Konuşma AI Başlangıç</option>
+    <option value="emg">💪 EMG & Biyoelektrik Sinyaller</option>
+    <option value="deepfake">🔍 Derin Sahte Ses Tespiti</option>
+    <option value="reflections">💗 Mühendislik Günlükleri</option>
+    <option value="courses">📚 Ücretsiz Kurslar & Sertifikalar</option>
   </select>
 </div>
 
 <div class="blog-layout">
 
   <aside class="sidebar">
-    <div class="sidebar-title">Categories</div>
+    <div class="sidebar-title">Kategoriler</div>
     <button class="sidebar-btn active" onclick="switchPanel('welcome')" id="btn-welcome">
-      <span class="icon">🏠</span> Overview
+      <span class="icon">🏠</span> Genel Bakış
     </button>
     <div class="sidebar-divider"></div>
     <button class="sidebar-btn" onclick="switchPanel('ml')" id="btn-ml">
-      <span class="icon">🎓</span> Learn ML With Me <span class="sidebar-count">4</span>
+      <span class="icon">🎓</span> Benimle ML Öğren <span class="sidebar-count">4</span>
     </button>
     <button class="sidebar-btn" onclick="switchPanel('ai')" id="btn-ai">
-      <span class="icon">⚡</span> AI & Signal Processing <span class="sidebar-count">5</span>
+      <span class="icon">⚡</span> AI & Sinyal İşleme <span class="sidebar-count">5</span>
     </button>
     <button class="sidebar-btn" onclick="switchPanel('speech')" id="btn-speech">
-      <span class="icon">🎧</span> Speech AI Starter <span class="sidebar-count">4</span>
+      <span class="icon">🎧</span> Konuşma AI Başlangıç <span class="sidebar-count">4</span>
     </button>
     <button class="sidebar-btn" onclick="switchPanel('emg')" id="btn-emg">
-      <span class="icon">💪</span> EMG & Bioelectrical <span class="sidebar-count">3</span>
+      <span class="icon">💪</span> EMG & Biyoelektrik <span class="sidebar-count">3</span>
     </button>
     <button class="sidebar-btn" onclick="switchPanel('deepfake')" id="btn-deepfake">
-      <span class="icon">🔍</span> Deepfake Detection <span class="sidebar-count">4</span>
+      <span class="icon">🔍</span> Derin Sahte Ses <span class="sidebar-count">4</span>
     </button>
     <div class="sidebar-divider"></div>
     <button class="sidebar-btn" onclick="switchPanel('reflections')" id="btn-reflections">
-      <span class="icon">💗</span> Engineering Reflections <span class="sidebar-count">1</span>
+      <span class="icon">💗</span> Mühendislik Günlükleri <span class="sidebar-count">1</span>
     </button>
     <button class="sidebar-btn" onclick="switchPanel('courses')" id="btn-courses">
-      <span class="icon">📚</span> Free Courses & Certs <span class="sidebar-count">8+</span>
+      <span class="icon">📚</span> Ücretsiz Kurslar <span class="sidebar-count">8+</span>
     </button>
   </aside>
 
   <div class="content-panel">
 
-    <!-- WELCOME -->
+    <!-- HOŞ GELDİN -->
     <div class="panel-section active" id="panel-welcome">
       <div class="welcome-banner">
-        <h2>Welcome to the Blog 💗</h2>
-        <p>Everything here is written to be beginner-friendly — whether you're just starting out in engineering or diving deeper into AI and signal processing. Pick a category from the sidebar to explore, or click any card below to jump straight in.</p>
+        <h2>Bloğa Hoş Geldin 💗</h2>
+        <p>Buradaki her şey başlangıç dostu olacak şekilde yazılmıştır — mühendisliğe yeni başlıyor olsanız da yapay zeka ve sinyal işleme konularını derinlemesine keşfediyor olsanız da. Yazıları keşfetmek için kenar çubuğundan bir kategori seçin ya da aşağıdaki kartlardan birini tıklayın.</p>
       </div>
       <div class="overview-grid">
         <div class="overview-card ov-ml" onclick="switchPanel('ml')">
           <span class="oc-icon">🎓</span>
-          <h3>Learn ML With Me</h3>
-          <p>ML fundamentals, step by step.</p>
-          <div class="oc-count">4 posts →</div>
+          <h3>Benimle ML Öğren</h3>
+          <p>Makine öğrenmesi temelleri, adım adım.</p>
+          <div class="oc-count">4 yazı →</div>
         </div>
         <div class="overview-card ov-ai" onclick="switchPanel('ai')">
           <span class="oc-icon">⚡</span>
-          <h3>AI & Signal Processing</h3>
-          <p>Core AI concepts explained visually.</p>
-          <div class="oc-count">5 posts →</div>
+          <h3>AI & Sinyal İşleme</h3>
+          <p>Temel AI kavramları görsel olarak anlatıldı.</p>
+          <div class="oc-count">5 yazı →</div>
         </div>
         <div class="overview-card ov-sp" onclick="switchPanel('speech')">
           <span class="oc-icon">🎧</span>
-          <h3>Speech AI Starter</h3>
-          <p>From raw audio to CNNs.</p>
-          <div class="oc-count">4 posts →</div>
+          <h3>Konuşma AI Başlangıç</h3>
+          <p>Ham sesten CNN'lere kadar.</p>
+          <div class="oc-count">4 yazı →</div>
         </div>
         <div class="overview-card ov-emg" onclick="switchPanel('emg')">
           <span class="oc-icon">💪</span>
-          <h3>EMG & Bioelectrical Signals</h3>
-          <p>Muscle signals, hardware and AI.</p>
-          <div class="oc-count">3 posts →</div>
+          <h3>EMG & Biyoelektrik Sinyaller</h3>
+          <p>Kas sinyalleri, donanım ve yapay zeka.</p>
+          <div class="oc-count">3 yazı →</div>
         </div>
         <div class="overview-card ov-df" onclick="switchPanel('deepfake')">
           <span class="oc-icon">🔍</span>
-          <h3>Deepfake Detection</h3>
-          <p>My graduation project — LCNN for fake audio.</p>
-          <div class="oc-count">4 posts →</div>
+          <h3>Derin Sahte Ses Tespiti</h3>
+          <p>Mezuniyet projem — LCNN ile sahte ses.</p>
+          <div class="oc-count">4 yazı →</div>
         </div>
         <div class="overview-card ov-ref" onclick="switchPanel('reflections')">
           <span class="oc-icon">💗</span>
-          <h3>Engineering Reflections</h3>
-          <p>Personal thoughts on engineering life.</p>
-          <div class="oc-count">1 post →</div>
+          <h3>Mühendislik Günlükleri</h3>
+          <p>Mühendislik hayatından kişisel düşünceler.</p>
+          <div class="oc-count">1 yazı →</div>
         </div>
         <div class="overview-card ov-free" onclick="switchPanel('courses')">
           <span class="oc-icon">📚</span>
-          <h3>Free Courses & Certs</h3>
-          <p>MathWorks Onramps and more.</p>
-          <div class="oc-count">8+ courses →</div>
+          <h3>Ücretsiz Kurslar & Sertifikalar</h3>
+          <p>MathWorks Onramp kursları ve daha fazlası.</p>
+          <div class="oc-count">8+ kurs →</div>
         </div>
       </div>
     </div>
 
-    <!-- LEARN ML -->
+    <!-- MAKİNE ÖĞRENMESİ -->
     <div class="panel-section" id="panel-ml">
       <div class="panel-header">
-        <h2>🎓 Learn Machine Learning With Me</h2>
+        <h2>🎓 Benimle Makine Öğrenmesi Öğren</h2>
         <div class="panel-header-line"></div>
       </div>
       <div class="post-grid">
         <div class="post-card">
-          <span class="post-tag tag-ml">Week 1</span>
-          <h3>What Is Machine Learning?</h3>
-          <p>Supervised vs unsupervised, datasets, features, generalization.</p>
-          <a class="btn" href="learn-ml-week1.html">Read →</a>
+          <span class="post-tag tag-ml">Hafta 1</span>
+          <h3>Makine Öğrenmesi Nedir?</h3>
+          <p>Supervised ve unsupervised öğrenme, veri seti ve genelleme.</p>
+          <a class="btn" href="learn-ml-week1-tr.html">Oku →</a>
         </div>
         <div class="post-card">
-          <span class="post-tag tag-ml">Week 2</span>
-          <h3>How Do Models Actually Learn?</h3>
-          <p>Loss functions, gradient descent, learning rate and the training loop.</p>
-          <a class="btn" href="learn-ml-week2.html">Read →</a>
+          <span class="post-tag tag-ml">Hafta 2</span>
+          <h3>Modeller Gerçekte Nasıl Öğrenir?</h3>
+          <p>Kayıp fonksiyonları, gradyan inişi ve eğitim döngüsü.</p>
+          <a class="btn" href="learn-ml-week2-tr.html">Oku →</a>
         </div>
         <div class="post-card">
-          <span class="post-tag tag-ml">Week 3</span>
-          <h3>Decision Trees & Random Forests</h3>
-          <p>How machines make decisions — and why combining trees helps.</p>
-          <a class="btn" href="learn-ml-week3.html">Read →</a>
+          <span class="post-tag tag-ml">Hafta 3</span>
+          <h3>Karar Ağaçları & Rastgele Ormanlar</h3>
+          <p>Makinelerin kararları nasıl verdiği ve ağaçları güçlü yapan şey.</p>
+          <a class="btn" href="learn-ml-week3-tr.html">Oku →</a>
         </div>
         <div class="post-card">
-          <span class="post-tag tag-ml">Week 4</span>
-          <h3>Neural Networks From Scratch</h3>
-          <p>Neurons, weights, layers, forward pass — the foundation of modern AI.</p>
-          <a class="btn" href="learn-ml-week4.html">Read →</a>
+          <span class="post-tag tag-ml">Hafta 4</span>
+          <h3>Sıfırdan Sinir Ağları</h3>
+          <p>Nöronlar, ağırlıklar, katmanlar ve ileri geçiş.</p>
+          <a class="btn" href="learn-ml-week4-tr.html">Oku →</a>
         </div>
       </div>
     </div>
 
-    <!-- AI ESSENTIALS -->
+    <!-- AI TEMELLERİ -->
     <div class="panel-section" id="panel-ai">
       <div class="panel-header">
-        <h2>⚡ AI & Signal Processing Essentials</h2>
+        <h2>⚡ AI & Sinyal İşleme Temelleri</h2>
         <div class="panel-header-line"></div>
       </div>
       <div class="post-grid">
         <div class="post-card">
-          <span class="post-tag tag-ai">Part 1</span>
-          <h3>What Is Overfitting?</h3>
-          <a class="btn" href="ai-essentials-part1.html">Read →</a>
+          <span class="post-tag tag-ai">Bölüm 1</span>
+          <h3>Overfitting Nedir?</h3>
+          <a class="btn" href="ai-essentials-part1-tr.html">Oku →</a>
         </div>
         <div class="post-card">
-          <span class="post-tag tag-ai">Part 2</span>
-          <h3>Bias vs Variance</h3>
-          <a class="btn" href="ai-essentials-part2.html">Read →</a>
+          <span class="post-tag tag-ai">Bölüm 2</span>
+          <h3>Bias ve Variance</h3>
+          <a class="btn" href="ai-essentials-part2-tr.html">Oku →</a>
         </div>
         <div class="post-card">
-          <span class="post-tag tag-ai">Part 3</span>
-          <h3>Activation Functions</h3>
-          <p>ReLU, Sigmoid, Tanh — why they exist and when to use each.</p>
-          <a class="btn" href="ai-essentials-part3.html">Read →</a>
+          <span class="post-tag tag-ai">Bölüm 3</span>
+          <h3>Aktivasyon Fonksiyonları</h3>
+          <p>ReLU, Sigmoid, Tanh — neden var oldukları ve ne zaman kullanılacakları.</p>
+          <a class="btn" href="ai-essentials-part3-tr.html">Oku →</a>
         </div>
         <div class="post-card">
-          <span class="post-tag tag-ai">Part 4</span>
-          <h3>How Backpropagation Works</h3>
-          <p>Forward pass, loss, gradients, weight updates.</p>
-          <a class="btn" href="ai-essentials-part4.html">Read →</a>
+          <span class="post-tag tag-ai">Bölüm 4</span>
+          <h3>Geri Yayılım Nasıl Çalışır?</h3>
+          <p>İleri geçiş, kayıp, gradyanlar ve ağırlık güncellemeleri.</p>
+          <a class="btn" href="ai-essentials-part4-tr.html">Oku →</a>
         </div>
         <div class="post-card">
-          <span class="post-tag tag-ai">Part 5</span>
-          <h3>Regularization Techniques</h3>
-          <p>Dropout, L1 and L2 — stopping your model from overfitting.</p>
-          <a class="btn" href="ai-essentials-part5.html">Read →</a>
+          <span class="post-tag tag-ai">Bölüm 5</span>
+          <h3>Düzenlileştirme Teknikleri</h3>
+          <p>Dropout, L1 ve L2 — aşırı öğrenmeyi önlemenin yolları.</p>
+          <a class="btn" href="ai-essentials-part5-tr.html">Oku →</a>
         </div>
       </div>
     </div>
 
-    <!-- SPEECH AI -->
+    <!-- KONUŞMA AI -->
     <div class="panel-section" id="panel-speech">
       <div class="panel-header">
-        <h2>🎧 Speech AI Starter Series</h2>
+        <h2>🎧 Konuşma AI Başlangıç Serisi</h2>
         <div class="panel-header-line"></div>
       </div>
       <div class="post-grid">
         <div class="post-card">
-          <span class="post-tag tag-speech">Part 1</span>
-          <h3>Understanding Audio Features & MFCC</h3>
-          <a class="btn" href="speech-ai-part1.html">Read →</a>
+          <span class="post-tag tag-speech">Bölüm 1</span>
+          <h3>Ses Özellikleri ve MFCC'yi Anlamak</h3>
+          <a class="btn" href="speech-ai-part1-tr.html">Oku →</a>
         </div>
         <div class="post-card">
-          <span class="post-tag tag-speech">Part 2</span>
-          <h3>CNNs for Speech Recognition</h3>
-          <a class="btn" href="speech-ai-part2.html">Read →</a>
+          <span class="post-tag tag-speech">Bölüm 2</span>
+          <h3>Konuşma Tanıma için CNN'ler</h3>
+          <a class="btn" href="speech-ai-part2-tr.html">Oku →</a>
         </div>
         <div class="post-card">
-          <span class="post-tag tag-speech">Part 3</span>
-          <h3>Understanding Spectrograms & Convolution</h3>
-          <a class="btn" href="speech-ai-part3.html">Read →</a>
+          <span class="post-tag tag-speech">Bölüm 3</span>
+          <h3>Spektrogramları ve Evrişimi Anlamak</h3>
+          <a class="btn" href="speech-ai-part3-tr.html">Oku →</a>
         </div>
         <div class="post-card">
-          <span class="post-tag tag-speech">Part 4</span>
-          <h3>Building a CNN for Speech Classification</h3>
-          <p>Hands-on Python + PyTorch — full pipeline from audio to prediction.</p>
-          <a class="btn" href="speech-ai-part4.html">Read →</a>
+          <span class="post-tag tag-speech">Bölüm 4</span>
+          <h3>Konuşma Sınıflandırması için CNN İnşa Etmek</h3>
+          <p>Python + PyTorch ile uygulamalı — ses dosyasından tahmine tam pipeline.</p>
+          <a class="btn" href="speech-ai-part4-tr.html">Oku →</a>
         </div>
       </div>
     </div>
@@ -319,27 +312,27 @@
     <!-- EMG -->
     <div class="panel-section" id="panel-emg">
       <div class="panel-header">
-        <h2>💪 EMG & Bioelectrical Signals</h2>
+        <h2>💪 EMG & Biyoelektrik Sinyaller</h2>
         <div class="panel-header-line"></div>
       </div>
       <div class="post-grid">
         <div class="post-card">
-          <span class="post-tag tag-new">Part 1 — New</span>
-          <h3>What Is EMG? The Electrical Language of Muscles</h3>
-          <p>Motor units, action potentials, and why EMG matters for AI and prosthetics.</p>
-          <a class="btn-green" href="emg-part1.html">Read →</a>
+          <span class="post-tag tag-new">Bölüm 1 — Yeni</span>
+          <h3>EMG Nedir? Kasların Elektriksel Dili</h3>
+          <p>Motor birimler, aksiyon potansiyelleri ve EMG'nin yapay zeka için neden önemli olduğu.</p>
+          <a class="btn-green" href="emg-part1-tr.html">Oku →</a>
         </div>
         <div class="post-card">
-          <span class="post-tag tag-new">Part 2 — New</span>
-          <h3>Reading the Signal — Hardware, Electrodes and Noise</h3>
-          <p>The full acquisition chain from skin to digital — amplifiers, ADC, and noise sources.</p>
-          <a class="btn-green" href="emg-part2.html">Read →</a>
+          <span class="post-tag tag-new">Bölüm 2 — Yeni</span>
+          <h3>Sinyali Okumak — Donanım, Elektrotlar ve Gürültü</h3>
+          <p>Deriden dijitale tam sinyal zinciri — yükselteçler, ADC ve gürültü kaynakları.</p>
+          <a class="btn-green" href="emg-part2-tr.html">Oku →</a>
         </div>
         <div class="post-card">
-          <span class="post-tag tag-new">Part 3 — New</span>
-          <h3>Processing EMG — Filtering, Windowing and Feature Extraction</h3>
-          <p>Bandpass filtering, sliding windows, RMS/MAV/ZCR/VAR features in Python.</p>
-          <a class="btn-green" href="emg-part3.html">Read →</a>
+          <span class="post-tag tag-new">Bölüm 3 — Yeni</span>
+          <h3>EMG İşleme — Filtreleme, Pencereleme ve Özellik Çıkarımı</h3>
+          <p>Bant geçiren filtre, kayan pencere, RMS/MAV/ZCR/VAR özellikleri Python ile.</p>
+          <a class="btn-green" href="emg-part3-tr.html">Oku →</a>
         </div>
       </div>
     </div>
@@ -347,82 +340,82 @@
     <!-- DEEPFAKE -->
     <div class="panel-section" id="panel-deepfake">
       <div class="panel-header">
-        <h2>🔍 Deepfake Detection — Graduation Project</h2>
+        <h2>🔍 Derin Sahte Ses Tespiti — Mezuniyet Projesi</h2>
         <div class="panel-header-line"></div>
       </div>
       <div class="post-grid">
         <div class="post-card">
-          <span class="post-tag tag-deepfake">Part 1</span>
-          <h3>What Is Deepfake Audio and Why Does It Matter?</h3>
-          <p>The problem, the threat landscape, and why I chose this for my graduation project.</p>
-          <a class="btn-blue" href="deepfake-part1.html">Read →</a>
+          <span class="post-tag tag-deepfake">Bölüm 1</span>
+          <h3>Derin Sahte Ses Nedir ve Neden Önemlidir?</h3>
+          <p>Problem, tehdit ortamı ve bunu mezuniyet projesi olarak seçme nedenim.</p>
+          <a class="btn-blue" href="deepfake-part1-tr.html">Oku →</a>
         </div>
         <div class="post-card">
-          <span class="post-tag tag-deepfake">Part 2</span>
-          <h3>The Dataset — ASVspoof2019 & My Turkish Dataset</h3>
-          <p>315 recordings, 26 speakers, and building my own deepfake dataset.</p>
-          <a class="btn-blue" href="deepfake-part2.html">Read →</a>
+          <span class="post-tag tag-deepfake">Bölüm 2</span>
+          <h3>Veri Seti — ASVspoof2019 ve Türkçe Veri Setim</h3>
+          <p>315 kayıt, 26 konuşmacı ve kendi deepfake veri setimi nasıl oluşturdum.</p>
+          <a class="btn-blue" href="deepfake-part2-tr.html">Oku →</a>
         </div>
         <div class="post-card">
-          <span class="post-tag tag-deepfake">Part 3</span>
-          <h3>The LCNN Model — Architecture and Training</h3>
-          <p>LCNN, MFM activation, log-Mel features, and training strategy.</p>
-          <a class="btn-blue" href="deepfake-part3.html">Read →</a>
+          <span class="post-tag tag-deepfake">Bölüm 3</span>
+          <h3>LCNN Modeli — Mimari ve Eğitim</h3>
+          <p>LCNN, MFM aktivasyonu, log-Mel özellikleri ve eğitim stratejisi.</p>
+          <a class="btn-blue" href="deepfake-part3-tr.html">Oku →</a>
         </div>
         <div class="post-card">
-          <span class="post-tag tag-deepfake">Part 4</span>
-          <h3>Results, Cross-Dataset Challenges & What I Learned</h3>
-          <p>99.27% accuracy on LA, cross-language experiments, honest conclusions.</p>
-          <a class="btn-blue" href="deepfake-part4.html">Read →</a>
+          <span class="post-tag tag-deepfake">Bölüm 4</span>
+          <h3>Sonuçlar, Çapraz Veri Seti Zorlukları ve Öğrendiklerim</h3>
+          <p>LA'da %99.27 doğruluk, diller arası deneyler ve dürüst sonuçlar.</p>
+          <a class="btn-blue" href="deepfake-part4-tr.html">Oku →</a>
         </div>
       </div>
     </div>
 
-    <!-- REFLECTIONS -->
+    <!-- MÜHENDİSLİK GÜNLÜKLERİ -->
     <div class="panel-section" id="panel-reflections">
       <div class="panel-header">
-        <h2>💗 Engineering Reflections</h2>
+        <h2>💗 Mühendislik Günlükleri</h2>
         <div class="panel-header-line"></div>
       </div>
       <div class="post-grid">
         <div class="post-card">
-          <span class="post-tag tag-reflect">Reflection</span>
-          <h3>When You Feel Behind in Engineering...</h3>
-          <a class="btn" href="feeling-behind.html">Read →</a>
+          <span class="post-tag tag-reflect">Günlük</span>
+          <h3>Mühendislikte Geride Hissettiğinde...</h3>
+          <a class="btn" href="feeling-behind-tr.html">Oku →</a>
         </div>
       </div>
     </div>
 
-    <!-- FREE COURSES -->
+    <!-- ÜCRETSİZ KURSLAR -->
     <div class="panel-section" id="panel-courses">
       <div class="panel-header">
-        <h2>📚 Free Courses & Certifications</h2>
+        <h2>📚 Ücretsiz Kurslar & Sertifikalar</h2>
         <div class="panel-header-line"></div>
       </div>
       <div class="post-grid">
         <div class="post-card">
           <span class="post-tag tag-toolkit">MathWorks</span>
           <h3>MATLAB Onramp</h3>
-          <p>Variables, arrays, plotting and scripting. Free + certificate.</p>
-          <a class="btn-orange" href="free-courses.html">View →</a>
+          <p>Değişkenler, diziler, grafik çizimi ve betik yazımı. Ücretsiz + sertifika.</p>
+          <a class="btn-orange" href="free-courses-tr.html">Görüntüle →</a>
         </div>
         <div class="post-card">
           <span class="post-tag tag-toolkit">MathWorks</span>
           <h3>Machine Learning Onramp</h3>
-          <p>Classification, regression and model evaluation. Free + certificate.</p>
-          <a class="btn-orange" href="free-courses.html">View →</a>
+          <p>Sınıflandırma, regresyon ve model değerlendirme. Ücretsiz + sertifika.</p>
+          <a class="btn-orange" href="free-courses-tr.html">Görüntüle →</a>
         </div>
         <div class="post-card">
           <span class="post-tag tag-toolkit">MathWorks</span>
           <h3>Deep Learning Onramp</h3>
-          <p>CNNs, transfer learning, image classification. Free + certificate.</p>
-          <a class="btn-orange" href="free-courses.html">View →</a>
+          <p>CNN, transfer öğrenme, görüntü sınıflandırma. Ücretsiz + sertifika.</p>
+          <a class="btn-orange" href="free-courses-tr.html">Görüntüle →</a>
         </div>
         <div class="post-card">
-          <span class="post-tag tag-toolkit">MathWorks + More</span>
-          <h3>See All 8+ Courses →</h3>
-          <p>Signal Processing, Computer Vision, Simulink, Hugging Face, fast.ai and more.</p>
-          <a class="btn-orange" href="free-courses.html">Browse All →</a>
+          <span class="post-tag tag-toolkit">MathWorks + Daha Fazlası</span>
+          <h3>8+ Kursun Tamamını Gör →</h3>
+          <p>Sinyal İşleme, Bilgisayarlı Görü, Simulink, Hugging Face, fast.ai ve daha fazlası.</p>
+          <a class="btn-orange" href="free-courses-tr.html">Tümünü Gör →</a>
         </div>
       </div>
     </div>
@@ -431,7 +424,7 @@
 </div>
 
 <footer>
-  <p>Made with 💗 by Buse | SheBuildsSTEM</p>
+  <p>💗 Buse tarafından hazırlandı | SheBuildsSTEM</p>
 </footer>
 
 <script>
