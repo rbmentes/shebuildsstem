@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Biliyor muydun? | SheBuildsSTEM</title>
+  <meta name="description" content="Favori uygulamalarının arkasındaki teknoloji — sade ve eğlenceli bir şekilde anlatıldı.">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
+
+    header { text-align: center; padding: 72px 20px 48px; }
+    .hero-eyebrow { display: inline-block; background: rgba(255,255,255,0.3); color: white; padding: 6px 20px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 18px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); }
+    header h1 { font-size: 2.8rem; font-weight: 900; color: white; text-shadow: 0 4px 24px rgba(0,0,0,0.13); margin-bottom: 12px; }
+    header p { color: rgba(255,255,255,0.92); font-size: 1rem; max-width: 520px; margin: 0 auto 28px; line-height: 1.7; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 8px 20px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
+    .back-btn:hover { background: rgba(255,255,255,0.38); }
+
+    .hint-bar { text-align: center; margin: 0 auto 36px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .hint-bar span { background: rgba(255,255,255,0.28); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 8px 20px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; }
+    .hint-icon { font-size: 1.1rem; animation: wiggle 2s ease-in-out infinite; }
+    @keyframes wiggle { 0%,100% { transform: rotate(-8deg); } 50% { transform: rotate(8deg); } }
+
+    .page-container { max-width: 980px; margin: 0 auto; padding: 0 20px 80px; }
+    .section-header { display: flex; align-items: center; gap: 14px; margin: 0 0 26px; }
+    .section-header h2 { font-size: 1.2rem; font-weight: 800; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.1); white-space: nowrap; }
+    .section-line { flex: 1; height: 2px; background: rgba(255,255,255,0.35); border-radius: 2px; }
+
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+
+    .flip-wrapper { perspective: 1000px; height: 240px; cursor: pointer; }
+    .flip-wrapper:focus { outline: none; }
+    .flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; }
+    .flip-wrapper.flipped .flip-inner { transform: rotateY(180deg); }
+
+    .flip-front, .flip-back { position: absolute; inset: 0; border-radius: 22px; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; padding: 26px 24px; box-shadow: 0 12px 32px rgba(0,0,0,0.11); }
+
+    .flip-front { background: rgba(255,255,255,0.88); backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.6); justify-content: space-between; }
+    .flip-front .card-emoji { font-size: 2.4rem; margin-bottom: 10px; display: block; }
+    .flip-front .card-question { font-size: 1rem; font-weight: 800; color: #2d2d2d; line-height: 1.4; flex: 1; }
+    .flip-front .card-tap { font-size: 0.7rem; font-weight: 700; color: #ccc; text-transform: uppercase; letter-spacing: 0.07em; margin-top: 14px; display: flex; align-items: center; gap: 5px; }
+    .flip-front .card-tap::before { content: "✦"; font-size: 0.6rem; }
+
+    .card-cat { display: inline-block; font-size: 0.62rem; font-weight: 700; padding: 3px 10px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.05em; width: fit-content; margin-bottom: 10px; }
+    .cat-tiktok    { background: #fce7f3; color: #be185d; }
+    .cat-spotify   { background: #d1fae5; color: #065f46; }
+    .cat-instagram { background: #ede9fe; color: #6d28d9; }
+    .cat-shazam    { background: #dbeafe; color: #1d4ed8; }
+
+    .flip-back { transform: rotateY(180deg); border: 1px solid rgba(255,255,255,0.5); justify-content: flex-start; gap: 10px; overflow: hidden; }
+    .back-tiktok    { background: linear-gradient(135deg, #ff0050 0%, #010101 100%); }
+    .back-spotify   { background: linear-gradient(135deg, #1db954 0%, #191414 100%); }
+    .back-instagram { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+    .back-shazam    { background: linear-gradient(135deg, #0088ff 0%, #00cfff 100%); }
+
+    .flip-back .back-title { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em; color: rgba(255,255,255,0.7); margin-bottom: 2px; }
+    .flip-back .back-answer { font-size: 0.84rem; font-weight: 600; color: white; line-height: 1.65; flex: 1; }
+    .flip-back .back-fun { font-size: 0.72rem; color: rgba(255,255,255,0.65); line-height: 1.55; border-top: 1px solid rgba(255,255,255,0.18); padding-top: 10px; margin-top: 4px; }
+    .flip-back .back-tag { font-size: 0.62rem; font-weight: 700; background: rgba(255,255,255,0.18); color: white; padding: 3px 9px; border-radius: 10px; width: fit-content; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-up { animation: fadeUp 0.5s ease forwards; opacity: 0; }
+    .fade-up:nth-child(1) { animation-delay: 0.05s; }
+    .fade-up:nth-child(2) { animation-delay: 0.12s; }
+    .fade-up:nth-child(3) { animation-delay: 0.19s; }
+    .fade-up:nth-child(4) { animation-delay: 0.26s; }
+    .fade-up:nth-child(5) { animation-delay: 0.33s; }
+
+    .coming-soon { margin-top: 50px; background: rgba(255,255,255,0.3); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.45); border-radius: 22px; padding: 28px 24px; text-align: center; color: white; }
+    .coming-soon h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; }
+    .coming-soon p { font-size: 0.84rem; opacity: 0.88; line-height: 1.65; }
+    .coming-soon .topics { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
+    .topic-pill { background: rgba(255,255,255,0.22); color: white; font-size: 0.74rem; font-weight: 700; padding: 5px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.35); }
+
+    .bottom-nav { margin-top: 40px; text-align: center; }
+    .btn-outline { display: inline-block; background: transparent; color: white; padding: 10px 24px; border-radius: 30px; font-weight: 700; font-size: 0.82rem; text-decoration: none; border: 2px solid rgba(255,255,255,0.7); backdrop-filter: blur(8px); transition: transform 0.2s, background 0.2s; }
+    .btn-outline:hover { transform: translateY(-2px); background: rgba(255,255,255,0.1); }
+
+    footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
+
+    @media (max-width: 600px) { header h1 { font-size: 2rem; } .flip-wrapper { height: 260px; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="hero-eyebrow">Biliyor muydun? 💡</div>
+  <h1>Uygulamalarının Arkasındaki Teknoloji ✨</h1>
+  <p>Her gün bu uygulamaları açıyorsun — ama perde arkasında gerçekte ne olduğunu biliyor musun? Öğrenmek için kartı çevir.</p>
+  <a class="back-btn" href="tr.html">← Ana Sayfaya Dön</a>
+</header>
+
+<div class="page-container">
+
+  <div class="hint-bar">
+    <span><span class="hint-icon">👆</span> Kartlara tıklayarak çevir!</span>
+  </div>
+
+  <div class="section-header">
+    <h2>📱 Sosyal Medya & Uygulamalar</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="cards-grid">
+
+    <!-- TikTok -->
+    <div class="flip-wrapper fade-up" tabindex="0" onclick="this.classList.toggle('flipped')" onkeydown="if(event.key==='Enter')this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <span class="card-emoji">🎵</span>
+          <span class="card-cat cat-tiktok">TikTok</span>
+          <div class="card-question">TikTok'un hangi videoların "Sana Özel" sayfanda çıkacağına nasıl karar verdiğini biliyor muydun?</div>
+          <div class="card-tap">Çevirmek için tıkla</div>
+        </div>
+        <div class="flip-back back-tiktok">
+          <div class="back-title">Cevap 🎵</div>
+          <div class="back-answer">TikTok, her videoyu sana özel olarak puanlayan bir öneri modeli kullanıyor — izleme süren, tekrar izleyip izlemediğin, beğeni, yorum ya da atlama gibi sinyallere bakıyor. Takipçi sayısıyla hiç ilgilenmiyor.</div>
+          <div class="back-fun">💡 Sıfır takipçili yeni bir hesap bile bir gecede viral olabilir. Algoritma önce küçük bir test kitlesine gösteriyor; eğer etkileşim yüksekse videoyu daha geniş kitlelere yayıyor.</div>
+          <div class="back-tag">Öneri Sistemi</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spotify -->
+    <div class="flip-wrapper fade-up" tabindex="0" onclick="this.classList.toggle('flipped')" onkeydown="if(event.key==='Enter')this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <span class="card-emoji">🎧</span>
+          <span class="card-cat cat-spotify">Spotify</span>
+          <div class="card-question">Spotify Discover Weekly'nin neden aklını okuyormuş gibi hissettirdiğini biliyor muydun?</div>
+          <div class="card-tap">Çevirmek için tıkla</div>
+        </div>
+        <div class="flip-back back-spotify">
+          <div class="back-title">Cevap 🎧</div>
+          <div class="back-answer">Spotify, işbirlikçi filtreleme kullanıyor — seninle benzer zevklere sahip milyonlarca kullanıcı buluyor ve onların sevdiği ama senin henüz duymadığın şarkıları öneriyor. Mesele türler değil, dinleme davranış kalıpları.</div>
+          <div class="back-fun">💡 Spotify ayrıca müzik bloglarında ve şarkı sözlerinde NLP çalıştırıyor. Böylece sen hiçbir şey söylemeden bir parçanın "gece geç saatler" ya da "yağmurlu gün" hissi verdiğini anlıyor.</div>
+          <div class="back-tag">İşbirlikçi Filtreleme + NLP</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Instagram AI görseli -->
+    <div class="flip-wrapper fade-up" tabindex="0" onclick="this.classList.toggle('flipped')" onkeydown="if(event.key==='Enter')this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <span class="card-emoji">📸</span>
+          <span class="card-cat cat-instagram">Instagram</span>
+          <div class="card-question">Instagram'ın bir fotoğrafın yapay zeka ile üretilip üretilmediğini nasıl anlayabildiğini biliyor muydun?</div>
+          <div class="card-tap">Çevirmek için tıkla</div>
+        </div>
+        <div class="flip-back back-instagram">
+          <div class="back-title">Cevap 📸</div>
+          <div class="back-answer">Instagram, milyonlarca gerçek ve yapay zeka üretimi görsel üzerinde eğitilmiş bir sınıflandırıcı kullanıyor. İnsanların göremeyeceği kalıpları — doğal olmayan piksel dağılımları, kusursuz cilt dokuları ve yapay zekanın bıraktığı ışık tutarsızlıklarını tespit ediyor.</div>
+          <div class="back-fun">💡 Ayrıca görsel dosyasına gömülü meta verileri de kontrol ediyor. DALL-E ve Midjourney gibi araçlar çıktılarını genellikle görünmez filigranlarla etiketliyor — dijital bir parmak izi gibi.</div>
+          <div class="back-tag">Görüntü Sınıflandırma + Filigran</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shazam -->
+    <div class="flip-wrapper fade-up" tabindex="0" onclick="this.classList.toggle('flipped')" onkeydown="if(event.key==='Enter')this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <span class="card-emoji">🎶</span>
+          <span class="card-cat cat-shazam">Shazam</span>
+          <div class="card-question">Shazam'ın sadece 5 saniyelik gürültüden bir şarkıyı nasıl tanıyabildiğini biliyor muydun?</div>
+          <div class="card-tap">Çevirmek için tıkla</div>
+        </div>
+        <div class="flip-back back-shazam">
+          <div class="back-title">Cevap 🎶</div>
+          <div class="back-answer">Shazam sesinizi bir spektrograma — sesin görsel bir parmak izine — dönüştürüyor. Ardından en güçlü frekans noktalarını çıkararak kompakt bir "takımyıldızı haritası" oluşturuyor. Bu harita, milyarlarca parmak izinin bulunduğu veritabanıyla milisaniyeler içinde eşleştiriliyor.</div>
+          <div class="back-fun">💡 Dahice olan kısmı şu: yalnızca en yüksek, en belirgin frekans noktalarına baktığı için arka plan gürültüsüyle bile çalışıyor — tıpkı bir yüzü yalnızca gözlerine ve burnuna bakarak tanımak gibi.</div>
+          <div class="back-tag">Ses Parmak İzi + Spektrogram</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Instagram Explore -->
+    <div class="flip-wrapper fade-up" tabindex="0" onclick="this.classList.toggle('flipped')" onkeydown="if(event.key==='Enter')this.classList.toggle('flipped')">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <span class="card-emoji">🔍</span>
+          <span class="card-cat cat-instagram">Instagram</span>
+          <div class="card-question">Instagram'ın Keşfet sayfasının, hiçbir şey aramadan sana neyi göstereceğine nasıl karar verdiğini biliyor muydun?</div>
+          <div class="card-tap">Çevirmek için tıkla</div>
+        </div>
+        <div class="flip-back back-instagram">
+          <div class="back-title">Cevap 🔍</div>
+          <div class="back-answer">Instagram, takip ettiğin hesaplar, kaydettiğin gönderiler, benzer içeriklerde geçirdiğin süre ve sana benzeyen kullanıcıların etkileşim alışkanlıkları gibi sinyalleri kullanarak veritabanındaki her gönderiyi sana özel olarak puanlıyor — tek bir kelime yazmadan.</div>
+          <div class="back-fun">💡 Instagram bu puanlamayı yüz milyonlarca kullanıcı için aynı anda yapıyor. İki aşamalı bir sistem kullanıyor: önce hızlı bir kaba filtre, ardından daha yavaş ve hassas bir sıralama — tıpkı finaller öncesinde seçmeler yapılan bir yetenek yarışması gibi.</div>
+          <div class="back-tag">İki Aşamalı Sıralama Sistemi</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="coming-soon">
+    <h3>Daha fazla "Biliyor muydun?" bölümü yakında 🚀</h3>
+    <p>Sırada — farkında bile olmadan kullandığın teknolojiler var.</p>
+    <div class="topics">
+      <span class="topic-pill">📱 Yüz Tanıma</span>
+      <span class="topic-pill">🗺️ Google Maps Trafiği</span>
+      <span class="topic-pill">🤖 Otomatik Düzeltme</span>
+      <span class="topic-pill">🎬 Netflix Küçük Resimleri</span>
+      <span class="topic-pill">📧 Spam Filtreleri</span>
+      <span class="topic-pill">🗣️ Sesli Asistanlar</span>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a class="btn-outline" href="tr.html">← Ana Sayfaya Dön</a>
+  </div>
+
+</div>
+
+<footer>
+  <p>💗 Buse tarafından hazırlandı | SheBuildsSTEM</p>
+</footer>
+
+</body>
+</html>
