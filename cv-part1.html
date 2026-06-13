@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>How Computers "See" — Pixels to Predictions | SheBuildsSTEM</title>
+  <meta name="description" content="Part 1 of Computer Vision From Scratch — how images become numbers, and how machines start to make sense of them.">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
+
+    header { text-align: center; padding: 70px 20px 40px; }
+    .hero-eyebrow { display: inline-block; background: rgba(255,255,255,0.3); color: white; padding: 6px 20px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); }
+    header h1 { font-size: 2.3rem; font-weight: 900; color: white; text-shadow: 0 4px 24px rgba(0,0,0,0.12); margin-bottom: 10px; max-width: 700px; margin-left: auto; margin-right: auto; line-height: 1.25; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 7px 18px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; margin-top: 16px; }
+    .back-btn:hover { background: rgba(255,255,255,0.38); }
+
+    .blog-container {
+      max-width: 760px; margin: 0 auto 60px; background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(10px); padding: 50px 46px; border-radius: 26px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.13); line-height: 1.85; text-align: left;
+    }
+    .series-label { display: inline-block; background-color: #ede9fe; color: #6d28d9; padding: 6px 14px; border-radius: 20px; font-size: 0.78rem; margin-bottom: 16px; font-weight: 700; }
+    .blog-container h2 { font-size: 1.7rem; margin-bottom: 6px; color: #2d2d2d; }
+    .date { opacity: 0.55; margin-bottom: 28px; font-size: 0.85rem; }
+    .blog-container h3 { margin-top: 36px; margin-bottom: 10px; font-size: 1.18rem; color: #2d2d2d; }
+    .blog-container p { margin: 16px 0; font-size: 0.97rem; color: #444; }
+    .blog-container ul, .blog-container ol { margin: 16px 0 16px 22px; line-height: 1.85; font-size: 0.97rem; color: #444; }
+    .blog-container li { margin-bottom: 6px; }
+    .blog-container strong { color: #2d2d2d; }
+    .blog-container code {
+      background: #f3eaff; color: #6d28d9; padding: 2px 7px;
+      border-radius: 6px; font-size: 0.86rem; font-family: monospace;
+    }
+
+    /* Pixel grid illustration */
+    .pixel-demo { display: flex; gap: 24px; align-items: center; justify-content: center; flex-wrap: wrap; margin: 28px 0; padding: 24px; background: #faf8ff; border-radius: 18px; border: 1px solid #ece4ff; }
+    .pixel-grid { display: grid; grid-template-columns: repeat(6, 28px); grid-template-rows: repeat(6, 28px); gap: 2px; }
+    .pixel { border-radius: 3px; }
+    .pixel-arrow { font-size: 1.6rem; color: #a855f7; }
+    .pixel-numbers {
+      display: grid; grid-template-columns: repeat(6, 28px); grid-template-rows: repeat(6, 28px); gap: 2px;
+      font-family: monospace; font-size: 0.62rem; font-weight: 700;
+    }
+    .pixel-numbers div { display: flex; align-items: center; justify-content: center; background: #2d2d2d; color: #aeefff; border-radius: 3px; }
+
+    /* Callout box */
+    .callout { background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(168,85,247,0.07)); border-left: 4px solid #ff4fa3; border-radius: 14px; padding: 18px 22px; margin: 26px 0; font-size: 0.92rem; color: #555; }
+    .callout strong { color: #ff4fa3; }
+
+    /* Series navigation */
+    .series-nav { margin-top: 50px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .series-nav a {
+      display: inline-block; padding: 11px 22px; border-radius: 30px; text-decoration: none;
+      font-weight: 700; font-size: 0.82rem; transition: transform 0.2s;
+    }
+    .series-nav .prev { background: transparent; border: 2px solid #a78bfa; color: #6d28d9; }
+    .series-nav .next { background: white; color: #6d28d9; box-shadow: 0 4px 14px rgba(168,85,247,0.2); }
+    .series-nav a:hover { transform: translateY(-2px); }
+    .series-nav .disabled { opacity: 0.45; pointer-events: none; }
+
+    .bottom-nav { text-align: center; margin-bottom: 60px; }
+    .btn-outline { display: inline-block; background: transparent; color: white; padding: 10px 24px; border-radius: 30px; font-weight: 700; font-size: 0.82rem; text-decoration: none; border: 2px solid rgba(255,255,255,0.7); backdrop-filter: blur(8px); transition: transform 0.2s, background 0.2s; }
+    .btn-outline:hover { transform: translateY(-2px); background: rgba(255,255,255,0.1); }
+
+    footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.7rem; }
+      .blog-container { padding: 32px 24px; }
+      .pixel-demo { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="hero-eyebrow">🧠 Computer Vision From Scratch — Part 1</div>
+  <h1>How Computers "See" — Pixels to Predictions</h1>
+  <a class="back-btn" href="blog.html">← Back to Blog</a>
+</header>
+
+<div class="blog-container">
+  <span class="series-label">Computer Vision From Scratch · Part 1 of 4</span>
+  <h2>How Computers "See" — Pixels to Predictions</h2>
+  <div class="date">A gentle introduction to computer vision, for absolute beginners 👁️</div>
+
+  <p>When you look at a photo of a cat, your brain instantly knows it's a cat. No effort, no counting, no math — just recognition. But a computer doesn't have eyes, or a brain that "understands" images the way we do. So how does it work at all?</p>
+
+  <p>The answer starts with one simple idea: <strong>to a computer, an image is just a big grid of numbers.</strong> That's it. Once you accept that, everything else in computer vision starts to make sense.</p>
+
+  <h3>🖼️ An Image Is a Grid of Numbers</h3>
+  <p>Every image is made of tiny squares called <strong>pixels</strong>. A small image might be 28×28 pixels — that's 784 individual squares. Each pixel holds a number that represents how bright or dark it is.</p>
+
+  <p>For a <strong>grayscale</strong> image, each pixel is a single number between 0 and 255:</p>
+  <ul>
+    <li><code>0</code> = completely black</li>
+    <li><code>255</code> = completely white</li>
+    <li>Everything in between = a shade of gray</li>
+  </ul>
+
+  <div class="pixel-demo">
+    <div class="pixel-grid">
+      <div class="pixel" style="background:#1a1a1a"></div><div class="pixel" style="background:#1a1a1a"></div><div class="pixel" style="background:#4d4d4d"></div><div class="pixel" style="background:#b3b3b3"></div><div class="pixel" style="background:#ffffff"></div><div class="pixel" style="background:#ffffff"></div>
+      <div class="pixel" style="background:#1a1a1a"></div><div class="pixel" style="background:#333333"></div><div class="pixel" style="background:#808080"></div><div class="pixel" style="background:#e6e6e6"></div><div class="pixel" style="background:#ffffff"></div><div class="pixel" style="background:#ffffff"></div>
+      <div class="pixel" style="background:#333333"></div><div class="pixel" style="background:#666666"></div><div class="pixel" style="background:#999999"></div><div class="pixel" style="background:#cccccc"></div><div class="pixel" style="background:#f2f2f2"></div><div class="pixel" style="background:#ffffff"></div>
+      <div class="pixel" style="background:#4d4d4d"></div><div class="pixel" style="background:#808080"></div><div class="pixel" style="background:#b3b3b3"></div><div class="pixel" style="background:#e6e6e6"></div><div class="pixel" style="background:#ffffff"></div><div class="pixel" style="background:#ffffff"></div>
+      <div class="pixel" style="background:#666666"></div><div class="pixel" style="background:#999999"></div><div class="pixel" style="background:#cccccc"></div><div class="pixel" style="background:#ffffff"></div><div class="pixel" style="background:#ffffff"></div><div class="pixel" style="background:#ffffff"></div>
+      <div class="pixel" style="background:#808080"></div><div class="pixel" style="background:#b3b3b3"></div><div class="pixel" style="background:#e6e6e6"></div><div class="pixel" style="background:#ffffff"></div><div class="pixel" style="background:#ffffff"></div><div class="pixel" style="background:#ffffff"></div>
+    </div>
+    <div class="pixel-arrow">→</div>
+    <div class="pixel-numbers">
+      <div>26</div><div>26</div><div>77</div><div>179</div><div>255</div><div>255</div>
+      <div>26</div><div>51</div><div>128</div><div>230</div><div>255</div><div>255</div>
+      <div>51</div><div>102</div><div>153</div><div>204</div><div>242</div><div>255</div>
+      <div>77</div><div>128</div><div>179</div><div>230</div><div>255</div><div>255</div>
+      <div>102</div><div>153</div><div>204</div><div>255</div><div>255</div><div>255</div>
+      <div>128</div><div>179</div><div>230</div><div>255</div><div>255</div><div>255</div>
+    </div>
+  </div>
+
+  <p>That diagonal gradient you see on the left looks smooth to your eye — but to a computer, it's literally just the grid of numbers on the right. A neural network never "sees" the image at all. It only ever works with this matrix of numbers.</p>
+
+  <h3>🌈 What About Color Images?</h3>
+  <p>A color image works the same way, but instead of one grid, it has <strong>three</strong> — one each for Red, Green, and Blue (RGB). Stack these three grids on top of each other, and you get every color your screen can display.</p>
+
+  <p>So a small color photo that's 28×28 pixels isn't really one grid of 784 numbers — it's <strong>three</strong> grids, giving 28 × 28 × 3 = <strong>2,352 numbers</strong> total. A regular smartphone photo (around 3000×4000 pixels) contains <strong>36 million numbers</strong>. That's the scale computer vision works at.</p>
+
+  <div class="callout">
+    💡 <strong>Why this matters:</strong> Once an image becomes "just numbers," it becomes something a computer can do math on — add, multiply, compare, transform. That's the entire foundation computer vision is built on.
+  </div>
+
+  <h3>🧩 So How Does "Seeing" Happen?</h3>
+  <p>If an image is just numbers, how does a model go from a giant grid of brightness values to "this is a cat"? The short answer: <strong>patterns</strong>.</p>
+
+  <p>Early computer vision researchers tried to hand-code rules — "if there are two dark circular regions near the top, it might be eyes." This worked poorly. Real images are messy: different lighting, angles, backgrounds, and breeds of cat all look different in pixel values, even though they're all obviously "cat" to us.</p>
+
+  <p>The breakthrough came from <strong>letting the computer learn the patterns itself</strong>, rather than hand-coding them. This is where machine learning — and specifically a type of neural network called a <strong>Convolutional Neural Network (CNN)</strong> — comes in. Instead of looking at the whole image at once, a CNN slides small filters across the image, learning to detect simple things first:</p>
+
+  <ul>
+    <li><strong>Edges</strong> — where brightness changes sharply</li>
+    <li><strong>Textures</strong> — fur, fabric, smooth surfaces</li>
+    <li><strong>Shapes</strong> — curves, corners, circles</li>
+    <li><strong>Objects</strong> — combining shapes into "ear," "eye," "whisker"</li>
+    <li><strong>Concepts</strong> — combining objects into "cat"</li>
+  </ul>
+
+  <p>Each layer of the network builds on the last — simple patterns combine into more complex ones, until the final layer can confidently say "cat" or "not cat." We'll build exactly this kind of network from scratch in Part 2.</p>
+
+  <h3>🔑 Key Takeaways</h3>
+  <ul>
+    <li>An image is just a grid (or three grids, for color) of numbers representing brightness.</li>
+    <li>Computers don't "see" — they do math on these number grids.</li>
+    <li>Hand-coded rules don't generalize well to messy real-world images.</li>
+    <li>CNNs learn to detect patterns layer by layer: edges → textures → shapes → objects.</li>
+  </ul>
+
+  <p>In <strong>Part 2</strong>, we'll get hands-on and build a simple CNN that can classify images — going from these raw pixel grids all the way to a working prediction. 🎉</p>
+
+  <div class="series-nav">
+    <a class="prev disabled" href="#">← Previous: Coming Soon</a>
+    <a class="next" href="cv-part2.html">Next: Image Classification with a Simple CNN →</a>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <a class="btn-outline" href="blog.html">← Back to Blog</a>
+</div>
+
+<footer>
+  <p>Made with 💗 by Buse | SheBuildsSTEM</p>
+</footer>
+
+</body>
+</html>

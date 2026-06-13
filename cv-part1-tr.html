@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bilgisayarlar Nasıl "Görür"? — Pikselden Tahmine | SheBuildsSTEM</title>
+  <meta name="description" content="Sıfırdan Bilgisayarlı Görü serisinin 1. bölümü — görüntülerin nasıl sayılara dönüştüğü ve makinelerin onları nasıl anlamlandırmaya başladığı.">
+  <link rel="icon" href="favicon.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
+
+    header { text-align: center; padding: 70px 20px 40px; }
+    .hero-eyebrow { display: inline-block; background: rgba(255,255,255,0.3); color: white; padding: 6px 20px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 16px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); }
+    header h1 { font-size: 2.3rem; font-weight: 900; color: white; text-shadow: 0 4px 24px rgba(0,0,0,0.12); margin-bottom: 10px; max-width: 700px; margin-left: auto; margin-right: auto; line-height: 1.25; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 7px 18px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; margin-top: 16px; }
+    .back-btn:hover { background: rgba(255,255,255,0.38); }
+
+    .blog-container { max-width: 760px; margin: 0 auto 60px; background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); padding: 50px 46px; border-radius: 26px; box-shadow: 0 20px 50px rgba(0,0,0,0.13); line-height: 1.85; text-align: left; }
+    .series-label { display: inline-block; background-color: #ede9fe; color: #6d28d9; padding: 6px 14px; border-radius: 20px; font-size: 0.78rem; margin-bottom: 16px; font-weight: 700; }
+    .blog-container h2 { font-size: 1.7rem; margin-bottom: 6px; color: #2d2d2d; }
+    .date { opacity: 0.55; margin-bottom: 28px; font-size: 0.85rem; }
+    .blog-container h3 { margin-top: 36px; margin-bottom: 10px; font-size: 1.18rem; color: #2d2d2d; }
+    .blog-container p { margin: 16px 0; font-size: 0.97rem; color: #444; }
+    .blog-container ul, .blog-container ol { margin: 16px 0 16px 22px; line-height: 1.85; font-size: 0.97rem; color: #444; }
+    .blog-container li { margin-bottom: 6px; }
+    .blog-container strong { color: #2d2d2d; }
+    .blog-container code { background: #f3eaff; color: #6d28d9; padding: 2px 7px; border-radius: 6px; font-size: 0.86rem; font-family: monospace; }
+
+    .pixel-demo { display: flex; gap: 24px; align-items: center; justify-content: center; flex-wrap: wrap; margin: 28px 0; padding: 24px; background: #faf8ff; border-radius: 18px; border: 1px solid #ece4ff; }
+    .pixel-grid { display: grid; grid-template-columns: repeat(6, 28px); grid-template-rows: repeat(6, 28px); gap: 2px; }
+    .pixel { border-radius: 3px; }
+    .pixel-arrow { font-size: 1.6rem; color: #a855f7; }
+    .pixel-numbers { display: grid; grid-template-columns: repeat(6, 28px); grid-template-rows: repeat(6, 28px); gap: 2px; font-family: monospace; font-size: 0.62rem; font-weight: 700; }
+    .pixel-numbers div { display: flex; align-items: center; justify-content: center; background: #2d2d2d; color: #aeefff; border-radius: 3px; }
+
+    .callout { background: linear-gradient(135deg, rgba(255,79,163,0.07), rgba(168,85,247,0.07)); border-left: 4px solid #ff4fa3; border-radius: 14px; padding: 18px 22px; margin: 26px 0; font-size: 0.92rem; color: #555; }
+    .callout strong { color: #ff4fa3; }
+
+    .series-nav { margin-top: 50px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .series-nav a { display: inline-block; padding: 11px 22px; border-radius: 30px; text-decoration: none; font-weight: 700; font-size: 0.82rem; transition: transform 0.2s; }
+    .series-nav .prev { background: transparent; border: 2px solid #a78bfa; color: #6d28d9; }
+    .series-nav .next { background: white; color: #6d28d9; box-shadow: 0 4px 14px rgba(168,85,247,0.2); }
+    .series-nav a:hover { transform: translateY(-2px); }
+    .series-nav .disabled { opacity: 0.45; pointer-events: none; }
+
+    .bottom-nav { text-align: center; margin-bottom: 60px; }
+    .btn-outline { display: inline-block; background: transparent; color: white; padding: 10px 24px; border-radius: 30px; font-weight: 700; font-size: 0.82rem; text-decoration: none; border: 2px solid rgba(255,255,255,0.7); backdrop-filter: blur(8px); transition: transform 0.2s, background 0.2s; }
+    .btn-outline:hover { transform: translateY(-2px); background: rgba(255,255,255,0.1); }
+
+    footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
+
+    @media (max-width: 600px) { header h1 { font-size: 1.7rem; } .blog-container { padding: 32px 24px; } .pixel-demo { flex-direction: column; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="hero-eyebrow">🧠 Sıfırdan Bilgisayarlı Görü — Bölüm 1</div>
+  <h1>Bilgisayarlar Nasıl "Görür"? — Pikselden Tahmine</h1>
+  <a class="back-btn" href="blog-tr.html">← Bloga Dön</a>
+</header>
+
+<div class="blog-container">
+  <span class="series-label">Sıfırdan Bilgisayarlı Görü · Bölüm 1 / 4</span>
+  <h2>Bilgisayarlar Nasıl "Görür"? — Pikselden Tahmine</h2>
+  <div class="date">Mutlak yeni başlayanlar için bilgisayarlı görüye nazik bir giriş 👁️</div>
+
+  <p>Bir kedi fotoğrafına baktığında, beynin anında bunun bir kedi olduğunu bilir. Hiçbir çaba, sayma ya da matematik gerekmez — sadece tanıma. Ama bir bilgisayarın gözü yoktur, ya da görüntüleri bizim gibi "anlayan" bir beyni yoktur. O zaman bu nasıl çalışıyor?</p>
+
+  <p>Cevap basit bir fikirle başlıyor: <strong>bilgisayar için bir görüntü, sadece büyük bir sayı ızgarasıdır.</strong> Hepsi bu. Bunu kabul ettiğinde, bilgisayarlı görüdeki her şey anlam kazanmaya başlıyor.</p>
+
+  <h3>🖼️ Bir Görüntü, Sayılardan Oluşan Bir Izgaradır</h3>
+  <p>Her görüntü, <strong>piksel</strong> denen küçük karelerden oluşur. Küçük bir görüntü 28×28 piksel olabilir — bu 784 ayrı kare demektir. Her piksel, ne kadar açık ya da koyu olduğunu temsil eden bir sayı taşır.</p>
+
+  <p><strong>Gri tonlamalı</strong> bir görüntüde, her piksel 0 ile 255 arasında tek bir sayıdır:</p>
+  <ul>
+    <li><code>0</code> = tamamen siyah</li>
+    <li><code>255</code> = tamamen beyaz</li>
+    <li>Aradaki her şey = bir gri tonu</li>
+  </ul>
+
+  <div class="pixel-demo">
+    <div class="pixel-grid">
+      <div class="pixel" style="background:#1a1a1a"></div><div class="pixel" style="background:#1a1a1a"></div><div class="pixel" style="background:#4d4d4d"></div><div class="pixel" style="background:#b3b3b3"></div><div class="pixel" style="background:#ffffff"></div><div class="pixel" style="background:#ffffff"></div>
+      <div class="pixel" style="background:#1a1a1a"></div><div class="pixel" style="background:#333333"></div><div class="pixel" style="background:#808080"></div><div class="pixel" style="background:#e6e6e6"></div><div class="pixel" style="background:#ffffff"></div><div class="pixel" style="background:#ffffff"></div>
+      <div class="pixel" style="background:#333333"></div><div class="pixel" style="background:#666666"></div><div class="pixel" style="background:#999999"></div><div class="pixel" style="background:#cccccc"></div><div class="pixel" style="background:#f2f2f2"></div><div class="pixel" style="background:#ffffff"></div>
+      <div class="pixel" style="background:#4d4d4d"></div><div class="pixel" style="background:#808080"></div><div class="pixel" style="background:#b3b3b3"></div><div class="pixel" style="background:#e6e6e6"></div><div class="pixel" style="background:#ffffff"></div><div class="pixel" style="background:#ffffff"></div>
+      <div class="pixel" style="background:#666666"></div><div class="pixel" style="background:#999999"></div><div class="pixel" style="background:#cccccc"></div><div class="pixel" style="background:#ffffff"></div><div class="pixel" style="background:#ffffff"></div><div class="pixel" style="background:#ffffff"></div>
+      <div class="pixel" style="background:#808080"></div><div class="pixel" style="background:#b3b3b3"></div><div class="pixel" style="background:#e6e6e6"></div><div class="pixel" style="background:#ffffff"></div><div class="pixel" style="background:#ffffff"></div><div class="pixel" style="background:#ffffff"></div>
+    </div>
+    <div class="pixel-arrow">→</div>
+    <div class="pixel-numbers">
+      <div>26</div><div>26</div><div>77</div><div>179</div><div>255</div><div>255</div>
+      <div>26</div><div>51</div><div>128</div><div>230</div><div>255</div><div>255</div>
+      <div>51</div><div>102</div><div>153</div><div>204</div><div>242</div><div>255</div>
+      <div>77</div><div>128</div><div>179</div><div>230</div><div>255</div><div>255</div>
+      <div>102</div><div>153</div><div>204</div><div>255</div><div>255</div><div>255</div>
+      <div>128</div><div>179</div><div>230</div><div>255</div><div>255</div><div>255</div>
+    </div>
+  </div>
+
+  <p>Soldaki çapraz geçiş gözüne pürüzsüz görünüyor — ama bilgisayar için bu, sağdaki sayı ızgarasından ibaret. Bir sinir ağı görüntüyü asla "görmez". Sadece bu sayı matrisiyle çalışır.</p>
+
+  <h3>🌈 Renkli Görüntülerde Durum Ne?</h3>
+  <p>Renkli bir görüntü de aynı şekilde çalışır, ama tek ızgara yerine <strong>üç</strong> ızgarası vardır — Kırmızı, Yeşil ve Mavi (RGB) için birer tane. Bu üç ızgarayı üst üste koyduğunda, ekranının gösterebileceği her rengi elde edersin.</p>
+
+  <p>Yani 28×28 piksellik küçük bir renkli fotoğraf, 784 sayılık tek bir ızgara değildir — <strong>üç</strong> ızgaradır, toplamda 28 × 28 × 3 = <strong>2.352 sayı</strong>. Normal bir akıllı telefon fotoğrafı (yaklaşık 3000×4000 piksel) <strong>36 milyon sayı</strong> içerir. Bilgisayarlı görü işte bu ölçekte çalışır.</p>
+
+  <div class="callout">
+    💡 <strong>Bunun önemi ne:</strong> Bir görüntü "sadece sayılara" dönüştüğünde, bilgisayarın üzerinde matematik yapabileceği bir şey haline gelir — toplama, çarpma, karşılaştırma, dönüştürme. Bilgisayarlı görünün tüm temeli bu üzerine kuruludur.
+  </div>
+
+  <h3>🧩 Peki "Görmek" Nasıl Gerçekleşiyor?</h3>
+  <p>Eğer bir görüntü sadece sayılardan ibaretse, bir model nasıl bu devasa parlaklık değerleri ızgarasından "bu bir kedi" sonucuna gidiyor? Kısa cevap: <strong>kalıplar (pattern'ler)</strong>.</p>
+
+  <p>İlk bilgisayarlı görü araştırmacıları kurallar elle yazmaya çalıştı — "üstte iki koyu dairesel bölge varsa, bunlar göz olabilir" gibi. Bu çok işe yaramadı. Gerçek görüntüler dağınıktır: farklı aydınlatmalar, açılar, arka planlar ve kedi cinsleri piksel değerlerinde tamamen farklı görünür — oysa hepsi bize göre "kedi"dir.</p>
+
+  <p>Atılım, kuralları elle yazmak yerine <strong>bilgisayarın kalıpları kendi başına öğrenmesine izin vermekten</strong> geldi. İşte burada makine öğrenmesi — ve özellikle <strong>Evrişimli Sinir Ağı (CNN)</strong> denen bir sinir ağı türü — devreye giriyor. Bir CNN, görüntünün tamamına bir kerede bakmak yerine, küçük filtreleri görüntü üzerinde kaydırarak önce basit şeyleri tespit etmeyi öğrenir:</p>
+
+  <ul>
+    <li><strong>Kenarlar</strong> — parlaklığın aniden değiştiği yerler</li>
+    <li><strong>Dokular</strong> — tüy, kumaş, düz yüzeyler</li>
+    <li><strong>Şekiller</strong> — eğriler, köşeler, daireler</li>
+    <li><strong>Nesneler</strong> — şekilleri birleştirerek "kulak", "göz", "bıyık"</li>
+    <li><strong>Kavramlar</strong> — nesneleri birleştirerek "kedi"</li>
+  </ul>
+
+  <p>Ağın her katmanı bir öncekinin üzerine inşa edilir — basit kalıplar birleşerek daha karmaşık hale gelir, ta ki son katman güvenle "kedi" veya "kedi değil" diyebilene kadar. Bölüm 2'de tam olarak bu türden bir ağı sıfırdan inşa edeceğiz.</p>
+
+  <h3>🔑 Önemli Çıkarımlar</h3>
+  <ul>
+    <li>Bir görüntü, parlaklığı temsil eden bir sayı ızgarasıdır (renkli görüntüler için üç ızgara).</li>
+    <li>Bilgisayarlar "görmez" — bu sayı ızgaraları üzerinde matematik yaparlar.</li>
+    <li>Elle yazılan kurallar, karmaşık gerçek dünya görüntülerine iyi genellenmez.</li>
+    <li>CNN'ler kalıpları katman katman öğrenir: kenarlar → dokular → şekiller → nesneler.</li>
+  </ul>
+
+  <p><strong>Bölüm 2</strong>'de uygulamalı hale geçeceğiz ve görüntüleri sınıflandırabilen basit bir CNN inşa edeceğiz — bu ham piksel ızgaralarından gerçek bir tahmine kadar tüm yolu birlikte kat edeceğiz. 🎉</p>
+
+  <div class="series-nav">
+    <a class="prev disabled" href="#">← Önceki: Yakında</a>
+    <a class="next" href="cv-part2-tr.html">Sonraki: Basit Bir CNN ile Görüntü Sınıflandırma →</a>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <a class="btn-outline" href="blog-tr.html">← Bloga Dön</a>
+</div>
+
+<footer>
+  <p>💗 Buse tarafından hazırlandı | SheBuildsSTEM</p>
+</footer>
+
+</body>
+</html>
