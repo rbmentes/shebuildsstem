@@ -10,57 +10,77 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: "Poppins", sans-serif; background: linear-gradient(120deg, #f8c8dc, #cbb6ff, #aeefff); min-height: 100vh; color: #2d2d2d; }
-    header { text-align: center; padding: 80px 20px 50px; }
-    .hero-eyebrow { display: inline-block; background: rgba(255,255,255,0.3); color: white; padding: 6px 20px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 18px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); }
-    header h1 { font-size: 2.8rem; font-weight: 900; color: white; text-shadow: 0 4px 24px rgba(0,0,0,0.12); margin-bottom: 14px; }
-    header p { color: rgba(255,255,255,0.9); font-size: 1rem; max-width: 520px; margin: 0 auto 30px; line-height: 1.7; }
-    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 8px 20px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
-    .back-btn:hover { background: rgba(255,255,255,0.35); }
-    .hub-container { max-width: 960px; margin: 0 auto; padding: 0 20px 80px; }
-    .hub-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 60px; }
-    .hub-card { background: rgba(255,255,255,0.82); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 24px; padding: 24px 20px; box-shadow: 0 12px 32px rgba(0,0,0,0.1); transition: transform 0.25s, box-shadow 0.25s; text-align: center; }
-    .hub-card:hover { transform: translateY(-8px); box-shadow: 0 22px 44px rgba(0,0,0,0.13); }
-    .hub-card h3 { font-size: 0.9rem; font-weight: 700; color: #2d2d2d; margin-bottom: 8px; line-height: 1.4; }
-    .hub-card p { font-size: 0.8rem; color: #666; line-height: 1.6; margin-bottom: 14px; }
-    .series-header { display: flex; align-items: center; gap: 14px; margin: 50px 0 20px; }
-    .series-header h2 { font-size: 1.25rem; font-weight: 800; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.1); white-space: nowrap; }
-    .series-header .series-line { flex: 1; height: 2px; background: rgba(255,255,255,0.35); border-radius: 2px; }
-    .post-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
-    .post-card { background: rgba(255,255,255,0.82); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 20px; padding: 22px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); transition: transform 0.22s, box-shadow 0.22s; display: flex; flex-direction: column; gap: 8px; }
-    .post-card:hover { transform: translateY(-6px); box-shadow: 0 18px 36px rgba(0,0,0,0.12); }
-    .post-tag { display: inline-block; font-size: 0.66rem; font-weight: 700; padding: 3px 9px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.05em; width: fit-content; }
-    .tag-ml       { background: #fce7f3; color: #be185d; }
-    .tag-ai       { background: #ede9fe; color: #6d28d9; }
-    .tag-speech   { background: #dbeafe; color: #1d4ed8; }
-    .tag-deepfake { background: #1e1e2e; color: #89b4fa; }
-    .tag-emg      { background: #d1fae5; color: #065f46; }
-    .tag-reflect  { background: #fdf2f8; color: #9d174d; }
-    .tag-new      { background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; }
-    .tag-toolkit  { background: #fff7ed; color: #c2410c; }
-    .post-card h3 { font-size: 0.9rem; font-weight: 700; color: #2d2d2d; line-height: 1.45; flex: 1; }
-    .post-card p  { font-size: 0.78rem; color: #666; line-height: 1.6; }
-    .btn       { display: inline-block; background: white; color: #ff4fa3; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.78rem; text-decoration: none; box-shadow: 0 4px 14px rgba(255,79,163,0.18); transition: transform 0.2s; width: fit-content; }
-    .btn:hover { transform: translateY(-2px); }
-    .btn-blue  { display: inline-block; background: white; color: #3b82f6; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.78rem; text-decoration: none; box-shadow: 0 4px 14px rgba(59,130,246,0.18); transition: transform 0.2s; width: fit-content; }
+    header { text-align: center; padding: 60px 20px 36px; }
+    .hero-eyebrow { display: inline-block; background: rgba(255,255,255,0.3); color: white; padding: 6px 20px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); }
+    header h1 { font-size: 2.6rem; font-weight: 900; color: white; text-shadow: 0 4px 24px rgba(0,0,0,0.12); margin-bottom: 10px; }
+    header p { color: rgba(255,255,255,0.9); font-size: 0.95rem; margin-bottom: 20px; }
+    .back-btn { display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 7px 18px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-decoration: none; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.4); transition: background 0.2s; }
+    .back-btn:hover { background: rgba(255,255,255,0.38); }
+    .mobile-select-wrap { display: none; padding: 0 16px 20px; }
+    .mobile-select-wrap select { width: 100%; padding: 12px 16px; border-radius: 16px; border: none; background: rgba(255,255,255,0.9); font-family: "Poppins", sans-serif; font-size: 0.88rem; font-weight: 700; color: #2d2d2d; box-shadow: 0 6px 20px rgba(0,0,0,0.1); appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ff4fa3' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
+    .blog-layout { display: flex; gap: 0; max-width: 1100px; margin: 0 auto 60px; padding: 0 20px; align-items: flex-start; }
+    .sidebar { width: 224px; flex-shrink: 0; position: sticky; top: 24px; background: rgba(255,255,255,0.76); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.6); border-radius: 24px; padding: 20px 12px; box-shadow: 0 12px 36px rgba(0,0,0,0.1); margin-right: 22px; }
+    .sidebar-title { font-size: 0.66rem; font-weight: 800; color: #bbb; letter-spacing: 0.1em; text-transform: uppercase; padding: 0 8px; margin-bottom: 12px; }
+    .sidebar-btn { display: flex; align-items: center; gap: 9px; width: 100%; padding: 10px 11px; border-radius: 13px; border: none; background: transparent; font-family: "Poppins", sans-serif; font-size: 0.8rem; font-weight: 600; color: #666; cursor: pointer; text-align: left; transition: background 0.18s, color 0.18s, transform 0.15s; margin-bottom: 2px; }
+    .sidebar-btn:hover { background: rgba(255,79,163,0.08); color: #ff4fa3; transform: translateX(3px); }
+    .sidebar-btn.active { background: linear-gradient(135deg, rgba(255,79,163,0.14), rgba(168,85,247,0.1)); color: #e0186e; font-weight: 700; }
+    .sidebar-btn .icon { font-size: 1rem; flex-shrink: 0; }
+    .sidebar-count { margin-left: auto; font-size: 0.63rem; font-weight: 700; background: rgba(255,79,163,0.1); color: #ff4fa3; padding: 2px 7px; border-radius: 8px; }
+    .sidebar-divider { height: 1px; background: rgba(0,0,0,0.06); margin: 9px 0; }
+    .content-panel { flex: 1; min-width: 0; }
+    .panel-section { display: none; }
+    .panel-section.active { display: block; animation: fadeIn 0.3s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .welcome-banner { background: rgba(255,255,255,0.82); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.6); border-radius: 24px; padding: 32px 30px; margin-bottom: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .welcome-banner h2 { font-size: 1.45rem; font-weight: 900; color: #2d2d2d; margin-bottom: 10px; }
+    .welcome-banner p { font-size: 0.87rem; color: #666; line-height: 1.75; max-width: 560px; }
+    .overview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)); gap: 11px; }
+    .overview-card { background: rgba(255,255,255,0.84); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.55); border-radius: 18px; padding: 18px 16px; box-shadow: 0 8px 22px rgba(0,0,0,0.07); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; text-align: left; border-left: 4px solid transparent; }
+    .overview-card:hover { transform: translateY(-5px); box-shadow: 0 16px 34px rgba(0,0,0,0.12); }
+    .overview-card .oc-icon { font-size: 1.5rem; margin-bottom: 7px; display: block; }
+    .overview-card h3 { font-size: 0.82rem; font-weight: 700; color: #2d2d2d; margin-bottom: 4px; line-height: 1.35; }
+    .overview-card p { font-size: 0.71rem; color: #999; line-height: 1.5; }
+    .overview-card .oc-count { font-size: 0.67rem; font-weight: 700; margin-top: 8px; }
+    .ov-ml   { border-left-color: #f472b6; } .ov-ml .oc-count   { color: #be185d; }
+    .ov-ai   { border-left-color: #a78bfa; } .ov-ai .oc-count   { color: #6d28d9; }
+    .ov-sp   { border-left-color: #60a5fa; } .ov-sp .oc-count   { color: #1d4ed8; }
+    .ov-emg  { border-left-color: #34d399; } .ov-emg .oc-count  { color: #065f46; }
+    .ov-df   { border-left-color: #818cf8; } .ov-df .oc-count   { color: #4338ca; }
+    .ov-ref  { border-left-color: #f9a8d4; } .ov-ref .oc-count  { color: #9d174d; }
+    .ov-free { border-left-color: #fb923c; } .ov-free .oc-count { color: #c2410c; }
+    .ov-dyk  { border-left-color: #fbbf24; } .ov-dyk .oc-count  { color: #b45309; }
+    .ov-cv   { border-left-color: #2dd4bf; } .ov-cv .oc-count   { color: #0f766e; }
+    .panel-header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+    .panel-header h2 { font-size: 1.15rem; font-weight: 800; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.12); white-space: nowrap; }
+    .panel-header-line { flex: 1; height: 2px; background: rgba(255,255,255,0.35); border-radius: 2px; }
+    .post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(235px, 1fr)); gap: 12px; }
+    .post-card { background: rgba(255,255,255,0.84); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.55); border-radius: 20px; padding: 22px 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); transition: transform 0.22s, box-shadow 0.22s; display: flex; flex-direction: column; gap: 8px; }
+    .post-card:hover { transform: translateY(-5px); box-shadow: 0 18px 36px rgba(0,0,0,0.12); }
+    .post-tag { display: inline-block; font-size: 0.63rem; font-weight: 700; padding: 3px 9px; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.05em; width: fit-content; }
+    .tag-ml { background: #fce7f3; color: #be185d; } .tag-ai { background: #ede9fe; color: #6d28d9; }
+    .tag-speech { background: #dbeafe; color: #1d4ed8; } .tag-deepfake { background: #1e1e2e; color: #89b4fa; }
+    .tag-emg { background: #d1fae5; color: #065f46; } .tag-reflect { background: #fdf2f8; color: #9d174d; }
+    .tag-new { background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; }
+    .tag-toolkit { background: #fff7ed; color: #c2410c; } .tag-dyk { background: #fef9c3; color: #b45309; } .tag-cv { background: #ccfbf1; color: #0f766e; }
+    .post-card h3 { font-size: 0.87rem; font-weight: 700; color: #2d2d2d; line-height: 1.45; flex: 1; }
+    .post-card p  { font-size: 0.75rem; color: #777; line-height: 1.6; }
+    .btn        { display: inline-block; background: white; color: #ff4fa3; padding: 7px 16px; border-radius: 30px; font-weight: 700; font-size: 0.74rem; text-decoration: none; box-shadow: 0 4px 14px rgba(255,79,163,0.18); transition: transform 0.2s; width: fit-content; }
+    .btn:hover  { transform: translateY(-2px); }
+    .btn-blue   { display: inline-block; background: white; color: #3b82f6; padding: 7px 16px; border-radius: 30px; font-weight: 700; font-size: 0.74rem; text-decoration: none; box-shadow: 0 4px 14px rgba(59,130,246,0.18); transition: transform 0.2s; width: fit-content; }
     .btn-blue:hover { transform: translateY(-2px); }
-    .btn-green { display: inline-block; background: white; color: #10b981; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.78rem; text-decoration: none; box-shadow: 0 4px 14px rgba(16,185,129,0.18); transition: transform 0.2s; width: fit-content; }
+    .btn-green  { display: inline-block; background: white; color: #10b981; padding: 7px 16px; border-radius: 30px; font-weight: 700; font-size: 0.74rem; text-decoration: none; box-shadow: 0 4px 14px rgba(16,185,129,0.18); transition: transform 0.2s; width: fit-content; }
     .btn-green:hover { transform: translateY(-2px); }
-    .btn-orange { display: inline-block; background: white; color: #f97316; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.78rem; text-decoration: none; box-shadow: 0 4px 14px rgba(249,115,22,0.18); transition: transform 0.2s; width: fit-content; }
+    .btn-orange { display: inline-block; background: white; color: #f97316; padding: 7px 16px; border-radius: 30px; font-weight: 700; font-size: 0.74rem; text-decoration: none; box-shadow: 0 4px 14px rgba(249,115,22,0.18); transition: transform 0.2s; width: fit-content; }
     .btn-orange:hover { transform: translateY(-2px); }
-    .btn-outline { display: inline-block; background: transparent; color: white; padding: 8px 18px; border-radius: 30px; font-weight: 700; font-size: 0.78rem; text-decoration: none; border: 2px solid rgba(255,255,255,0.7); backdrop-filter: blur(8px); transition: transform 0.2s; width: fit-content; }
-    .btn-outline:hover { transform: translateY(-2px); background: rgba(255,255,255,0.1); }
-    .bottom-nav { margin-top: 50px; text-align: center; }
+    .btn-yellow { display: inline-block; background: white; color: #b45309; padding: 7px 16px; border-radius: 30px; font-weight: 700; font-size: 0.74rem; text-decoration: none; box-shadow: 0 4px 14px rgba(180,83,9,0.15); transition: transform 0.2s; width: fit-content; }
+    .btn-yellow:hover { transform: translateY(-2px); }
+    .btn-teal { display: inline-block; background: white; color: #0f766e; padding: 7px 16px; border-radius: 30px; font-weight: 700; font-size: 0.74rem; text-decoration: none; box-shadow: 0 4px 14px rgba(15,118,110,0.18); transition: transform 0.2s; width: fit-content; }
+    .btn-teal:hover { transform: translateY(-2px); }
+    .post-card.coming-soon-card { opacity: 0.6; }
+    .soon-badge { font-size: 0.62rem; font-weight: 700; background: #f1f5f9; color: #94a3b8; padding: 3px 9px; border-radius: 10px; width: fit-content; text-transform: uppercase; letter-spacing: 0.05em; }
+    .dyk-panel-note { background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.55); border-radius: 16px; padding: 14px 18px; font-size: 0.79rem; color: #666; margin-bottom: 16px; display: flex; gap: 8px; align-items: center; }
     footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .fade-up { animation: fadeUp 0.55s ease forwards; opacity: 0; }
-    .fade-up:nth-child(1) { animation-delay: 0.1s; }
-    .fade-up:nth-child(2) { animation-delay: 0.17s; }
-    .fade-up:nth-child(3) { animation-delay: 0.24s; }
-    .fade-up:nth-child(4) { animation-delay: 0.31s; }
-    .fade-up:nth-child(5) { animation-delay: 0.38s; }
-    .fade-up:nth-child(6) { animation-delay: 0.45s; }
-    .fade-up:nth-child(7) { animation-delay: 0.52s; }
-    @media (max-width: 600px) { header h1 { font-size: 2rem; } .series-header h2 { font-size: 1rem; } }
+    @media (max-width: 700px) { .sidebar { display: none; } .mobile-select-wrap { display: block; } .blog-layout { padding: 0 14px; } header h1 { font-size: 2rem; } .welcome-banner { padding: 22px 18px; } }
   </style>
 </head>
 <body>
@@ -72,256 +92,177 @@
   <a class="back-btn" href="tr.html">← Ana Sayfaya Dön</a>
 </header>
 
-<div class="hub-container">
+<div class="mobile-select-wrap">
+  <select id="mobileSelect" onchange="switchPanel(this.value)">
+    <option value="welcome">🏠 Hoş Geldin — Genel Bakış</option>
+    <option value="ml">🎓 Benimle ML Öğren</option>
+    <option value="ai">⚡ AI & Sinyal İşleme</option>
+    <option value="speech">🎧 Konuşma AI Başlangıç</option>
+    <option value="emg">💪 EMG & Biyoelektrik Sinyaller</option>
+    <option value="deepfake">🔍 Derin Sahte Ses Tespiti</option>
+    <option value="cv">🧠 Sıfırdan Bilgisayarlı Görü</option>
+    <option value="reflections">💗 Mühendislik Günlükleri</option>
+    <option value="courses">📚 Ücretsiz Kurslar & Sertifikalar</option>
+    <option value="dyk">💡 Biliyor muydun?</option>
+  </select>
+</div>
 
-  <!-- Kategori kartları -->
-  <div class="hub-grid">
-    <div class="hub-card fade-up">
-      <h3>🎓 Benimle ML Öğren</h3>
-      <p>Makine öğrenmesi temelleri adım adım.</p>
-      <a class="btn" href="#learn-ml">Keşfet →</a>
-    </div>
-    <div class="hub-card fade-up">
-      <h3>⚡ AI & Sinyal İşleme</h3>
-      <p>Temel AI kavramları görsel olarak.</p>
-      <a class="btn" href="#ai-essentials">Keşfet →</a>
-    </div>
-    <div class="hub-card fade-up">
-      <h3>🎧 Konuşma AI Başlangıç</h3>
-      <p>Ham sesten CNN'lere kadar.</p>
-      <a class="btn" href="#speech-ai">Keşfet →</a>
-    </div>
-    <div class="hub-card fade-up">
-      <h3>💪 EMG & Biyoelektrik Sinyaller</h3>
-      <p>Kas sinyalleri, donanım ve yapay zeka.</p>
-      <a class="btn-green" href="#emg">Keşfet →</a>
-    </div>
-    <div class="hub-card fade-up">
-      <h3>🔍 Derin Sahte Ses Tespiti</h3>
-      <p>Mezuniyet projem — LCNN ile sahte ses.</p>
-      <a class="btn-blue" href="#deepfake">Keşfet →</a>
-    </div>
-    <div class="hub-card fade-up">
-      <h3>💗 Mühendislik Günlükleri</h3>
-      <p>Mühendislik hayatından kişisel düşünceler.</p>
-      <a class="btn" href="#reflections">Keşfet →</a>
-    </div>
-    <div class="hub-card fade-up">
-      <h3>📚 Ücretsiz Kurslar & Sertifikalar</h3>
-      <p>MathWorks Onramp, Coursera, fast.ai ve daha fazlası.</p>
-      <a class="btn-orange" href="#free-courses">Keşfet →</a>
-    </div>
-  </div>
+<div class="blog-layout">
+  <aside class="sidebar">
+    <div class="sidebar-title">Kategoriler</div>
+    <button class="sidebar-btn active" onclick="switchPanel('welcome')" id="btn-welcome"><span class="icon">🏠</span> Genel Bakış</button>
+    <div class="sidebar-divider"></div>
+    <button class="sidebar-btn" onclick="switchPanel('ml')" id="btn-ml"><span class="icon">🎓</span> Benimle ML Öğren <span class="sidebar-count">4</span></button>
+    <button class="sidebar-btn" onclick="switchPanel('ai')" id="btn-ai"><span class="icon">⚡</span> AI & Sinyal İşleme <span class="sidebar-count">5</span></button>
+    <button class="sidebar-btn" onclick="switchPanel('speech')" id="btn-speech"><span class="icon">🎧</span> Konuşma AI Başlangıç <span class="sidebar-count">4</span></button>
+    <button class="sidebar-btn" onclick="switchPanel('emg')" id="btn-emg"><span class="icon">💪</span> EMG & Biyoelektrik <span class="sidebar-count">3</span></button>
+    <button class="sidebar-btn" onclick="switchPanel('deepfake')" id="btn-deepfake"><span class="icon">🔍</span> Derin Sahte Ses <span class="sidebar-count">4</span></button>
+    <button class="sidebar-btn" onclick="switchPanel('cv')" id="btn-cv"><span class="icon">🧠</span> Bilgisayarlı Görü <span class="sidebar-count">1</span></button>
+    <div class="sidebar-divider"></div>
+    <button class="sidebar-btn" onclick="switchPanel('reflections')" id="btn-reflections"><span class="icon">💗</span> Mühendislik Günlükleri <span class="sidebar-count">1</span></button>
+    <button class="sidebar-btn" onclick="switchPanel('courses')" id="btn-courses"><span class="icon">📚</span> Ücretsiz Kurslar <span class="sidebar-count">8+</span></button>
+    <button class="sidebar-btn" onclick="switchPanel('dyk')" id="btn-dyk"><span class="icon">💡</span> Biliyor muydun? <span class="sidebar-count">5</span></button>
+  </aside>
 
-  <!-- Makine Öğrenmesi -->
-  <div class="series-header" id="learn-ml">
-    <h2>🎓 Benimle Makine Öğrenmesi Öğren</h2>
-    <div class="series-line"></div>
-  </div>
-  <div class="post-grid">
-    <div class="post-card">
-      <span class="post-tag tag-ml">Hafta 1</span>
-      <h3>Makine Öğrenmesi Nedir?</h3>
-      <p>Supervised ve unsupervised öğrenme, veri seti ve genelleme.</p>
-      <a class="btn" href="learn-ml-week1-tr.html">Oku →</a>
-    </div>
-    <div class="post-card">
-      <span class="post-tag tag-ml">Hafta 2</span>
-      <h3>Modeller Gerçekte Nasıl Öğrenir?</h3>
-      <p>Kayıp fonksiyonları, gradyan inişi ve eğitim döngüsü.</p>
-      <a class="btn" href="learn-ml-week2-tr.html">Oku →</a>
-    </div>
-    <div class="post-card">
-      <span class="post-tag tag-ml">Hafta 3</span>
-      <h3>Karar Ağaçları & Rastgele Ormanlar</h3>
-      <p>Makinelerin kararları nasıl verdiği ve ağaçları güçlü yapan şey.</p>
-      <a class="btn" href="learn-ml-week3-tr.html">Oku →</a>
-    </div>
-    <div class="post-card">
-      <span class="post-tag tag-ml">Hafta 4</span>
-      <h3>Sıfırdan Sinir Ağları</h3>
-      <p>Nöronlar, ağırlıklar, katmanlar ve ileri geçiş.</p>
-      <a class="btn" href="learn-ml-week4-tr.html">Oku →</a>
-    </div>
-  </div>
+  <div class="content-panel">
 
-  <!-- AI Temelleri -->
-  <div class="series-header" id="ai-essentials">
-    <h2>⚡ AI & Sinyal İşleme Temelleri</h2>
-    <div class="series-line"></div>
-  </div>
-  <div class="post-grid">
-    <div class="post-card">
-      <span class="post-tag tag-ai">Bölüm 1</span>
-      <h3>Overfitting Nedir?</h3>
-      <a class="btn" href="ai-essentials-part1-tr.html">Oku →</a>
+    <!-- HOŞ GELDİN -->
+    <div class="panel-section active" id="panel-welcome">
+      <div class="welcome-banner">
+        <h2>Bloğa Hoş Geldin 💗</h2>
+        <p>Buradaki her şey başlangıç dostu olacak şekilde yazılmıştır — mühendisliğe yeni başlıyor olsanız da yapay zeka ve sinyal işleme konularını derinlemesine keşfediyor olsanız da. Kenar çubuğundan bir kategori seçin ya da aşağıdaki kartlardan birini tıklayın.</p>
+      </div>
+      <div class="overview-grid">
+        <div class="overview-card ov-ml" onclick="switchPanel('ml')"><span class="oc-icon">🎓</span><h3>Benimle ML Öğren</h3><p>Makine öğrenmesi temelleri, adım adım.</p><div class="oc-count">4 yazı →</div></div>
+        <div class="overview-card ov-ai" onclick="switchPanel('ai')"><span class="oc-icon">⚡</span><h3>AI & Sinyal İşleme</h3><p>Temel AI kavramları görsel olarak anlatıldı.</p><div class="oc-count">5 yazı →</div></div>
+        <div class="overview-card ov-sp" onclick="switchPanel('speech')"><span class="oc-icon">🎧</span><h3>Konuşma AI Başlangıç</h3><p>Ham sesten CNN'lere kadar.</p><div class="oc-count">4 yazı →</div></div>
+        <div class="overview-card ov-emg" onclick="switchPanel('emg')"><span class="oc-icon">💪</span><h3>EMG & Biyoelektrik Sinyaller</h3><p>Kas sinyalleri, donanım ve yapay zeka.</p><div class="oc-count">3 yazı →</div></div>
+        <div class="overview-card ov-df" onclick="switchPanel('deepfake')"><span class="oc-icon">🔍</span><h3>Derin Sahte Ses Tespiti</h3><p>Mezuniyet projem — LCNN ile sahte ses.</p><div class="oc-count">4 yazı →</div></div>
+        <div class="overview-card ov-cv" onclick="switchPanel('cv')"><span class="oc-icon">🧠</span><h3>Sıfırdan Bilgisayarlı Görü</h3><p>Pikselden tahmine — başlangıç dostu CV serisi.</p><div class="oc-count">Yeni seri →</div></div>
+        <div class="overview-card ov-ref" onclick="switchPanel('reflections')"><span class="oc-icon">💗</span><h3>Mühendislik Günlükleri</h3><p>Mühendislik hayatından kişisel düşünceler.</p><div class="oc-count">1 yazı →</div></div>
+        <div class="overview-card ov-free" onclick="switchPanel('courses')"><span class="oc-icon">📚</span><h3>Ücretsiz Kurslar & Sertifikalar</h3><p>MathWorks Onramp kursları ve daha fazlası.</p><div class="oc-count">8+ kurs →</div></div>
+        <div class="overview-card ov-dyk" onclick="switchPanel('dyk')"><span class="oc-icon">💡</span><h3>Biliyor muydun?</h3><p>Favori uygulamalarının arkasındaki teknoloji.</p><div class="oc-count">5 kart →</div></div>
+      </div>
     </div>
-    <div class="post-card">
-      <span class="post-tag tag-ai">Bölüm 2</span>
-      <h3>Bias ve Variance</h3>
-      <a class="btn" href="ai-essentials-part2-tr.html">Oku →</a>
-    </div>
-    <div class="post-card">
-      <span class="post-tag tag-ai">Bölüm 3</span>
-      <h3>Aktivasyon Fonksiyonları</h3>
-      <p>ReLU, Sigmoid, Tanh — neden var oldukları ve ne zaman kullanılacakları.</p>
-      <a class="btn" href="ai-essentials-part3-tr.html">Oku →</a>
-    </div>
-    <div class="post-card">
-      <span class="post-tag tag-ai">Bölüm 4</span>
-      <h3>Geri Yayılım Nasıl Çalışır?</h3>
-      <p>İleri geçiş, kayıp, gradyanlar ve ağırlık güncellemeleri.</p>
-      <a class="btn" href="ai-essentials-part4-tr.html">Oku →</a>
-    </div>
-    <div class="post-card">
-      <span class="post-tag tag-ai">Bölüm 5</span>
-      <h3>Düzenlileştirme Teknikleri</h3>
-      <p>Dropout, L1 ve L2 — aşırı öğrenmeyi önlemenin yolları.</p>
-      <a class="btn" href="ai-essentials-part5-tr.html">Oku →</a>
-    </div>
-  </div>
 
-  <!-- Konuşma AI -->
-  <div class="series-header" id="speech-ai">
-    <h2>🎧 Konuşma AI Başlangıç Serisi</h2>
-    <div class="series-line"></div>
-  </div>
-  <div class="post-grid">
-    <div class="post-card">
-      <span class="post-tag tag-speech">Bölüm 1</span>
-      <h3>Ses Özellikleri ve MFCC'yi Anlamak</h3>
-      <a class="btn" href="speech-ai-part1-tr.html">Oku →</a>
+    <!-- MAKİNE ÖĞRENMESİ -->
+    <div class="panel-section" id="panel-ml">
+      <div class="panel-header"><h2>🎓 Benimle Makine Öğrenmesi Öğren</h2><div class="panel-header-line"></div></div>
+      <div class="post-grid">
+        <div class="post-card"><span class="post-tag tag-ml">Hafta 1</span><h3>Makine Öğrenmesi Nedir?</h3><p>Supervised ve unsupervised öğrenme, veri seti ve genelleme.</p><a class="btn" href="learn-ml-week1-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-ml">Hafta 2</span><h3>Modeller Gerçekte Nasıl Öğrenir?</h3><p>Kayıp fonksiyonları, gradyan inişi ve eğitim döngüsü.</p><a class="btn" href="learn-ml-week2-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-ml">Hafta 3</span><h3>Karar Ağaçları & Rastgele Ormanlar</h3><p>Makinelerin kararları nasıl verdiği ve ağaçları güçlü yapan şey.</p><a class="btn" href="learn-ml-week3-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-ml">Hafta 4</span><h3>Sıfırdan Sinir Ağları</h3><p>Nöronlar, ağırlıklar, katmanlar ve ileri geçiş.</p><a class="btn" href="learn-ml-week4-tr.html">Oku →</a></div>
+      </div>
     </div>
-    <div class="post-card">
-      <span class="post-tag tag-speech">Bölüm 2</span>
-      <h3>Konuşma Tanıma için CNN'ler</h3>
-      <a class="btn" href="speech-ai-part2-tr.html">Oku →</a>
-    </div>
-    <div class="post-card">
-      <span class="post-tag tag-speech">Bölüm 3</span>
-      <h3>Spektrogramları ve Evrişimi Anlamak</h3>
-      <a class="btn" href="speech-ai-part3-tr.html">Oku →</a>
-    </div>
-    <div class="post-card">
-      <span class="post-tag tag-speech">Bölüm 4</span>
-      <h3>Konuşma Sınıflandırması için CNN İnşa Etmek</h3>
-      <p>Python + PyTorch ile uygulamalı — ses dosyasından tahmine tam pipeline.</p>
-      <a class="btn" href="speech-ai-part4-tr.html">Oku →</a>
-    </div>
-  </div>
 
-  <!-- EMG Serisi -->
-  <div class="series-header" id="emg">
-    <h2>💪 EMG & Biyoelektrik Sinyaller</h2>
-    <div class="series-line"></div>
-  </div>
-  <div class="post-grid">
-    <div class="post-card">
-      <span class="post-tag tag-new">Bölüm 1 — Yeni</span>
-      <h3>EMG Nedir? Kasların Elektriksel Dili</h3>
-      <p>Motor birimler, aksiyon potansiyelleri ve EMG'nin yapay zeka için neden önemli olduğu.</p>
-      <a class="btn-green" href="emg-part1-tr.html">Oku →</a>
+    <!-- AI TEMELLERİ -->
+    <div class="panel-section" id="panel-ai">
+      <div class="panel-header"><h2>⚡ AI & Sinyal İşleme Temelleri</h2><div class="panel-header-line"></div></div>
+      <div class="post-grid">
+        <div class="post-card"><span class="post-tag tag-ai">Bölüm 1</span><h3>Overfitting Nedir?</h3><a class="btn" href="ai-essentials-part1-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-ai">Bölüm 2</span><h3>Bias ve Variance</h3><a class="btn" href="ai-essentials-part2-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-ai">Bölüm 3</span><h3>Aktivasyon Fonksiyonları</h3><p>ReLU, Sigmoid, Tanh — neden var oldukları ve ne zaman kullanılacakları.</p><a class="btn" href="ai-essentials-part3-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-ai">Bölüm 4</span><h3>Geri Yayılım Nasıl Çalışır?</h3><p>İleri geçiş, kayıp, gradyanlar ve ağırlık güncellemeleri.</p><a class="btn" href="ai-essentials-part4-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-ai">Bölüm 5</span><h3>Düzenlileştirme Teknikleri</h3><p>Dropout, L1 ve L2 — aşırı öğrenmeyi önlemenin yolları.</p><a class="btn" href="ai-essentials-part5-tr.html">Oku →</a></div>
+      </div>
     </div>
-    <div class="post-card">
-      <span class="post-tag tag-new">Bölüm 2 — Yeni</span>
-      <h3>Sinyali Okumak — Donanım, Elektrotlar ve Gürültü</h3>
-      <p>Deriden dijitale tam sinyal zinciri — yükselteçler, ADC ve gürültü kaynakları.</p>
-      <a class="btn-green" href="emg-part2-tr.html">Oku →</a>
-    </div>
-    <div class="post-card">
-      <span class="post-tag tag-new">Bölüm 3 — Yeni</span>
-      <h3>EMG İşleme — Filtreleme, Pencereleme ve Özellik Çıkarımı</h3>
-      <p>Bant geçiren filtre, kayan pencere, RMS/MAV/ZCR/VAR özellikleri Python ile.</p>
-      <a class="btn-green" href="emg-part3-tr.html">Oku →</a>
-    </div>
-  </div>
 
-  <!-- Deepfake Tespiti -->
-  <div class="series-header" id="deepfake">
-    <h2>🔍 Derin Sahte Ses Tespiti — Mezuniyet Projesi</h2>
-    <div class="series-line"></div>
-  </div>
-  <div class="post-grid">
-    <div class="post-card">
-      <span class="post-tag tag-deepfake">Bölüm 1</span>
-      <h3>Derin Sahte Ses Nedir ve Neden Önemlidir?</h3>
-      <p>Problem, tehdit ortamı ve bunu mezuniyet projesi olarak seçme nedenim.</p>
-      <a class="btn-blue" href="deepfake-part1-tr.html">Oku →</a>
+    <!-- KONUŞMA AI -->
+    <div class="panel-section" id="panel-speech">
+      <div class="panel-header"><h2>🎧 Konuşma AI Başlangıç Serisi</h2><div class="panel-header-line"></div></div>
+      <div class="post-grid">
+        <div class="post-card"><span class="post-tag tag-speech">Bölüm 1</span><h3>Ses Özellikleri ve MFCC'yi Anlamak</h3><a class="btn" href="speech-ai-part1-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-speech">Bölüm 2</span><h3>Konuşma Tanıma için CNN'ler</h3><a class="btn" href="speech-ai-part2-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-speech">Bölüm 3</span><h3>Spektrogramları ve Evrişimi Anlamak</h3><a class="btn" href="speech-ai-part3-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-speech">Bölüm 4</span><h3>Konuşma Sınıflandırması için CNN İnşa Etmek</h3><p>Python + PyTorch ile uygulamalı — ses dosyasından tahmine tam pipeline.</p><a class="btn" href="speech-ai-part4-tr.html">Oku →</a></div>
+      </div>
     </div>
-    <div class="post-card">
-      <span class="post-tag tag-deepfake">Bölüm 2</span>
-      <h3>Veri Seti — ASVspoof2019 ve Türkçe Veri Setim</h3>
-      <p>315 kayıt, 26 konuşmacı ve kendi deepfake veri setimi nasıl oluşturdum.</p>
-      <a class="btn-blue" href="deepfake-part2-tr.html">Oku →</a>
-    </div>
-    <div class="post-card">
-      <span class="post-tag tag-deepfake">Bölüm 3</span>
-      <h3>LCNN Modeli — Mimari ve Eğitim</h3>
-      <p>LCNN, MFM aktivasyonu, log-Mel özellikleri ve eğitim stratejisi.</p>
-      <a class="btn-blue" href="deepfake-part3-tr.html">Oku →</a>
-    </div>
-    <div class="post-card">
-      <span class="post-tag tag-deepfake">Bölüm 4</span>
-      <h3>Sonuçlar, Çapraz Veri Seti Zorlukları ve Öğrendiklerim</h3>
-      <p>LA'da %99.27 doğruluk, diller arası deneyler ve dürüst sonuçlar.</p>
-      <a class="btn-blue" href="deepfake-part4-tr.html">Oku →</a>
-    </div>
-  </div>
 
-  <!-- Mühendislik Günlükleri -->
-  <div class="series-header" id="reflections">
-    <h2>💗 Mühendislik Günlükleri</h2>
-    <div class="series-line"></div>
-  </div>
-  <div class="post-grid">
-    <div class="post-card">
-      <span class="post-tag tag-reflect">Günlük</span>
-      <h3>Mühendislikte Geride Hissettiğinde...</h3>
-      <a class="btn" href="feeling-behind-tr.html">Oku →</a>
+    <!-- EMG -->
+    <div class="panel-section" id="panel-emg">
+      <div class="panel-header"><h2>💪 EMG & Biyoelektrik Sinyaller</h2><div class="panel-header-line"></div></div>
+      <div class="post-grid">
+        <div class="post-card"><span class="post-tag tag-new">Bölüm 1 — Yeni</span><h3>EMG Nedir? Kasların Elektriksel Dili</h3><p>Motor birimler, aksiyon potansiyelleri ve EMG'nin yapay zeka için neden önemli olduğu.</p><a class="btn-green" href="emg-part1-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-new">Bölüm 2 — Yeni</span><h3>Sinyali Okumak — Donanım, Elektrotlar ve Gürültü</h3><p>Deriden dijitale tam sinyal zinciri — yükselteçler, ADC ve gürültü kaynakları.</p><a class="btn-green" href="emg-part2-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-new">Bölüm 3 — Yeni</span><h3>EMG İşleme — Filtreleme, Pencereleme ve Özellik Çıkarımı</h3><p>Bant geçiren filtre, kayan pencere, RMS/MAV/ZCR/VAR özellikleri Python ile.</p><a class="btn-green" href="emg-part3-tr.html">Oku →</a></div>
+      </div>
     </div>
-  </div>
 
-  <!-- Ücretsiz Kurslar -->
-  <div class="series-header" id="free-courses">
-    <h2>📚 Ücretsiz Kurslar & Sertifikalar</h2>
-    <div class="series-line"></div>
-  </div>
-  <div class="post-grid">
-    <div class="post-card">
-      <span class="post-tag tag-toolkit">MathWorks</span>
-      <h3>MATLAB Onramp</h3>
-      <p>MATLAB'a giriş — değişkenler, diziler, grafik ve betik yazımı. Ücretsiz + sertifika.</p>
-      <a class="btn-orange" href="free-courses-tr.html">Görüntüle →</a>
+    <!-- DEEPFAKE -->
+    <div class="panel-section" id="panel-deepfake">
+      <div class="panel-header"><h2>🔍 Derin Sahte Ses Tespiti — Mezuniyet Projesi</h2><div class="panel-header-line"></div></div>
+      <div class="post-grid">
+        <div class="post-card"><span class="post-tag tag-deepfake">Bölüm 1</span><h3>Derin Sahte Ses Nedir ve Neden Önemlidir?</h3><p>Problem, tehdit ortamı ve bunu mezuniyet projesi olarak seçme nedenim.</p><a class="btn-blue" href="deepfake-part1-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-deepfake">Bölüm 2</span><h3>Veri Seti — ASVspoof2019 ve Türkçe Veri Setim</h3><p>315 kayıt, 26 konuşmacı ve kendi deepfake veri setimi nasıl oluşturdum.</p><a class="btn-blue" href="deepfake-part2-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-deepfake">Bölüm 3</span><h3>LCNN Modeli — Mimari ve Eğitim</h3><p>LCNN, MFM aktivasyonu, log-Mel özellikleri ve eğitim stratejisi.</p><a class="btn-blue" href="deepfake-part3-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-deepfake">Bölüm 4</span><h3>Sonuçlar, Çapraz Veri Seti Zorlukları ve Öğrendiklerim</h3><p>LA'da %99.27 doğruluk, diller arası deneyler ve dürüst sonuçlar.</p><a class="btn-blue" href="deepfake-part4-tr.html">Oku →</a></div>
+      </div>
     </div>
-    <div class="post-card">
-      <span class="post-tag tag-toolkit">MathWorks</span>
-      <h3>Machine Learning Onramp</h3>
-      <p>Sınıflandırma, regresyon ve model değerlendirmeyi kapsayan interaktif ML kursu. Ücretsiz + sertifika.</p>
-      <a class="btn-orange" href="free-courses-tr.html">Görüntüle →</a>
-    </div>
-    <div class="post-card">
-      <span class="post-tag tag-toolkit">MathWorks</span>
-      <h3>Deep Learning Onramp</h3>
-      <p>MATLAB ile sinir ağları, CNN ve transfer öğrenme — uygulamalı. Ücretsiz + sertifika.</p>
-      <a class="btn-orange" href="free-courses-tr.html">Görüntüle →</a>
-    </div>
-    <div class="post-card">
-      <span class="post-tag tag-toolkit">MathWorks + Daha Fazlası</span>
-      <h3>Tüm Kurslara Bak →</h3>
-      <p>Sinyal İşleme, Bilgisayarlı Görü, Simulink, Pekiştirmeli Öğrenme, Hugging Face, fast.ai ve daha fazlası.</p>
-      <a class="btn-orange" href="free-courses-tr.html">Tümünü Gör →</a>
-    </div>
-  </div>
 
-  <div class="bottom-nav">
-    <a class="btn-outline" href="tr.html">← Ana Sayfaya Dön</a>
-  </div>
 
+    <!-- BİLGİSAYARLI GÖRÜ -->
+    <div class="panel-section" id="panel-cv">
+      <div class="panel-header"><h2>🧠 Sıfırdan Bilgisayarlı Görü</h2><div class="panel-header-line"></div></div>
+      <div class="post-grid">
+        <div class="post-card"><span class="post-tag tag-cv">Bölüm 1</span><h3>Bilgisayarlar Nasıl "Görür"? — Pikselden Tahmine</h3><p>Görüntüler sayı ızgaraları olarak ve CNN'lerin kalıpları nasıl öğrendiği.</p><a class="btn-teal" href="cv-part1-tr.html">Oku →</a></div>
+        <div class="post-card coming-soon-card"><span class="soon-badge">Yakında</span><h3>Bölüm 2: Basit Bir CNN ile Görüntü Sınıflandırma</h3><p>Sıfırdan çalışan bir CNN inşa edin — pikselden tahmine.</p></div>
+        <div class="post-card coming-soon-card"><span class="soon-badge">Yakında</span><h3>Bölüm 3: Nesne Tespiti — YOLO Nedir?</h3><p>Modeller bir görüntüde birden fazla nesneyi nasıl bulur ve etiketler.</p></div>
+        <div class="post-card coming-soon-card"><span class="soon-badge">Yakında</span><h3>Bölüm 4: Görü için Transfer Öğrenme</h3><p>Kendi projeleriniz için güçlü önceden eğitilmiş modelleri kullanma.</p></div>
+      </div>
+    </div>
+
+    <!-- MÜHENDİSLİK GÜNLÜKLERİ -->
+    <div class="panel-section" id="panel-reflections">
+      <div class="panel-header"><h2>💗 Mühendislik Günlükleri</h2><div class="panel-header-line"></div></div>
+      <div class="post-grid">
+        <div class="post-card"><span class="post-tag tag-reflect">Günlük</span><h3>Mühendislikte Geride Hissettiğinde...</h3><a class="btn" href="feeling-behind-tr.html">Oku →</a></div>
+      </div>
+    </div>
+
+    <!-- ÜCRETSİZ KURSLAR -->
+    <div class="panel-section" id="panel-courses">
+      <div class="panel-header"><h2>📚 Ücretsiz Kurslar & Sertifikalar</h2><div class="panel-header-line"></div></div>
+      <div class="post-grid">
+        <div class="post-card"><span class="post-tag tag-toolkit">MathWorks</span><h3>MATLAB Onramp</h3><p>Değişkenler, diziler, grafik çizimi ve betik yazımı. Ücretsiz + sertifika.</p><a class="btn-orange" href="free-courses-tr.html">Görüntüle →</a></div>
+        <div class="post-card"><span class="post-tag tag-toolkit">MathWorks</span><h3>Machine Learning Onramp</h3><p>Sınıflandırma, regresyon ve model değerlendirme. Ücretsiz + sertifika.</p><a class="btn-orange" href="free-courses-tr.html">Görüntüle →</a></div>
+        <div class="post-card"><span class="post-tag tag-toolkit">MathWorks</span><h3>Deep Learning Onramp</h3><p>CNN, transfer öğrenme, görüntü sınıflandırma. Ücretsiz + sertifika.</p><a class="btn-orange" href="free-courses-tr.html">Görüntüle →</a></div>
+        <div class="post-card"><span class="post-tag tag-toolkit">MathWorks + Daha Fazlası</span><h3>8+ Kursun Tamamını Gör →</h3><p>Sinyal İşleme, Bilgisayarlı Görü, Simulink, Hugging Face, fast.ai ve daha fazlası.</p><a class="btn-orange" href="free-courses-tr.html">Tümünü Gör →</a></div>
+      </div>
+    </div>
+
+    <!-- BİLİYOR MUYDUN -->
+    <div class="panel-section" id="panel-dyk">
+      <div class="panel-header"><h2>💡 Biliyor muydun?</h2><div class="panel-header-line"></div></div>
+      <div class="dyk-panel-note">
+        💡 Bunlar interaktif çevrilir kartlar — cevapları görmek için tam sayfaya git ve kartları çevir!
+      </div>
+      <div class="post-grid">
+        <div class="post-card"><span class="post-tag tag-dyk">TikTok</span><h3>TikTok "Sana Özel" sayfanı nasıl belirliyor</h3><p>Takipçi sayısıyla alakası yok — her videoyla nasıl etkileşime girdiğinle ilgili.</p><a class="btn-yellow" href="did-you-know-tr.html">Kartı çevir →</a></div>
+        <div class="post-card"><span class="post-tag tag-dyk">Spotify</span><h3>Discover Weekly neden aklını okur gibi hissettiriyor</h3><p>İşbirlikçi filtreleme ve müzik bloglarında NLP — hiçbir tür etiketi gerekmez.</p><a class="btn-yellow" href="did-you-know-tr.html">Kartı çevir →</a></div>
+        <div class="post-card"><span class="post-tag tag-dyk">Shazam</span><h3>Shazam 5 saniyelik gürültüden şarkıyı nasıl tanıyor</h3><p>Spektrogramlar, takımyıldızı haritaları ve milyarlarca parmak izi.</p><a class="btn-yellow" href="did-you-know-tr.html">Kartı çevir →</a></div>
+        <div class="post-card"><span class="post-tag tag-dyk">Instagram</span><h3>Instagram yapay zeka üretimi fotoğrafları nasıl tespit ediyor</h3><p>Görünmez piksel kalıpları ve dijital filigranlar.</p><a class="btn-yellow" href="did-you-know-tr.html">Kartı çevir →</a></div>
+        <div class="post-card"><span class="post-tag tag-dyk">Instagram</span><h3>Keşfet sayfası hiç arama yapmadan nasıl çalışıyor</h3><p>Yüz milyonlarca kullanıcı için eş zamanlı iki aşamalı sıralama.</p><a class="btn-yellow" href="did-you-know-tr.html">Kartı çevir →</a></div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <footer>
   <p>💗 Buse tarafından hazırlandı | SheBuildsSTEM</p>
 </footer>
 
+<script>
+  function switchPanel(id) {
+    document.querySelectorAll('.panel-section').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    const btn = document.getElementById('btn-' + id);
+    if (btn) btn.classList.add('active');
+    document.getElementById('mobileSelect').value = id;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
 </body>
 </html>
