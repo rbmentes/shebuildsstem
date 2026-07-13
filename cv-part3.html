@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Object Detection — What's YOLO? | Computer Vision From Scratch – SheBuildsSTEM</title>
+<meta name="description" content="Part 3 of Computer Vision From Scratch — how object detection models find and label multiple objects in one image, and what makes YOLO fast.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #e4c9f7 0%, #b18cf0 30%, #8fa8ef 65%, #a8d4f5 100%);
+    background-attachment: fixed;
+    color: #2d2640;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 40px 20px 80px; }
+  header.top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
+  .brand { font-weight: 800; font-size: 1.25rem; color: #fff; text-decoration: none; }
+  .back-link { color: #fff; text-decoration: none; font-weight: 500; font-size: 0.95rem; background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 999px; backdrop-filter: blur(10px); transition: background 0.2s; }
+  .back-link:hover { background: rgba(255,255,255,0.35); }
+
+  .glass {
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.4);
+    box-shadow: 0 8px 32px rgba(31,38,135,0.15);
+  }
+
+  .post-header { padding: 36px 40px; margin-bottom: 28px; }
+  .series-tag { font-weight: 700; color: #7c3aed; font-size: 0.95rem; margin-bottom: 6px; }
+  .part-badge { display: inline-block; background: #f472b6; color: #831843; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.05em; padding: 5px 14px; border-radius: 999px; margin-bottom: 14px; }
+  h1 { font-size: 2rem; font-weight: 800; color: #241b3d; margin-bottom: 12px; }
+  .tags { color: #6b5f8a; font-size: 0.9rem; margin-bottom: 18px; }
+  .intro { font-size: 1.05rem; color: #3a3155; }
+  .intro strong { color: #7c3aed; }
+
+  section.block { padding: 32px 40px; margin-bottom: 24px; }
+  h2 { font-size: 1.4rem; color: #241b3d; margin-bottom: 14px; }
+  h3 { font-size: 1.1rem; color: #4c1d95; margin: 20px 0 8px; }
+  p { margin-bottom: 14px; color: #3a3155; }
+  code { background: rgba(124,58,237,0.12); padding: 2px 8px; border-radius: 6px; font-size: 0.9em; color: #5b21b6; }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 600px) { .compare-grid { grid-template-columns: 1fr; } }
+  .compare-card { border-radius: 16px; padding: 20px 22px; }
+  .compare-card.bad { background: rgba(248,113,113,0.15); border-left: 4px solid #f87171; }
+  .compare-card.good { background: rgba(52,211,153,0.15); border-left: 4px solid #34d399; }
+  .compare-card h4 { margin-bottom: 8px; color: #241b3d; }
+  .compare-card p { margin: 0; font-size: 0.92rem; color: #3a3155; }
+
+  .example-box { background: linear-gradient(135deg, rgba(196,181,253,0.35), rgba(147,197,253,0.35)); border-radius: 18px; padding: 24px 28px; margin: 20px 0; }
+  .example-box h3 { margin-top: 0; }
+
+  .step-list { list-style: none; margin: 16px 0; }
+  .step-list li { display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+  .step-list .dot { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: #7c3aed; color: #fff; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; }
+  .step-list p { margin: 0; }
+
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid rgba(124,58,237,0.15); }
+  th { color: #4c1d95; font-weight: 700; }
+  td { color: #3a3155; }
+
+  .takeaway { background: linear-gradient(135deg, #7c3aed, #6366f1); color: #fff; padding: 30px 36px; border-radius: 20px; margin-top: 10px; }
+  .takeaway h2 { color: #fff; }
+  .takeaway p { color: #ece9ff; margin-bottom: 0; }
+
+  .nav-links { display: flex; justify-content: space-between; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
+  .nav-links a { flex: 1; min-width: 200px; background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); padding: 16px 20px; border-radius: 16px; text-decoration: none; color: #4c1d95; font-weight: 600; text-align: center; transition: transform 0.2s; }
+  .nav-links a:hover { transform: translateY(-2px); }
+
+  footer { text-align: center; color: #fff; margin-top: 40px; font-size: 0.9rem; opacity: 0.9; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <a class="brand" href="index.html">SheBuildsSTEM 💗⚡</a>
+    <a class="back-link" href="blog.html">← Back to Blog</a>
+  </header>
+
+  <div class="glass post-header">
+    <div class="series-tag">🧠 Computer Vision From Scratch</div>
+    <span class="part-badge">PART 3</span>
+    <h1>Object Detection — What's YOLO?</h1>
+    <div class="tags">Beginner-friendly · Object Detection · Real-Time Vision</div>
+    <p class="intro">In <strong>Part 2</strong>, our CNN answered one question per image: "what is this?" But real photos usually contain more than one thing. <strong>Object detection</strong> answers a harder question: <em>what objects are here, and where exactly is each one?</em> This is where architectures like <strong>YOLO</strong> come in.</p>
+  </div>
+
+  <section class="glass block">
+    <h2>🔍 Classification vs. detection</h2>
+    <div class="compare-grid">
+      <div class="compare-card bad">
+        <h4>Classification (Part 2)</h4>
+        <p>One label for the whole image: "dog." Doesn't say where, or how many.</p>
+      </div>
+      <div class="compare-card good">
+        <h4>Detection (this post)</h4>
+        <p>A box around each object, plus a label: "dog at (x, y, w, h)," possibly several times per image.</p>
+      </div>
+    </div>
+    <p>Detection models output a list of <strong>bounding boxes</strong> — rectangles that mark where each object is — along with a class label and a confidence score for every box.</p>
+  </section>
+
+  <section class="glass block">
+    <h2>🐌 The old way: sliding windows</h2>
+    <p>Early approaches ran a classifier over hundreds of small crops of the image at different positions and sizes, asking "is there an object here?" at every single one. It worked, but it was painfully slow — far too slow for anything real-time, like video or a self-driving car's camera feed.</p>
+    <p>Better versions like R-CNN improved accuracy by first proposing a smaller set of likely regions, then classifying just those. Still, running the network many times per image kept things slow.</p>
+  </section>
+
+  <section class="glass block">
+    <h2>⚡ YOLO: You Only Look Once</h2>
+    <p>YOLO's key idea is right there in the name: instead of scanning the image piece by piece, it looks at the <strong>entire image exactly once</strong> and predicts every bounding box and class in a single pass through the network.</p>
+
+    <ul class="step-list">
+      <li><span class="dot">1</span><p>The image is divided into a grid — say, 13×13 cells.</p></li>
+      <li><span class="dot">2</span><p>Each cell predicts: "is the center of an object here, and if so, what box and what class?"</p></li>
+      <li><span class="dot">3</span><p>All predictions come out of the network together, in one forward pass.</p></li>
+      <li><span class="dot">4</span><p>Overlapping, low-confidence boxes are filtered out with a step called <strong>Non-Maximum Suppression</strong>, leaving the best box per object.</p></li>
+    </ul>
+
+    <div class="example-box">
+      <h3>Why "one look" matters</h3>
+      <p>Because YOLO processes the whole image in a single network pass rather than hundreds of separate crops, it can run at real-time speeds — fast enough for live video, robotics, and camera feeds, not just still photos.</p>
+    </div>
+  </section>
+
+  <section class="glass block">
+    <h2>📦 What a prediction actually looks like</h2>
+    <p>For each detected object, YOLO outputs something like:</p>
+    <p><code>class: "cat", confidence: 0.87, box: (x=112, y=45, w=80, h=95)</code></p>
+    <p>The box coordinates mark the top-left corner plus width and height, the class is the predicted label, and the confidence score tells you how sure the model is — low-confidence boxes are usually thrown away before showing results.</p>
+  </section>
+
+  <section class="glass block">
+    <h2>⚖️ Speed vs. accuracy trade-offs</h2>
+    <table>
+      <tr><th>Model family</th><th>Approach</th><th>Best for</th></tr>
+      <tr><td>Sliding window / R-CNN family</td><td>Multiple passes, region proposals</td><td>Highest accuracy, offline processing</td></tr>
+      <tr><td>YOLO</td><td>Single pass over the whole image</td><td>Real-time speed, video, embedded devices</td></tr>
+    </table>
+    <p>Newer YOLO versions have closed much of the accuracy gap while keeping their speed advantage, which is why the family remains a go-to choice for real-time detection tasks.</p>
+  </section>
+
+  <div class="glass takeaway">
+    <h2>💡 Final takeaway</h2>
+    <p>Object detection extends classification by locating every object, not just naming one. YOLO's "look once" design predicts all boxes and classes in a single forward pass, trading a little accuracy for the real-time speed that made it a default choice in production vision systems. In Part 4, we'll learn how to reuse powerful pretrained models like this one instead of training from scratch, with transfer learning.</p>
+  </div>
+
+  <div class="nav-links">
+    <a href="cv-part2.html">← Part 2: Image Classification with a Simple CNN</a>
+    <a href="cv-part4.html">Part 4: Transfer Learning for Vision →</a>
+  </div>
+
+  <footer>Made with 💗 by Buse | SheBuildsSTEM</footer>
+</div>
+</body>
+</html>

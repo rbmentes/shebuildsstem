@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transfer Learning for Vision | Computer Vision From Scratch – SheBuildsSTEM</title>
+<meta name="description" content="Part 4 of Computer Vision From Scratch — how to reuse powerful pretrained vision models for your own projects with transfer learning.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #e4c9f7 0%, #b18cf0 30%, #8fa8ef 65%, #a8d4f5 100%);
+    background-attachment: fixed;
+    color: #2d2640;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 40px 20px 80px; }
+  header.top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
+  .brand { font-weight: 800; font-size: 1.25rem; color: #fff; text-decoration: none; }
+  .back-link { color: #fff; text-decoration: none; font-weight: 500; font-size: 0.95rem; background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 999px; backdrop-filter: blur(10px); transition: background 0.2s; }
+  .back-link:hover { background: rgba(255,255,255,0.35); }
+
+  .glass {
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.4);
+    box-shadow: 0 8px 32px rgba(31,38,135,0.15);
+  }
+
+  .post-header { padding: 36px 40px; margin-bottom: 28px; }
+  .series-tag { font-weight: 700; color: #7c3aed; font-size: 0.95rem; margin-bottom: 6px; }
+  .part-badge { display: inline-block; background: #60a5fa; color: #1e3a8a; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.05em; padding: 5px 14px; border-radius: 999px; margin-bottom: 14px; }
+  h1 { font-size: 2rem; font-weight: 800; color: #241b3d; margin-bottom: 12px; }
+  .tags { color: #6b5f8a; font-size: 0.9rem; margin-bottom: 18px; }
+  .intro { font-size: 1.05rem; color: #3a3155; }
+  .intro strong { color: #7c3aed; }
+
+  section.block { padding: 32px 40px; margin-bottom: 24px; }
+  h2 { font-size: 1.4rem; color: #241b3d; margin-bottom: 14px; }
+  h3 { font-size: 1.1rem; color: #4c1d95; margin: 20px 0 8px; }
+  p { margin-bottom: 14px; color: #3a3155; }
+  code { background: rgba(124,58,237,0.12); padding: 2px 8px; border-radius: 6px; font-size: 0.9em; color: #5b21b6; }
+
+  .analogy-box { background: linear-gradient(135deg, rgba(196,181,253,0.35), rgba(147,197,253,0.35)); border-radius: 18px; padding: 24px 28px; margin: 20px 0; }
+  .analogy-box h3 { margin-top: 0; }
+
+  .layer-visual { display: flex; align-items: center; gap: 8px; margin: 20px 0; flex-wrap: wrap; }
+  .layer-visual .seg { flex: 1; min-width: 110px; border-radius: 12px; padding: 14px 12px; text-align: center; font-size: 0.85rem; font-weight: 600; }
+  .layer-visual .frozen { background: rgba(148,163,184,0.35); color: #334155; border: 2px dashed #94a3b8; }
+  .layer-visual .trainable { background: rgba(124,58,237,0.25); color: #4c1d95; border: 2px solid #7c3aed; }
+  .layer-visual .arrow { font-size: 1.3rem; color: #7c3aed; }
+
+  .step-list { list-style: none; margin: 16px 0; }
+  .step-list li { display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+  .step-list .dot { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: #7c3aed; color: #fff; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; }
+  .step-list p { margin: 0; }
+
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid rgba(124,58,237,0.15); }
+  th { color: #4c1d95; font-weight: 700; }
+  td { color: #3a3155; }
+
+  .takeaway { background: linear-gradient(135deg, #7c3aed, #6366f1); color: #fff; padding: 30px 36px; border-radius: 20px; margin-top: 10px; }
+  .takeaway h2 { color: #fff; }
+  .takeaway p { color: #ece9ff; margin-bottom: 0; }
+
+  .nav-links { display: flex; justify-content: space-between; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
+  .nav-links a { flex: 1; min-width: 200px; background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); padding: 16px 20px; border-radius: 16px; text-decoration: none; color: #4c1d95; font-weight: 600; text-align: center; transition: transform 0.2s; }
+  .nav-links a:hover { transform: translateY(-2px); }
+
+  footer { text-align: center; color: #fff; margin-top: 40px; font-size: 0.9rem; opacity: 0.9; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <a class="brand" href="index.html">SheBuildsSTEM 💗⚡</a>
+    <a class="back-link" href="blog.html">← Back to Blog</a>
+  </header>
+
+  <div class="glass post-header">
+    <div class="series-tag">🧠 Computer Vision From Scratch</div>
+    <span class="part-badge">PART 4</span>
+    <h1>Transfer Learning for Vision</h1>
+    <div class="tags">Beginner-friendly · Transfer Learning · Practical ML</div>
+    <p class="intro">Across this series we've built CNNs from raw pixels and seen how YOLO detects objects in real time. But training a strong model from scratch usually needs millions of labeled images and serious compute. <strong>Transfer learning</strong> is how you skip most of that — by reusing a model that's already learned to see.</p>
+  </div>
+
+  <section class="glass block">
+    <h2>🎓 The core idea</h2>
+    <div class="analogy-box">
+      <h3>An analogy</h3>
+      <p>Someone who already knows how to ride a bike learns to ride a motorcycle much faster than a total beginner — balance, steering, and awareness of the road all carry over. Transfer learning works the same way: a model that already learned to recognize edges, textures, and shapes from millions of general photos doesn't need to relearn those basics for your specific task.</p>
+    </div>
+    <p>Models like ResNet, VGG, and EfficientNet are pretrained on huge datasets like ImageNet, which contains over a million labeled images across a thousand categories. By the time training finishes, their early layers have become excellent general-purpose visual feature detectors — completely independent of the exact task they were trained for.</p>
+  </section>
+
+  <section class="glass block">
+    <h2>🧊 Freezing vs. fine-tuning</h2>
+    <p>A pretrained network's layers aren't all treated the same way. Early layers detect generic features like edges and colors — useful for almost any vision task, so we usually leave them untouched. Later layers detect more task-specific patterns, so those are the ones we adapt.</p>
+
+    <div class="layer-visual">
+      <div class="seg frozen">Early layers<br>(frozen)</div>
+      <div class="arrow">→</div>
+      <div class="seg frozen">Middle layers<br>(frozen or fine-tuned)</div>
+      <div class="arrow">→</div>
+      <div class="seg trainable">New final layers<br>(trained on your data)</div>
+    </div>
+
+    <h3>Two common strategies</h3>
+    <p><strong>Feature extraction:</strong> Freeze the entire pretrained network and only train a new classifier head on top. Fast, and works well when your dataset is small.</p>
+    <p><strong>Fine-tuning:</strong> Unfreeze some of the later layers too, and train them at a very low learning rate alongside your new head. Slower, but can boost accuracy when you have a moderate amount of data.</p>
+  </section>
+
+  <section class="glass block">
+    <h2>🛠️ A practical workflow</h2>
+    <ul class="step-list">
+      <li><span class="dot">1</span><p>Pick a pretrained model suited to your compute budget — ResNet50 and EfficientNet are common, solid defaults.</p></li>
+      <li><span class="dot">2</span><p>Remove its original final classification layer, which was built for ImageNet's 1,000 classes.</p></li>
+      <li><span class="dot">3</span><p>Add a new final layer sized for your own classes — say, 2 classes for a "cat vs. dog" task, or however many your dataset needs.</p></li>
+      <li><span class="dot">4</span><p>Freeze the pretrained layers and train only the new head first, to avoid destroying the useful pretrained weights early on.</p></li>
+      <li><span class="dot">5</span><p>Optionally, unfreeze the last few blocks and fine-tune everything together at a low learning rate for a final accuracy boost.</p></li>
+    </ul>
+  </section>
+
+  <section class="glass block">
+    <h2>⚖️ When transfer learning wins</h2>
+    <table>
+      <tr><th>Situation</th><th>Recommended approach</th></tr>
+      <tr><td>Small dataset (hundreds to low thousands of images)</td><td>Feature extraction — freeze everything, train only the head</td></tr>
+      <tr><td>Moderate dataset, similar domain to ImageNet</td><td>Fine-tune the last few layers</td></tr>
+      <tr><td>Very large dataset, very different domain (e.g. medical scans)</td><td>Fine-tune more layers, or consider training from scratch</td></tr>
+    </table>
+    <p>This is exactly why transfer learning matters for real projects — most of us don't have millions of labeled images or a data center. Reusing a pretrained backbone gets you strong results with a dataset you could realistically collect yourself.</p>
+  </section>
+
+  <div class="glass takeaway">
+    <h2>💡 Final takeaway</h2>
+    <p>Transfer learning lets you stand on the shoulders of models trained on massive datasets, adapting their learned visual knowledge to your own task with a fraction of the data and compute. Combined with what we covered across this series — pixels and CNNs in Parts 1 and 2, and real-time detection with YOLO in Part 3 — you now have a practical map of how modern computer vision actually gets built.</p>
+  </div>
+
+  <div class="nav-links">
+    <a href="cv-part3.html">← Part 3: Object Detection — What's YOLO?</a>
+    <a href="blog.html">Back to Blog →</a>
+  </div>
+
+  <footer>Made with 💗 by Buse | SheBuildsSTEM</footer>
+</div>
+</body>
+</html>
