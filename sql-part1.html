@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Is SQL & Why Databases Matter | Learn SQL From Scratch – SheBuildsSTEM</title>
+<meta name="description" content="Part 1 of Learn SQL From Scratch — what relational databases are, why they beat spreadsheets, and how to write your first SELECT statement.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #e4c9f7 0%, #b18cf0 30%, #8fa8ef 65%, #a8d4f5 100%);
+    background-attachment: fixed;
+    color: #2d2640;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 40px 20px 80px; }
+  header.top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
+  .brand { font-weight: 800; font-size: 1.25rem; color: #fff; text-decoration: none; }
+  .back-link { color: #fff; text-decoration: none; font-weight: 500; font-size: 0.95rem; background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 999px; backdrop-filter: blur(10px); transition: background 0.2s; }
+  .back-link:hover { background: rgba(255,255,255,0.35); }
+
+  .glass {
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.4);
+    box-shadow: 0 8px 32px rgba(31,38,135,0.15);
+  }
+
+  .post-header { padding: 36px 40px; margin-bottom: 28px; }
+  .series-tag { font-weight: 700; color: #7c3aed; font-size: 0.95rem; margin-bottom: 6px; }
+  .part-badge { display: inline-block; background: #64748b; color: #f1f5f9; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.05em; padding: 5px 14px; border-radius: 999px; margin-bottom: 14px; }
+  h1 { font-size: 2rem; font-weight: 800; color: #241b3d; margin-bottom: 12px; }
+  .tags { color: #6b5f8a; font-size: 0.9rem; margin-bottom: 18px; }
+  .intro { font-size: 1.05rem; color: #3a3155; }
+  .intro strong { color: #7c3aed; }
+
+  section.block { padding: 32px 40px; margin-bottom: 24px; }
+  h2 { font-size: 1.4rem; color: #241b3d; margin-bottom: 14px; }
+  h3 { font-size: 1.1rem; color: #4c1d95; margin: 20px 0 8px; }
+  p { margin-bottom: 14px; color: #3a3155; }
+  code { background: rgba(124,58,237,0.12); padding: 2px 8px; border-radius: 6px; font-size: 0.9em; color: #5b21b6; }
+  pre { background: #241b3d; color: #e9e4fc; padding: 18px 22px; border-radius: 14px; overflow-x: auto; margin: 16px 0; font-size: 0.88rem; line-height: 1.6; }
+  pre code { background: none; padding: 0; color: inherit; }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 600px) { .compare-grid { grid-template-columns: 1fr; } }
+  .compare-card { border-radius: 16px; padding: 20px 22px; }
+  .compare-card.bad { background: rgba(248,113,113,0.15); border-left: 4px solid #f87171; }
+  .compare-card.good { background: rgba(52,211,153,0.15); border-left: 4px solid #34d399; }
+  .compare-card h4 { margin-bottom: 8px; color: #241b3d; }
+  .compare-card p { margin: 0; font-size: 0.92rem; color: #3a3155; }
+
+  .example-box { background: linear-gradient(135deg, rgba(196,181,253,0.35), rgba(147,197,253,0.35)); border-radius: 18px; padding: 24px 28px; margin: 20px 0; }
+  .example-box h3 { margin-top: 0; }
+
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid rgba(124,58,237,0.15); }
+  th { color: #4c1d95; font-weight: 700; }
+  td { color: #3a3155; }
+
+  .anatomy { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0; align-items: center; }
+  .anatomy .piece { background: rgba(255,255,255,0.65); border: 2px solid #a78bfa; border-radius: 12px; padding: 10px 16px; font-family: monospace; font-weight: 700; color: #4c1d95; text-align: center; }
+  .anatomy .piece small { display: block; font-family: 'Poppins', sans-serif; font-weight: 500; font-size: 0.68rem; color: #7c6a99; margin-top: 4px; }
+
+  .takeaway { background: linear-gradient(135deg, #7c3aed, #6366f1); color: #fff; padding: 30px 36px; border-radius: 20px; margin-top: 10px; }
+  .takeaway h2 { color: #fff; }
+  .takeaway p { color: #ece9ff; margin-bottom: 0; }
+
+  .nav-links { display: flex; justify-content: space-between; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
+  .nav-links a { flex: 1; min-width: 200px; background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); padding: 16px 20px; border-radius: 16px; text-decoration: none; color: #4c1d95; font-weight: 600; text-align: center; transition: transform 0.2s; }
+  .nav-links a:hover { transform: translateY(-2px); }
+
+  footer { text-align: center; color: #fff; margin-top: 40px; font-size: 0.9rem; opacity: 0.9; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <a class="brand" href="index.html">SheBuildsSTEM 💗⚡</a>
+    <a class="back-link" href="blog.html">← Back to Blog</a>
+  </header>
+
+  <div class="glass post-header">
+    <div class="series-tag">🗄️ Learn SQL From Scratch</div>
+    <span class="part-badge">PART 1</span>
+    <h1>What Is SQL & Why Databases Matter</h1>
+    <div class="tags">Beginner-friendly · Databases · SQL Basics</div>
+    <p class="intro">Every app you use — Instagram, Spotify, your university's student portal — stores its data somewhere, and almost always queries it with <strong>SQL</strong>. This series starts from zero: no prior database experience needed. By the end of Part 1, you'll understand what a relational database actually is, and you'll write your first query.</p>
+  </div>
+
+  <section class="glass block">
+    <h2>📊 Why not just use a spreadsheet?</h2>
+    <p>A spreadsheet works fine for a small personal list. But once data gets large, gets shared across many users, or needs to stay consistent while dozens of people update it at once, spreadsheets start to break down.</p>
+    <div class="compare-grid">
+      <div class="compare-card bad">
+        <h4>Spreadsheets</h4>
+        <p>Slow at scale, no real way to enforce rules ("age must be a number"), painful to link related data across sheets, and risky with multiple simultaneous editors.</p>
+      </div>
+      <div class="compare-card good">
+        <h4>Relational databases</h4>
+        <p>Built to handle millions of rows, enforce data rules automatically, link related tables cleanly, and handle many simultaneous reads/writes safely.</p>
+      </div>
+    </div>
+    <p>A <strong>database</strong> is just organized, persistent storage for data. A <strong>relational</strong> database organizes that data into <strong>tables</strong> — think structured spreadsheets that can be precisely linked to one another.</p>
+  </section>
+
+  <section class="glass block">
+    <h2>🧱 Tables, rows, and columns</h2>
+    <p>A table stores one type of thing — say, students. Each <strong>row</strong> is one specific student. Each <strong>column</strong> is one property every student has, like name or major.</p>
+    <table>
+      <tr><th>student_id</th><th>name</th><th>major</th><th>gpa</th></tr>
+      <tr><td>1</td><td>Buse</td><td>EEE</td><td>3.7</td></tr>
+      <tr><td>2</td><td>Ahmet</td><td>Computer Science</td><td>3.4</td></tr>
+      <tr><td>3</td><td>Elif</td><td>EEE</td><td>3.9</td></tr>
+    </table>
+    <p>A real application usually has many tables — <code>students</code>, <code>courses</code>, <code>enrollments</code> — each storing one kind of entity, connected to the others through shared ID columns. We'll cover exactly how those connections work when we get to joins later in the series.</p>
+  </section>
+
+  <section class="glass block">
+    <h2>🗣️ So what is SQL, exactly?</h2>
+    <p><strong>SQL</strong> stands for <strong>Structured Query Language</strong>. It's how you talk to a relational database: asking it to retrieve, add, update, or remove data. The key thing that makes SQL different from a typical programming language is that it's <strong>declarative</strong> — you describe <em>what</em> data you want, not <em>how</em> to go get it. The database figures out the "how" for you.</p>
+    <div class="example-box">
+      <h3>Declarative vs. imperative</h3>
+      <p>In a language like Python, you'd write a loop: check each student one by one, and collect the ones majoring in EEE. In SQL, you just state the result you want, and the database handles the retrieval internally — usually far more efficiently than a hand-written loop would.</p>
+    </div>
+  </section>
+
+  <section class="glass block">
+    <h2>🔍 Your first query: SELECT</h2>
+    <p>The most common SQL statement is <code>SELECT</code> — it retrieves data from a table. Here's the anatomy of a simple query:</p>
+    <pre><code>SELECT name, gpa
+FROM students
+WHERE major = 'EEE';</code></pre>
+    <div class="anatomy">
+      <div class="piece">SELECT<small>which columns</small></div>
+      <div class="piece">FROM<small>which table</small></div>
+      <div class="piece">WHERE<small>which rows</small></div>
+    </div>
+    <p>Read it almost like English: "give me the <code>name</code> and <code>gpa</code>, <code>from</code> the <code>students</code> table, <code>where</code> the major is EEE." Running this against our example table above would return just Buse and Elif's rows.</p>
+    <p>Want every column instead of naming them one by one? Use <code>SELECT *</code> — the asterisk means "all columns."</p>
+  </section>
+
+  <div class="glass takeaway">
+    <h2>💡 Final takeaway</h2>
+    <p>Relational databases organize data into linked tables instead of scattered spreadsheets, and SQL is the declarative language used to ask them questions. You now know what a table is and how to write a basic <code>SELECT</code> query. In Part 2, we'll go further with filtering and sorting — comparison operators, <code>ORDER BY</code>, and <code>LIMIT</code> — to get exactly the rows you want, in the order you want them.</p>
+  </div>
+
+  <div class="nav-links">
+    <a href="blog.html">← Back to Blog</a>
+    <a href="sql-part2.html">Part 2: Filtering & Sorting →</a>
+  </div>
+
+  <footer>Made with 💗 by Buse | SheBuildsSTEM</footer>
+</div>
+</body>
+</html>

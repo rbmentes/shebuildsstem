@@ -49,6 +49,8 @@
     .ov-ref  { border-left-color: #f9a8d4; } .ov-ref .oc-count  { color: #9d174d; }
     .ov-free { border-left-color: #fb923c; } .ov-free .oc-count { color: #c2410c; }
     .ov-dyk  { border-left-color: #fbbf24; } .ov-dyk .oc-count  { color: #b45309; }
+    .ov-cv   { border-left-color: #2dd4bf; } .ov-cv .oc-count   { color: #0f766e; }
+    .ov-sql  { border-left-color: #64748b; } .ov-sql .oc-count  { color: #334155; }
     .panel-header { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
     .panel-header h2 { font-size: 1.15rem; font-weight: 800; color: white; text-shadow: 0 2px 10px rgba(0,0,0,0.12); white-space: nowrap; }
     .panel-header-line { flex: 1; height: 2px; background: rgba(255,255,255,0.35); border-radius: 2px; }
@@ -60,7 +62,7 @@
     .tag-speech { background: #dbeafe; color: #1d4ed8; } .tag-deepfake { background: #1e1e2e; color: #89b4fa; }
     .tag-emg { background: #d1fae5; color: #065f46; } .tag-reflect { background: #fdf2f8; color: #9d174d; }
     .tag-new { background: linear-gradient(135deg, #ff4fa3, #a855f7); color: white; }
-    .tag-toolkit { background: #fff7ed; color: #c2410c; } .tag-dyk { background: #fef9c3; color: #b45309; }
+    .tag-toolkit { background: #fff7ed; color: #c2410c; } .tag-dyk { background: #fef9c3; color: #b45309; } .tag-cv { background: #ccfbf1; color: #0f766e; } .tag-sql { background: #e2e8f0; color: #334155; }
     .post-card h3 { font-size: 0.87rem; font-weight: 700; color: #2d2d2d; line-height: 1.45; flex: 1; }
     .post-card p  { font-size: 0.75rem; color: #777; line-height: 1.6; }
     .btn        { display: inline-block; background: white; color: #ff4fa3; padding: 7px 16px; border-radius: 30px; font-weight: 700; font-size: 0.74rem; text-decoration: none; box-shadow: 0 4px 14px rgba(255,79,163,0.18); transition: transform 0.2s; width: fit-content; }
@@ -73,6 +75,12 @@
     .btn-orange:hover { transform: translateY(-2px); }
     .btn-yellow { display: inline-block; background: white; color: #b45309; padding: 7px 16px; border-radius: 30px; font-weight: 700; font-size: 0.74rem; text-decoration: none; box-shadow: 0 4px 14px rgba(180,83,9,0.15); transition: transform 0.2s; width: fit-content; }
     .btn-yellow:hover { transform: translateY(-2px); }
+    .btn-teal { display: inline-block; background: white; color: #0f766e; padding: 7px 16px; border-radius: 30px; font-weight: 700; font-size: 0.74rem; text-decoration: none; box-shadow: 0 4px 14px rgba(15,118,110,0.18); transition: transform 0.2s; width: fit-content; }
+    .btn-teal:hover { transform: translateY(-2px); }
+    .btn-slate { display: inline-block; background: white; color: #334155; padding: 7px 16px; border-radius: 30px; font-weight: 700; font-size: 0.74rem; text-decoration: none; box-shadow: 0 4px 14px rgba(51,65,85,0.18); transition: transform 0.2s; width: fit-content; }
+    .btn-slate:hover { transform: translateY(-2px); }
+    .post-card.coming-soon-card { opacity: 0.6; }
+    .soon-badge { font-size: 0.62rem; font-weight: 700; background: #f1f5f9; color: #94a3b8; padding: 3px 9px; border-radius: 10px; width: fit-content; text-transform: uppercase; letter-spacing: 0.05em; }
     .dyk-panel-note { background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.55); border-radius: 16px; padding: 14px 18px; font-size: 0.79rem; color: #666; margin-bottom: 16px; display: flex; gap: 8px; align-items: center; }
     footer { text-align: center; padding: 26px 20px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.4); color: white; font-weight: 600; font-size: 0.88rem; }
     @media (max-width: 700px) { .sidebar { display: none; } .mobile-select-wrap { display: block; } .blog-layout { padding: 0 14px; } header h1 { font-size: 2rem; } .welcome-banner { padding: 22px 18px; } }
@@ -95,6 +103,8 @@
     <option value="speech">🎧 Konuşma AI Başlangıç</option>
     <option value="emg">💪 EMG & Biyoelektrik Sinyaller</option>
     <option value="deepfake">🔍 Derin Sahte Ses Tespiti</option>
+    <option value="cv">🧠 Sıfırdan Bilgisayarlı Görü</option>
+    <option value="sql">🗄️ Sıfırdan SQL Öğren</option>
     <option value="reflections">💗 Mühendislik Günlükleri</option>
     <option value="courses">📚 Ücretsiz Kurslar & Sertifikalar</option>
     <option value="dyk">💡 Biliyor muydun?</option>
@@ -111,6 +121,8 @@
     <button class="sidebar-btn" onclick="switchPanel('speech')" id="btn-speech"><span class="icon">🎧</span> Konuşma AI Başlangıç <span class="sidebar-count">4</span></button>
     <button class="sidebar-btn" onclick="switchPanel('emg')" id="btn-emg"><span class="icon">💪</span> EMG & Biyoelektrik <span class="sidebar-count">3</span></button>
     <button class="sidebar-btn" onclick="switchPanel('deepfake')" id="btn-deepfake"><span class="icon">🔍</span> Derin Sahte Ses <span class="sidebar-count">4</span></button>
+    <button class="sidebar-btn" onclick="switchPanel('cv')" id="btn-cv"><span class="icon">🧠</span> Bilgisayarlı Görü <span class="sidebar-count">4</span></button>
+    <button class="sidebar-btn" onclick="switchPanel('sql')" id="btn-sql"><span class="icon">🗄️</span> Sıfırdan SQL Öğren <span class="sidebar-count">1</span></button>
     <div class="sidebar-divider"></div>
     <button class="sidebar-btn" onclick="switchPanel('reflections')" id="btn-reflections"><span class="icon">💗</span> Mühendislik Günlükleri <span class="sidebar-count">1</span></button>
     <button class="sidebar-btn" onclick="switchPanel('courses')" id="btn-courses"><span class="icon">📚</span> Ücretsiz Kurslar <span class="sidebar-count">8+</span></button>
@@ -131,6 +143,8 @@
         <div class="overview-card ov-sp" onclick="switchPanel('speech')"><span class="oc-icon">🎧</span><h3>Konuşma AI Başlangıç</h3><p>Ham sesten CNN'lere kadar.</p><div class="oc-count">4 yazı →</div></div>
         <div class="overview-card ov-emg" onclick="switchPanel('emg')"><span class="oc-icon">💪</span><h3>EMG & Biyoelektrik Sinyaller</h3><p>Kas sinyalleri, donanım ve yapay zeka.</p><div class="oc-count">3 yazı →</div></div>
         <div class="overview-card ov-df" onclick="switchPanel('deepfake')"><span class="oc-icon">🔍</span><h3>Derin Sahte Ses Tespiti</h3><p>Mezuniyet projem — LCNN ile sahte ses.</p><div class="oc-count">4 yazı →</div></div>
+        <div class="overview-card ov-cv" onclick="switchPanel('cv')"><span class="oc-icon">🧠</span><h3>Sıfırdan Bilgisayarlı Görü</h3><p>Pikselden tahmine — başlangıç dostu CV serisi.</p><div class="oc-count">4 yazı →</div></div>
+        <div class="overview-card ov-sql" onclick="switchPanel('sql')"><span class="oc-icon">🗄️</span><h3>Sıfırdan SQL Öğren</h3><p>Veritabanları ve sorgular, sıfırdan.</p><div class="oc-count">1 yazı →</div></div>
         <div class="overview-card ov-ref" onclick="switchPanel('reflections')"><span class="oc-icon">💗</span><h3>Mühendislik Günlükleri</h3><p>Mühendislik hayatından kişisel düşünceler.</p><div class="oc-count">1 yazı →</div></div>
         <div class="overview-card ov-free" onclick="switchPanel('courses')"><span class="oc-icon">📚</span><h3>Ücretsiz Kurslar & Sertifikalar</h3><p>MathWorks Onramp kursları ve daha fazlası.</p><div class="oc-count">8+ kurs →</div></div>
         <div class="overview-card ov-dyk" onclick="switchPanel('dyk')"><span class="oc-icon">💡</span><h3>Biliyor muydun?</h3><p>Favori uygulamalarının arkasındaki teknoloji.</p><div class="oc-count">5 kart →</div></div>
@@ -189,6 +203,30 @@
         <div class="post-card"><span class="post-tag tag-deepfake">Bölüm 2</span><h3>Veri Seti — ASVspoof2019 ve Türkçe Veri Setim</h3><p>315 kayıt, 26 konuşmacı ve kendi deepfake veri setimi nasıl oluşturdum.</p><a class="btn-blue" href="deepfake-part2-tr.html">Oku →</a></div>
         <div class="post-card"><span class="post-tag tag-deepfake">Bölüm 3</span><h3>LCNN Modeli — Mimari ve Eğitim</h3><p>LCNN, MFM aktivasyonu, log-Mel özellikleri ve eğitim stratejisi.</p><a class="btn-blue" href="deepfake-part3-tr.html">Oku →</a></div>
         <div class="post-card"><span class="post-tag tag-deepfake">Bölüm 4</span><h3>Sonuçlar, Çapraz Veri Seti Zorlukları ve Öğrendiklerim</h3><p>LA'da %99.27 doğruluk, diller arası deneyler ve dürüst sonuçlar.</p><a class="btn-blue" href="deepfake-part4-tr.html">Oku →</a></div>
+      </div>
+    </div>
+
+
+    <!-- BİLGİSAYARLI GÖRÜ -->
+    <div class="panel-section" id="panel-cv">
+      <div class="panel-header"><h2>🧠 Sıfırdan Bilgisayarlı Görü</h2><div class="panel-header-line"></div></div>
+      <div class="post-grid">
+        <div class="post-card"><span class="post-tag tag-cv">Bölüm 1</span><h3>Bilgisayarlar Nasıl "Görür"? — Pikselden Tahmine</h3><p>Görüntüler sayı ızgaraları olarak ve CNN'lerin kalıpları nasıl öğrendiği.</p><a class="btn-teal" href="cv-part1-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-cv">Bölüm 2</span><h3>Basit Bir CNN ile Görüntü Sınıflandırma</h3><p>Sıfırdan çalışan bir CNN inşa edin — pikselden tahmine.</p><a class="btn-teal" href="cv-part2-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-cv">Bölüm 3</span><h3>Nesne Tespiti — YOLO Nedir?</h3><p>Modeller bir görüntüde birden fazla nesneyi nasıl bulur ve etiketler.</p><a class="btn-teal" href="cv-part3-tr.html">Oku →</a></div>
+        <div class="post-card"><span class="post-tag tag-cv">Bölüm 4</span><h3>Görü için Transfer Öğrenme</h3><p>Kendi projeleriniz için güçlü önceden eğitilmiş modelleri kullanma.</p><a class="btn-teal" href="cv-part4-tr.html">Oku →</a></div>
+      </div>
+    </div>
+
+    <!-- SQL -->
+    <div class="panel-section" id="panel-sql">
+      <div class="panel-header"><h2>🗄️ Sıfırdan SQL Öğren</h2><div class="panel-header-line"></div></div>
+      <div class="post-grid">
+        <div class="post-card"><span class="post-tag tag-sql">Bölüm 1</span><h3>SQL Nedir ve Veritabanları Neden Önemlidir?</h3><p>İlişkisel veritabanları, tablolar ve ilk SELECT sorgunuz.</p><a class="btn-slate" href="sql-part1-tr.html">Oku →</a></div>
+        <div class="post-card coming-soon-card"><span class="soon-badge">Yakında</span><h3>Bölüm 2: Filtreleme ve Sıralama</h3><p>WHERE, ORDER BY, LIMIT ve karşılaştırma operatörleri.</p></div>
+        <div class="post-card coming-soon-card"><span class="soon-badge">Yakında</span><h3>Bölüm 3: Veriyi Toplulaştırma</h3><p>GROUP BY, COUNT/SUM/AVG ve HAVING ile WHERE karşılaştırması.</p></div>
+        <div class="post-card coming-soon-card"><span class="soon-badge">Yakında</span><h3>Bölüm 4: Join'ler</h3><p>INNER, LEFT ve RIGHT JOIN — ilişkisel tabloları bağlama.</p></div>
+        <div class="post-card coming-soon-card"><span class="soon-badge">Yakında</span><h3>Bölüm 5: Alt Sorgular ve CTE'ler</h3><p>İç içe sorgular, WITH ifadeleri ve hangisinin ne zaman kullanılacağı.</p></div>
       </div>
     </div>
 
