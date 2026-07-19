@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alt Sorgular ve CTE'ler | Sıfırdan SQL Öğren – SheBuildsSTEM</title>
+<meta name="description" content="Sıfırdan SQL Öğren serisi Bölüm 5 — iç içe sorgular, WITH ifadesi ve ne zaman alt sorgu, ne zaman CTE kullanılır.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #e4c9f7 0%, #b18cf0 30%, #8fa8ef 65%, #a8d4f5 100%); background-attachment: fixed; color: #2d2640; line-height: 1.7; min-height: 100vh; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 40px 20px 80px; }
+  header.top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
+  .brand { font-weight: 800; font-size: 1.25rem; color: #fff; text-decoration: none; }
+  .back-link { color: #fff; text-decoration: none; font-weight: 500; font-size: 0.95rem; background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 999px; backdrop-filter: blur(10px); transition: background 0.2s; }
+  .back-link:hover { background: rgba(255,255,255,0.35); }
+  .glass { background: rgba(255,255,255,0.55); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 8px 32px rgba(31,38,135,0.15); }
+  .post-header { padding: 36px 40px; margin-bottom: 28px; }
+  .series-tag { font-weight: 700; color: #7c3aed; font-size: 0.95rem; margin-bottom: 6px; }
+  .part-badge { display: inline-block; background: #64748b; color: #f1f5f9; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.05em; padding: 5px 14px; border-radius: 999px; margin-bottom: 14px; }
+  h1 { font-size: 2rem; font-weight: 800; color: #241b3d; margin-bottom: 12px; }
+  .tags { color: #6b5f8a; font-size: 0.9rem; margin-bottom: 18px; }
+  .intro { font-size: 1.05rem; color: #3a3155; }
+  .intro strong { color: #7c3aed; }
+  section.block { padding: 32px 40px; margin-bottom: 24px; }
+  h2 { font-size: 1.4rem; color: #241b3d; margin-bottom: 14px; }
+  h3 { font-size: 1.1rem; color: #4c1d95; margin: 20px 0 8px; }
+  p { margin-bottom: 14px; color: #3a3155; }
+  code { background: rgba(124,58,237,0.12); padding: 2px 8px; border-radius: 6px; font-size: 0.9em; color: #5b21b6; }
+  pre { background: #241b3d; color: #e9e4fc; padding: 18px 22px; border-radius: 14px; overflow-x: auto; margin: 16px 0; font-size: 0.88rem; line-height: 1.6; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid rgba(124,58,237,0.15); }
+  th { color: #4c1d95; font-weight: 700; }
+  td { color: #3a3155; }
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 600px) { .compare-grid { grid-template-columns: 1fr; } }
+  .compare-card { border-radius: 16px; padding: 20px 22px; }
+  .compare-card.bad { background: rgba(248,113,113,0.15); border-left: 4px solid #f87171; }
+  .compare-card.good { background: rgba(52,211,153,0.15); border-left: 4px solid #34d399; }
+  .compare-card h4 { margin-bottom: 8px; color: #241b3d; }
+  .compare-card p { margin: 0; font-size: 0.92rem; color: #3a3155; }
+  .example-box { background: linear-gradient(135deg, rgba(196,181,253,0.35), rgba(147,197,253,0.35)); border-radius: 18px; padding: 24px 28px; margin: 20px 0; }
+  .example-box h3 { margin-top: 0; }
+  .takeaway { background: linear-gradient(135deg, #7c3aed, #6366f1); color: #fff; padding: 30px 36px; border-radius: 20px; margin-top: 10px; }
+  .takeaway h2 { color: #fff; }
+  .takeaway p { color: #ece9ff; margin-bottom: 0; }
+  .nav-links { display: flex; justify-content: space-between; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
+  .nav-links a { flex: 1; min-width: 200px; background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); padding: 16px 20px; border-radius: 16px; text-decoration: none; color: #4c1d95; font-weight: 600; text-align: center; transition: transform 0.2s; }
+  .nav-links a:hover { transform: translateY(-2px); }
+  footer { text-align: center; color: #fff; margin-top: 40px; font-size: 0.9rem; opacity: 0.9; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <a class="brand" href="tr.html">SheBuildsSTEM 💗⚡</a>
+    <a class="back-link" href="blog-tr.html">← Bloga Dön</a>
+  </header>
+
+  <div class="glass post-header">
+    <div class="series-tag">🗄️ Sıfırdan SQL Öğren</div>
+    <span class="part-badge">BÖLÜM 5</span>
+    <h1>Alt Sorgular ve CTE'ler</h1>
+    <div class="tags">Başlangıç seviyesi · Alt Sorgular · WITH İfadesi</div>
+    <p class="intro">Bazen bir sorgu, önce <em>başka</em> bir sorgunun sonucuna ihtiyaç duyar. İşte <strong>alt sorgular (subqueries)</strong> ve <strong>CTE'ler (Common Table Expressions)</strong> tam olarak bunun için var — karmaşık mantığı adım adım inşa edebilmeniz için bir sorgunun içine başka bir sorgu yazmak.</p>
+  </div>
+
+  <section class="glass block">
+    <h2>📦 Alt sorgu nedir?</h2>
+    <p>Bir alt sorgu, genellikle parantez içine alınmış, başka bir sorgunun içine yerleştirilmiş bir <code>SELECT</code> ifadesidir. Önce o çalışır ve sonucu dış sorgu tarafından kullanılır.</p>
+    <pre><code>SELECT name, gpa
+FROM students
+WHERE gpa &gt; (SELECT AVG(gpa) FROM students);</code></pre>
+    <p>İç sorgu tüm öğrenciler arasındaki ortalama GANO'yu hesaplar; dış sorgu ise bu ortalamanın üzerindeki herkesi bulur. Bir alt sorgu olmadan, iki ayrı sorguya ve bir sonucu diğerine elle bağlamaya ihtiyacınız olurdu.</p>
+  </section>
+
+  <section class="glass block">
+    <h2>📍 Alt sorgular nerede yer alabilir</h2>
+    <table>
+      <tr><th>Konum</th><th>Örnek kullanım</th></tr>
+      <tr><td><code>WHERE</code> içinde</td><td>Bir sütunu hesaplanmış bir değerle karşılaştırma</td></tr>
+      <tr><td><code>FROM</code> içinde</td><td>Bir sorgunun sonucunu daha fazla sorgulamak için geçici bir tablo olarak ele alma</td></tr>
+      <tr><td><code>SELECT</code> içinde</td><td>İlişkili bir sorgu kullanarak satır başına bir değer hesaplama</td></tr>
+    </table>
+    <pre><code>SELECT s.name,
+  (SELECT COUNT(*) FROM enrollments e WHERE e.student_id = s.student_id) AS course_count
+FROM students s;</code></pre>
+    <p>Bu, her öğrenci satırı için bir mini sorguyla hesaplanan bir <code>course_count</code> sütunu ekler.</p>
+  </section>
+
+  <section class="glass block">
+    <h2>📝 Common Table Expressions (CTE): WITH</h2>
+    <p>Bir CTE, <code>WITH</code> kullanarak bir alt sorguyu önceden isimlendirmenize izin verir, ardından ana sorgunuzda o ismi normal bir tablo gibi referans verebilirsiniz.</p>
+    <pre><code>WITH high_achievers AS (
+  SELECT * FROM students WHERE gpa &gt; 3.7
+)
+SELECT major, COUNT(*) AS count
+FROM high_achievers
+GROUP BY major;</code></pre>
+    <p>CTE'nin yaptığı her şeyi bir alt sorgu da yapabilir — ama CTE, bir sorgunun içindeki sorgunun içindeki sorgu yerine, yukarıdan aşağıya açıkça etiketlenmiş bir dizi adım gibi okunur.</p>
+  </section>
+
+  <section class="glass block">
+    <h2>⚖️ Alt sorgu mu, CTE mi — hangisini kullanmalı?</h2>
+    <div class="compare-grid">
+      <div class="compare-card bad">
+        <h4>Alt Sorgu</h4>
+        <p>Sadece bir yerde kullanılan tek, basit, bir kerelik bir hesaplama için uygundur.</p>
+      </div>
+      <div class="compare-card good">
+        <h4>CTE</h4>
+        <p>Karmaşık olan, birden fazla kez yeniden kullanılan veya okunabilirliğin önemli olduğu her şey için daha iyidir — ki bu, dürüst olmak gerekirse, çoğu gerçek sorgu için geçerlidir.</p>
+      </div>
+    </div>
+    <div class="example-box">
+      <h3>Birden fazla CTE'yi zincirleyebilirsiniz</h3>
+      <p>Okunabilir bir işlem hattı oluşturmak için birkaç <code>WITH</code> bloğunu virgülle ayırın: ilk CTE filtreler, ikinci CTE ilkini toplar ve son sorgunuz ikinciden okur — her adım isimlendirilmiş ve takip etmesi kolay.</p>
+    </div>
+  </section>
+
+  <div class="glass takeaway">
+    <h2>💡 Son çıkarım</h2>
+    <p>Alt sorgular ve CTE'ler, karmaşık bir problemi daha küçük, isimlendirilmiş adımlara bölmenizi sağlar — başka bir sorunun cevabını kullanarak bir soruyu yanıtlayan bir sorgu. Bu, <strong>Sıfırdan SQL Öğren</strong>'in özünü tamamlıyor: Bölüm 1'deki ilk <code>SELECT</code>'inizden, filtreleme, toplama ve join'lerden geçip buradaki iç içe sorgulara kadar. Artık gerçek ilişkisel veritabanlarını güvenle sorgulamaya başlamak için ihtiyacınız olan her şeye sahipsiniz.</p>
+  </div>
+
+  <div class="nav-links">
+    <a href="sql-part4-tr.html">← Bölüm 4: Join'ler</a>
+    <a href="blog-tr.html">Bloga Dön →</a>
+  </div>
+
+  <footer>Made with 💗 by Buse | SheBuildsSTEM</footer>
+</div>
+</body>
+</html>

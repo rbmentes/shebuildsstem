@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Filtreleme ve Sıralama | Sıfırdan SQL Öğren – SheBuildsSTEM</title>
+<meta name="description" content="Sıfırdan SQL Öğren serisi Bölüm 2 — WHERE, karşılaştırma ve mantıksal operatörler, ORDER BY ve LIMIT.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #e4c9f7 0%, #b18cf0 30%, #8fa8ef 65%, #a8d4f5 100%); background-attachment: fixed; color: #2d2640; line-height: 1.7; min-height: 100vh; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 40px 20px 80px; }
+  header.top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
+  .brand { font-weight: 800; font-size: 1.25rem; color: #fff; text-decoration: none; }
+  .back-link { color: #fff; text-decoration: none; font-weight: 500; font-size: 0.95rem; background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 999px; backdrop-filter: blur(10px); transition: background 0.2s; }
+  .back-link:hover { background: rgba(255,255,255,0.35); }
+  .glass { background: rgba(255,255,255,0.55); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 8px 32px rgba(31,38,135,0.15); }
+  .post-header { padding: 36px 40px; margin-bottom: 28px; }
+  .series-tag { font-weight: 700; color: #7c3aed; font-size: 0.95rem; margin-bottom: 6px; }
+  .part-badge { display: inline-block; background: #64748b; color: #f1f5f9; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.05em; padding: 5px 14px; border-radius: 999px; margin-bottom: 14px; }
+  h1 { font-size: 2rem; font-weight: 800; color: #241b3d; margin-bottom: 12px; }
+  .tags { color: #6b5f8a; font-size: 0.9rem; margin-bottom: 18px; }
+  .intro { font-size: 1.05rem; color: #3a3155; }
+  .intro strong { color: #7c3aed; }
+  section.block { padding: 32px 40px; margin-bottom: 24px; }
+  h2 { font-size: 1.4rem; color: #241b3d; margin-bottom: 14px; }
+  h3 { font-size: 1.1rem; color: #4c1d95; margin: 20px 0 8px; }
+  p { margin-bottom: 14px; color: #3a3155; }
+  code { background: rgba(124,58,237,0.12); padding: 2px 8px; border-radius: 6px; font-size: 0.9em; color: #5b21b6; }
+  pre { background: #241b3d; color: #e9e4fc; padding: 18px 22px; border-radius: 14px; overflow-x: auto; margin: 16px 0; font-size: 0.88rem; line-height: 1.6; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid rgba(124,58,237,0.15); }
+  th { color: #4c1d95; font-weight: 700; }
+  td { color: #3a3155; }
+  .example-box { background: linear-gradient(135deg, rgba(196,181,253,0.35), rgba(147,197,253,0.35)); border-radius: 18px; padding: 24px 28px; margin: 20px 0; }
+  .example-box h3 { margin-top: 0; }
+  .takeaway { background: linear-gradient(135deg, #7c3aed, #6366f1); color: #fff; padding: 30px 36px; border-radius: 20px; margin-top: 10px; }
+  .takeaway h2 { color: #fff; }
+  .takeaway p { color: #ece9ff; margin-bottom: 0; }
+  .nav-links { display: flex; justify-content: space-between; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
+  .nav-links a { flex: 1; min-width: 200px; background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); padding: 16px 20px; border-radius: 16px; text-decoration: none; color: #4c1d95; font-weight: 600; text-align: center; transition: transform 0.2s; }
+  .nav-links a:hover { transform: translateY(-2px); }
+  footer { text-align: center; color: #fff; margin-top: 40px; font-size: 0.9rem; opacity: 0.9; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <a class="brand" href="tr.html">SheBuildsSTEM 💗⚡</a>
+    <a class="back-link" href="blog-tr.html">← Bloga Dön</a>
+  </header>
+
+  <div class="glass post-header">
+    <div class="series-tag">🗄️ Sıfırdan SQL Öğren</div>
+    <span class="part-badge">BÖLÜM 2</span>
+    <h1>Filtreleme ve Sıralama</h1>
+    <div class="tags">Başlangıç seviyesi · WHERE · ORDER BY · LIMIT</div>
+    <p class="intro"><strong>Bölüm 1</strong>'de basit bir <code>WHERE</code> ifadesiyle ilk <code>SELECT</code> sorgumuzu yazmıştık. Şimdi <code>WHERE</code>'ün gerçekte yapabildiği her şeyi inceleyelim, ardından <code>ORDER BY</code> ve <code>LIMIT</code> ile geri gelen sonuçların sırasını ve miktarını nasıl kontrol edeceğimizi öğrenelim.</p>
+  </div>
+
+  <section class="glass block">
+    <h2>🎯 Karşılaştırma operatörleri</h2>
+    <p><code>WHERE</code> ifadesi, çoğu programlama dilinde olduğu gibi karşılaştırma operatörlerini kullanarak satırları filtreler:</p>
+    <table>
+      <tr><th>Operatör</th><th>Anlamı</th></tr>
+      <tr><td><code>=</code></td><td>eşittir</td></tr>
+      <tr><td><code>!=</code> veya <code>&lt;&gt;</code></td><td>eşit değildir</td></tr>
+      <tr><td><code>&gt;</code> / <code>&lt;</code></td><td>büyüktür / küçüktür</td></tr>
+      <tr><td><code>&gt;=</code> / <code>&lt;=</code></td><td>büyük veya eşit / küçük veya eşit</td></tr>
+    </table>
+    <pre><code>SELECT name, gpa
+FROM students
+WHERE gpa &gt;= 3.7;</code></pre>
+    <p>Bu, sadece 3.7 veya üzerinde ortalamaya sahip öğrencileri döndürür.</p>
+  </section>
+
+  <section class="glass block">
+    <h2>🔗 Koşulları birleştirme: AND, OR, NOT</h2>
+    <p>Gerçek filtreler genellikle birden fazla koşul gerektirir. <code>AND</code> her ikisinin de doğru olmasını gerektirir, <code>OR</code> en az birinin doğru olmasını gerektirir ve <code>NOT</code> bir koşulu tersine çevirir.</p>
+    <pre><code>SELECT name, major, gpa
+FROM students
+WHERE major = 'EEE' AND gpa &gt; 3.5;</code></pre>
+    <div class="example-box">
+      <h3>Parantezlerinize dikkat edin</h3>
+      <p><code>AND</code> ve <code>OR</code>'u karıştırırken, mantığı açık hale getirmek için her zaman parantez kullanın — <code>major = 'EEE' AND (gpa &gt; 3.5 OR year = 4)</code>, parantezsiz aynı ifadeden farklı bir anlama gelir ve SQL'in varsayılan işlem sırası niyetinizle eşleşmeyebilir.</p>
+    </div>
+  </section>
+
+  <section class="glass block">
+    <h2>🧮 Faydalı filtreleme anahtar kelimeleri</h2>
+    <p><code>BETWEEN</code> bir aralığı kontrol eder, <code>IN</code> bir değer listesine karşı kontrol eder ve <code>LIKE</code> metin desenleriyle eşleşir.</p>
+    <pre><code>WHERE gpa BETWEEN 3.0 AND 3.8
+WHERE major IN ('EEE', 'Computer Science')
+WHERE name LIKE 'B%'</code></pre>
+    <p>Bir <code>LIKE</code> deseninde, <code>%</code> herhangi bir sayıda karakterle eşleşir, bu yüzden <code>'B%'</code> "B" ile başlayan herhangi bir isimle eşleşir. Bir alt çizgi <code>_</code> tam olarak bir karakterle eşleşir.</p>
+    <p>Eksik veriyi kontrol etmek için <code>IS NULL</code> veya <code>IS NOT NULL</code> kullanın — asla <code>= NULL</code> kullanmayın, çünkü NULL "bilinmiyor"u temsil eder ve hiçbir şeye eşit değildir, kendisine bile.</p>
+  </section>
+
+  <section class="glass block">
+    <h2>↕️ Sonuçları sıralama: ORDER BY</h2>
+    <p><code>ORDER BY</code>, sonuçlarınızı bir veya daha fazla sütuna göre sıralar. Artan sıralama için <code>ASC</code> (varsayılan) veya azalan sıralama için <code>DESC</code> ekleyin.</p>
+    <pre><code>SELECT name, gpa
+FROM students
+ORDER BY gpa DESC;</code></pre>
+    <p>Birden fazla sütuna göre de sıralayabilirsiniz — SQL önce ilk sütuna göre sıralar, ardından eşitlikleri bozmak için ikinciyi kullanır:</p>
+    <pre><code>SELECT name, major, gpa
+FROM students
+ORDER BY major ASC, gpa DESC;</code></pre>
+  </section>
+
+  <section class="glass block">
+    <h2>✂️ Satırları sınırlama: LIMIT</h2>
+    <p><code>LIMIT</code>, kaç satırın geri döneceğini sınırlar — veriyi önizlemek veya sadece "en iyi N" sonucu almak için kullanışlıdır.</p>
+    <pre><code>SELECT name, gpa
+FROM students
+ORDER BY gpa DESC
+LIMIT 3;</code></pre>
+    <p>Bu, GANO'ya göre sadece en iyi 3 öğrenciyi döndürür. <code>ORDER BY</code>'yi <code>LIMIT</code> ile birleştirmek SQL'deki en yaygın kalıplardan biridir — "en çok satan 5 ürün" veya "en son 10 sipariş" gibi düşünün.</p>
+  </section>
+
+  <div class="glass takeaway">
+    <h2>💡 Son çıkarım</h2>
+    <p>Artık satırları karşılaştırma ve mantıksal operatörlerle filtreleyebilir, aralıkları, listeleri ve metin desenlerini eşleştirebilir, sonuçları <code>ORDER BY</code> ile sıralayabilir ve <code>LIMIT</code> ile sınırlayabilirsiniz. Bölüm 3'te, <code>GROUP BY</code> ve <code>COUNT</code>, <code>SUM</code>, <code>AVG</code> gibi toplama fonksiyonlarıyla birçok satırdaki veriyi bir kerede özetlemeyi öğreneceğiz.</p>
+  </div>
+
+  <div class="nav-links">
+    <a href="sql-part1-tr.html">← Bölüm 1: SQL Nedir ve Veritabanları Neden Önemlidir?</a>
+    <a href="sql-part3-tr.html">Bölüm 3: Veriyi Toplulaştırma →</a>
+  </div>
+
+  <footer>Made with 💗 by Buse | SheBuildsSTEM</footer>
+</div>
+</body>
+</html>

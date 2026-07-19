@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aggregating Data | Learn SQL From Scratch – SheBuildsSTEM</title>
+<meta name="description" content="Part 3 of Learn SQL From Scratch — GROUP BY, aggregate functions like COUNT/SUM/AVG, and the difference between HAVING and WHERE.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #e4c9f7 0%, #b18cf0 30%, #8fa8ef 65%, #a8d4f5 100%); background-attachment: fixed; color: #2d2640; line-height: 1.7; min-height: 100vh; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 40px 20px 80px; }
+  header.top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
+  .brand { font-weight: 800; font-size: 1.25rem; color: #fff; text-decoration: none; }
+  .back-link { color: #fff; text-decoration: none; font-weight: 500; font-size: 0.95rem; background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 999px; backdrop-filter: blur(10px); transition: background 0.2s; }
+  .back-link:hover { background: rgba(255,255,255,0.35); }
+  .glass { background: rgba(255,255,255,0.55); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 8px 32px rgba(31,38,135,0.15); }
+  .post-header { padding: 36px 40px; margin-bottom: 28px; }
+  .series-tag { font-weight: 700; color: #7c3aed; font-size: 0.95rem; margin-bottom: 6px; }
+  .part-badge { display: inline-block; background: #64748b; color: #f1f5f9; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.05em; padding: 5px 14px; border-radius: 999px; margin-bottom: 14px; }
+  h1 { font-size: 2rem; font-weight: 800; color: #241b3d; margin-bottom: 12px; }
+  .tags { color: #6b5f8a; font-size: 0.9rem; margin-bottom: 18px; }
+  .intro { font-size: 1.05rem; color: #3a3155; }
+  .intro strong { color: #7c3aed; }
+  section.block { padding: 32px 40px; margin-bottom: 24px; }
+  h2 { font-size: 1.4rem; color: #241b3d; margin-bottom: 14px; }
+  h3 { font-size: 1.1rem; color: #4c1d95; margin: 20px 0 8px; }
+  p { margin-bottom: 14px; color: #3a3155; }
+  code { background: rgba(124,58,237,0.12); padding: 2px 8px; border-radius: 6px; font-size: 0.9em; color: #5b21b6; }
+  pre { background: #241b3d; color: #e9e4fc; padding: 18px 22px; border-radius: 14px; overflow-x: auto; margin: 16px 0; font-size: 0.88rem; line-height: 1.6; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid rgba(124,58,237,0.15); }
+  th { color: #4c1d95; font-weight: 700; }
+  td { color: #3a3155; }
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 600px) { .compare-grid { grid-template-columns: 1fr; } }
+  .compare-card { border-radius: 16px; padding: 20px 22px; }
+  .compare-card.bad { background: rgba(248,113,113,0.15); border-left: 4px solid #f87171; }
+  .compare-card.good { background: rgba(52,211,153,0.15); border-left: 4px solid #34d399; }
+  .compare-card h4 { margin-bottom: 8px; color: #241b3d; }
+  .compare-card p { margin: 0; font-size: 0.92rem; color: #3a3155; }
+  .example-box { background: linear-gradient(135deg, rgba(196,181,253,0.35), rgba(147,197,253,0.35)); border-radius: 18px; padding: 24px 28px; margin: 20px 0; }
+  .example-box h3 { margin-top: 0; }
+  .takeaway { background: linear-gradient(135deg, #7c3aed, #6366f1); color: #fff; padding: 30px 36px; border-radius: 20px; margin-top: 10px; }
+  .takeaway h2 { color: #fff; }
+  .takeaway p { color: #ece9ff; margin-bottom: 0; }
+  .nav-links { display: flex; justify-content: space-between; gap: 16px; margin-top: 32px; flex-wrap: wrap; }
+  .nav-links a { flex: 1; min-width: 200px; background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); padding: 16px 20px; border-radius: 16px; text-decoration: none; color: #4c1d95; font-weight: 600; text-align: center; transition: transform 0.2s; }
+  .nav-links a:hover { transform: translateY(-2px); }
+  footer { text-align: center; color: #fff; margin-top: 40px; font-size: 0.9rem; opacity: 0.9; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <a class="brand" href="index.html">SheBuildsSTEM 💗⚡</a>
+    <a class="back-link" href="blog.html">← Back to Blog</a>
+  </header>
+
+  <div class="glass post-header">
+    <div class="series-tag">🗄️ Learn SQL From Scratch</div>
+    <span class="part-badge">PART 3</span>
+    <h1>Aggregating Data</h1>
+    <div class="tags">Beginner-friendly · GROUP BY · Aggregate Functions</div>
+    <p class="intro">So far we've filtered and sorted individual rows. But a lot of real questions are about summaries: "how many students per major?" or "what's the average GPA?" That's what <strong>aggregate functions</strong> and <code>GROUP BY</code> are for.</p>
+  </div>
+
+  <section class="glass block">
+    <h2>🧮 Aggregate functions</h2>
+    <p>An aggregate function takes many rows and collapses them into a single value:</p>
+    <table>
+      <tr><th>Function</th><th>Returns</th></tr>
+      <tr><td><code>COUNT()</code></td><td>number of rows</td></tr>
+      <tr><td><code>SUM()</code></td><td>total of a numeric column</td></tr>
+      <tr><td><code>AVG()</code></td><td>average of a numeric column</td></tr>
+      <tr><td><code>MIN()</code> / <code>MAX()</code></td><td>smallest / largest value</td></tr>
+    </table>
+    <pre><code>SELECT COUNT(*) AS total_students, AVG(gpa) AS average_gpa
+FROM students;</code></pre>
+    <p>Used alone like this, an aggregate collapses the <em>entire table</em> into one row of summary numbers.</p>
+  </section>
+
+  <section class="glass block">
+    <h2>🗂️ Grouping rows: GROUP BY</h2>
+    <p><code>GROUP BY</code> is where aggregates get really useful — it splits your rows into groups first, then runs the aggregate function separately per group.</p>
+    <pre><code>SELECT major, COUNT(*) AS student_count, AVG(gpa) AS avg_gpa
+FROM students
+GROUP BY major;</code></pre>
+    <p>This gives you one row per unique major, each with its own student count and average GPA — instead of one number for the whole table.</p>
+    <div class="example-box">
+      <h3>The rule to remember</h3>
+      <p>Every column in your <code>SELECT</code> list must either be inside an aggregate function, or listed in <code>GROUP BY</code>. SQL needs to know exactly how to collapse every non-aggregated column, and it can't guess.</p>
+    </div>
+  </section>
+
+  <section class="glass block">
+    <h2>⚖️ WHERE vs. HAVING</h2>
+    <div class="compare-grid">
+      <div class="compare-card bad">
+        <h4>WHERE</h4>
+        <p>Filters individual rows <em>before</em> grouping happens. Cannot reference an aggregate function like <code>COUNT()</code>.</p>
+      </div>
+      <div class="compare-card good">
+        <h4>HAVING</h4>
+        <p>Filters groups <em>after</em> aggregation happens. Built specifically to filter on aggregate results.</p>
+      </div>
+    </div>
+    <pre><code>SELECT major, COUNT(*) AS student_count
+FROM students
+GROUP BY major
+HAVING COUNT(*) &gt; 5;</code></pre>
+    <p>This returns only majors with more than 5 students. Trying to write <code>WHERE COUNT(*) &gt; 5</code> instead would throw an error — at the point <code>WHERE</code> runs, the counts don't exist yet.</p>
+  </section>
+
+  <section class="glass block">
+    <h2>🔢 Putting it together</h2>
+    <pre><code>SELECT major, COUNT(*) AS student_count, AVG(gpa) AS avg_gpa
+FROM students
+WHERE year = 4
+GROUP BY major
+HAVING AVG(gpa) &gt; 3.5
+ORDER BY avg_gpa DESC;</code></pre>
+    <p>Reading top to bottom: filter to 4th-year students, group by major, keep only majors averaging above 3.5 GPA, then sort by that average — a realistic query you might actually write on the job.</p>
+  </section>
+
+  <div class="glass takeaway">
+    <h2>💡 Final takeaway</h2>
+    <p><code>GROUP BY</code> splits rows into buckets, aggregate functions summarize each bucket, and <code>HAVING</code> filters on those summaries — <code>WHERE</code> still handles filtering the raw rows beforehand. In Part 4, we'll connect data that lives across multiple tables using <code>JOIN</code>.</p>
+  </div>
+
+  <div class="nav-links">
+    <a href="sql-part2.html">← Part 2: Filtering & Sorting</a>
+    <a href="sql-part4.html">Part 4: Joins →</a>
+  </div>
+
+  <footer>Made with 💗 by Buse | SheBuildsSTEM</footer>
+</div>
+</body>
+</html>
